@@ -3,4 +3,7 @@
 .idea/vcs.xml
 
 # Gradle:
-.idea/gradle.xml
+.gradle
+.idea
+build
+gradle
