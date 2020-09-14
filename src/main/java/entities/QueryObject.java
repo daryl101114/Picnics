@@ -9,7 +9,7 @@ public class QueryObject {
     protected String statement;
     protected Connection conn = null;
     protected PreparedStatement stmt = null;
-
+    // Comment
 
     protected boolean query(String statement) {
         try {
