@@ -4,9 +4,7 @@ import java.sql.*;
 
 public class QueryObject {
 
-    protected final  String connectionURL = "jdbc:sqlserver://ec2-34-200-224-73.compute-1.amazonaws.com:1433/FANCYPICNICS";
-    protected final  String connectionUser = "JavaUser";
-    protected final  String connectionPassword = "cnsltiq";
+    protected final  String connectionURL = "jdbc:sqlserver://ec2-34-200-224-73.compute-1.amazonaws.com:1433;databaseName=FANCYPICNICS;user=JavaUser;password=consltiq";
 
     protected String statement;
     protected Connection conn = null;
@@ -15,7 +13,7 @@ public class QueryObject {
 
     protected boolean query(String statement) {
         try {
-            conn = DriverManager.getConnection(connectionURL, connectionUser, connectionPassword);
+            conn = DriverManager.getConnection(connectionURL);
             stmt = conn.prepareStatement(statement);
             int result = stmt.executeUpdate();
             if (result > 0)

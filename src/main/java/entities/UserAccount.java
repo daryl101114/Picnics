@@ -1,25 +1,21 @@
 package entities;
 
-public class User extends QueryObject {
+public class UserAccount extends QueryObject {
     private String username;
     private String password;
-    private String employeeName;
-    private String employeeEmail;
+    private int employee_id;
 
-    public User(String username, String password) {
+    public UserAccount(String username, String password, int employee_id) {
         this.username = username;
         this.password = password;
-    }
-
-    public User(String username){
-        this.username = username;
+        this.employee_id = employee_id;
     }
 
     public boolean Edit(String password){
 
         setPassword(password);
 
-        statement = "UPDATE User " +
+        statement = "UPDATE User_Account " +
                 "SET " +
                 "password = '" + this.getPassword() +  "' " +
                 "WHERE username = '" + this.getUsername() + "'";
@@ -28,8 +24,8 @@ public class User extends QueryObject {
     }
 
     public boolean Add(){
-        statement = "INSERT INTO User (username, password) VALUES ('" +
-                this.getUsername() + "', '" + this.getPassword() +
+        statement = "INSERT INTO User_Account (username, password, employee_id) VALUES ('" +
+                this.getUsername() + "', '" + this.getPassword() + "', " + this.getEmployee_ID() +
                 ")";
         return query(statement);
     }
@@ -45,6 +41,10 @@ public class User extends QueryObject {
         return username;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -53,19 +53,11 @@ public class User extends QueryObject {
         this.password = password;
     }
 
-    public String getEmployeeName() {
-        return employeeName;
+    public int getEmployee_ID() {
+        return employee_id;
     }
 
-    public void setEmployeeName(String employeeName) {
-        this.employeeName = employeeName;
-    }
-
-    public String getEmployeeEmail() {
-        return employeeEmail;
-    }
-
-    public void setEmployeeEmail(String employeeEmail) {
-        this.employeeEmail = employeeEmail;
+    public void setEmployee_ID(int employee_id) {
+        this.employee_id = employee_id;
     }
 }
