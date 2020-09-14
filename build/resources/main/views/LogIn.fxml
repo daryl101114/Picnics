@@ -48,8 +48,6 @@
         </Label>
     </AnchorPane>
    <ImageView fitHeight="319.0" fitWidth="425.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
-      <image>
-         <Image url="@../images/fancy-picnics.jpg" />
-      </image>
+       <Image url="@../images/fancy-picnics.jpg" />
    </ImageView>
 </GridPane>

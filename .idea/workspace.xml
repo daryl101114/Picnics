@@ -2,24 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b5ba7aaf-69ab-4dba-8b46-70f77108bc08" name="Default Changelist" comment="Changes to the Log-In Screen">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/classAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/entities/QueryObject.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/entities/QueryObject.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/resources/main/views/LogIn.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/views/LogIn.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/views/MainMenu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/views/MainMenu.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/entities/QueryObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entities/QueryObject.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ChangesViewManager" show_ignored="true" />
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
     <option name="GROUP_DATA_SOURCES" value="true" />
@@ -115,7 +115,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$USER_HOME$/AppData/Local/SceneBuilder/SceneBuilder.exe" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.selected.configurable" value="Ignore Files Support" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -183,17 +183,7 @@
       <list>
         <serviceView>
           <treeState>
-            <expand>
-              <path>
-                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-                <item name="root:Fancy Picnic" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-              </path>
-              <path>
-                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-                <item name="root:Fancy Picnic" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-                <item name="com.intellij.database.console.session.MessageBusSession@144f490e" type="9fbbdea:ServiceModel$ServiceNode" />
-              </path>
-            </expand>
+            <expand />
             <select />
           </treeState>
         </serviceView>
@@ -212,7 +202,11 @@
       <updated>1600108219600</updated>
       <workItem from="1600108220929" duration="1707000" />
       <workItem from="1600110382959" duration="12086000" />
-      <workItem from="1600124194232" duration="1141000" />
+      <workItem from="1600124194232" duration="1416000" />
+      <workItem from="1600125622238" duration="273000" />
+      <workItem from="1600125906013" duration="74000" />
+      <workItem from="1600125989716" duration="192000" />
+      <workItem from="1600126192520" duration="331000" />
     </task>
     <task id="LOCAL-00001" summary="Project Creation">
       <created>1600110921319</created>
@@ -263,7 +257,21 @@
       <option name="project" value="LOCAL" />
       <updated>1600125224228</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Changes to the Log-In Screen">
+      <created>1600125341513</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1600125341513</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Changes to the Log-In Screen">
+      <created>1600125446861</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1600125446861</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -315,58 +323,62 @@
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
     <state x="-1213" y="367" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600116165672" />
-    <state x="-1366" y="115" key="CommitChangelistDialog2" timestamp="1600125223689">
+    <state x="-1366" y="115" key="CommitChangelistDialog2" timestamp="1600125676940">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
-    <state x="-1366" y="115" key="CommitChangelistDialog2/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600125223689" />
-    <state x="-1828" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1600111941689">
+    <state x="-1366" y="115" key="CommitChangelistDialog2/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600125676940" />
+    <state x="-1828" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1600125557893">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
-    <state x="-1828" y="92" width="1736" height="856" key="DiffContextDialog/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600111941689" />
+    <state x="-1828" y="92" width="1736" height="856" key="DiffContextDialog/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600125557893" />
     <state x="-1180" y="262" key="FileChooserDialogImpl" timestamp="1600120405943">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
     <state x="-1180" y="262" key="FileChooserDialogImpl/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600120405943" />
-    <state width="1877" height="282" key="GridCell.Tab.0.bottom" timestamp="1600122478961">
+    <state width="1877" height="282" key="GridCell.Tab.0.bottom" timestamp="1600125611311">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.bottom/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600122478961" />
-    <state width="1877" height="282" key="GridCell.Tab.0.center" timestamp="1600122478961">
+    <state width="1877" height="282" key="GridCell.Tab.0.bottom/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600125611311" />
+    <state width="1877" height="282" key="GridCell.Tab.0.center" timestamp="1600125611311">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.center/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600122478961" />
-    <state width="1877" height="282" key="GridCell.Tab.0.left" timestamp="1600122478961">
+    <state width="1877" height="282" key="GridCell.Tab.0.center/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600125611311" />
+    <state width="1877" height="282" key="GridCell.Tab.0.left" timestamp="1600125611311">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.left/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600122478961" />
-    <state width="1877" height="282" key="GridCell.Tab.0.right" timestamp="1600122478961">
+    <state width="1877" height="282" key="GridCell.Tab.0.left/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600125611311" />
+    <state width="1877" height="282" key="GridCell.Tab.0.right" timestamp="1600125611311">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.right/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600122478961" />
+    <state width="1877" height="282" key="GridCell.Tab.0.right/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600125611311" />
     <state width="196" height="457" key="HiddenNamespacesPopup" timestamp="1600117905176">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
     <state width="196" height="457" key="HiddenNamespacesPopup/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600117905176" />
-    <state x="-1459" y="163" key="SettingsEditor" timestamp="1600111154720">
+    <state x="-1459" y="163" key="SettingsEditor" timestamp="1600126269598">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
-    <state x="-1459" y="163" key="SettingsEditor/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600111154720" />
+    <state x="-1459" y="163" key="SettingsEditor/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600126269598" />
     <state x="-1113" y="437" key="VCS.ChangelistChooser" timestamp="1600111931304">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
     <state x="-1113" y="437" key="VCS.ChangelistChooser/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600111931304" />
-    <state x="-1368" y="254" key="Vcs.Push.Dialog.v2" timestamp="1600125243815">
+    <state x="-1100" y="437" key="VCS.EditChangelistDialog" timestamp="1600125831661">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
-    <state x="-1368" y="254" key="Vcs.Push.Dialog.v2/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600125243815" />
-    <state x="-1264" y="345" key="com.intellij.ide.util.TipDialog" timestamp="1600124210458">
+    <state x="-1100" y="437" key="VCS.EditChangelistDialog/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600125831661" />
+    <state x="-1368" y="254" key="Vcs.Push.Dialog.v2" timestamp="1600125641861">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
-    <state x="-1264" y="345" key="com.intellij.ide.util.TipDialog/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600124210458" />
-    <state x="-1151" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1600118723625">
+    <state x="-1368" y="254" key="Vcs.Push.Dialog.v2/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600125641861" />
+    <state x="-1264" y="345" key="com.intellij.ide.util.TipDialog" timestamp="1600126535163">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
-    <state x="-1151" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600118723625" />
+    <state x="-1264" y="345" key="com.intellij.ide.util.TipDialog/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600126535163" />
+    <state x="-1151" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1600125653418">
+      <screen x="-1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="-1151" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600125653418" />
     <state x="-1169" y="312" key="git4idea.merge.GitMergeDialog" timestamp="1600111764971">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
