@@ -4,44 +4,52 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: white" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.LogInController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: white" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.LogInController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="196.0" minWidth="10.0" prefWidth="70.0" />
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="484.0" minWidth="10.0" prefWidth="415.0" />
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="143.0" minWidth="0.0" prefWidth="70.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="220.0" minHeight="0.0" prefHeight="220.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="512.0" minHeight="10.0" prefHeight="300.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="200.0" minHeight="0.0" prefHeight="98.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="324.0" minHeight="10.0" prefHeight="84.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="336.0" minHeight="0.0" prefHeight="326.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="512.0" minHeight="10.0" prefHeight="173.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="200.0" minHeight="0.0" prefHeight="24.0" vgrow="SOMETIMES" />
     </rowConstraints>
-    <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-        <Label layoutX="70.0" layoutY="112.0" text="Username:" />
-        <Label layoutX="71.0" layoutY="166.0" text="Password:" />
-        <Label layoutX="187.0" layoutY="25.0" text="Log-In">
+    <AnchorPane prefHeight="329.0" prefWidth="430.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <Label layoutX="78.0" layoutY="72.0" text="Username:" />
+        <Label layoutX="79.0" layoutY="126.0" text="Password:" />
+        <Label layoutX="184.0" layoutY="25.0" text="Log-In">
             <font>
                 <Font size="24.0" />
             </font>
         </Label>
-        <JFXButton layoutX="187.0" layoutY="234.0" onAction="#enterButtonPressed" prefHeight="28.0" prefWidth="75.0" style="-fx-background-color: rgba(167,167,167,0.51)" text="Enter">
+        <JFXButton layoutX="184.0" layoutY="161.0" onAction="#enterButtonPressed" prefHeight="28.0" prefWidth="75.0" style="-fx-background-color: rgba(167,167,167,0.51)" text="Enter">
             <font>
                 <Font size="14.0" />
             </font>
         </JFXButton>
-        <TextField fx:id="usernameField" layoutX="154.0" layoutY="107.0" prefHeight="27.0" prefWidth="151.0" />
-        <PasswordField fx:id="passwordField" layoutX="153.0" layoutY="161.0" prefHeight="27.0" prefWidth="151.0" />
+        <TextField fx:id="usernameField" layoutX="162.0" layoutY="67.0" prefHeight="27.0" prefWidth="151.0" />
+        <PasswordField fx:id="passwordField" layoutX="161.0" layoutY="121.0" prefHeight="27.0" prefWidth="151.0" />
     </AnchorPane>
     <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
-        <Label layoutX="90.0" layoutY="52.0" text="Product Manager">
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="112.0" layoutY="25.0" text="Fancy Picnics" textAlignment="CENTER">
             <font>
                 <Font size="36.0" />
             </font>
         </Label>
     </AnchorPane>
+   <ImageView fitHeight="319.0" fitWidth="425.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+      <image>
+         <Image url="@../images/fancy-picnics.jpg" />
+      </image>
+   </ImageView>
 </GridPane>
