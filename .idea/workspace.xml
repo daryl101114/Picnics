@@ -2,10 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b5ba7aaf-69ab-4dba-8b46-70f77108bc08" name="Default Changelist" comment="Project Creation">
-      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/entities/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -64,6 +60,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="ServiceViewManager">
     <option name="viewStates">
@@ -88,8 +85,16 @@
       <option name="presentableId" value="Default" />
       <updated>1600108219600</updated>
       <workItem from="1600108220929" duration="1707000" />
-      <workItem from="1600110382959" duration="517000" />
+      <workItem from="1600110382959" duration="1022000" />
     </task>
+    <task id="LOCAL-00001" summary="Project Creation">
+      <created>1600110921319</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1600110921319</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -121,14 +126,18 @@
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
     <state x="-1231" y="323" key="#com.intellij.fileTypes.FileTypeChooser/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600109911575" />
-    <state x="-1366" y="115" key="CommitChangelistDialog2" timestamp="1600110851917">
+    <state x="-1366" y="115" key="CommitChangelistDialog2" timestamp="1600111451650">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
-    <state x="-1366" y="115" key="CommitChangelistDialog2/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600110851917" />
+    <state x="-1366" y="115" key="CommitChangelistDialog2/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600111451650" />
     <state x="-1180" y="262" key="FileChooserDialogImpl" timestamp="1600110188665">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
     <state x="-1180" y="262" key="FileChooserDialogImpl/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600110188665" />
+    <state x="-1459" y="163" key="SettingsEditor" timestamp="1600111154720">
+      <screen x="-1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="-1459" y="163" key="SettingsEditor/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1600111154720" />
     <state x="-1151" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1600110196748">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
