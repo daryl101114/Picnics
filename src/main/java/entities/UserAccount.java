@@ -2,6 +2,7 @@ package entities;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -23,13 +24,13 @@ public class UserAccount extends QueryObject {
 
     }
 
-    public boolean edit(String password){
-
-        setPassword(password);
+    public boolean edit(){
+        clearEmployee();
 
         statement = "UPDATE user_account " +
                 "SET " +
-                "password = '" + this.getPassword() +  "' " +
+                "password = '" + this.getPassword() +  "', " +
+                "employee_id = " + this.getEmployeeID() + " " +
                 "WHERE username = '" + this.getUsername() + "'";
 
         return executeUpdate(statement);
@@ -98,18 +99,33 @@ public class UserAccount extends QueryObject {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        String salt = BCrypt.gensalt(12);
+        String hashedPassword = BCrypt.hashpw(password, salt);
+        this.password = hashedPassword;
+    }
+
+    public void setPassword(String password, boolean encrypt) {
+        if(!encrypt) {
+            this.password = password;
+        }
+    }
+
+    public static boolean checkPassword(String passwordPlain, String passwordStored){
+        if(passwordStored == null || !passwordStored.startsWith("$2a$"))
+            throw new IllegalArgumentException("Invalid hash stored in the database");
+
+        return BCrypt.checkpw(passwordPlain, passwordStored);
     }
 
     public Employee getEmployee() {
         if(this.employee == null) {
-            setEmployee(Employee.findByID(getEmployeeID()));
+            this.employee = Employee.findByID(getEmployeeID());
         }
         return this.employee;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void clearEmployee() {
+        this.employee = null;
     }
 
     public String getEmployeeName(){
@@ -130,7 +146,7 @@ public class UserAccount extends QueryObject {
 
     private static void setUserFromQuery(UserAccount userAccount) throws SQLException {
         userAccount.setUsername(resultSet.getString("username"));
-        userAccount.setPassword(resultSet.getString("password"));
+        userAccount.setPassword(resultSet.getString("password"), false);
         userAccount.setEmployeeID(resultSet.getInt("employee_id"));
     }
 }

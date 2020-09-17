@@ -2,7 +2,7 @@ package entities;
 
 import controllers.LogInController;
 import controllers.MainMenuController;
-import controllers.UserController;
+import controllers.UserAccountController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class Controller extends QueryObject{
+public abstract class Controller{
 
     protected static UserAccount SESSION_USER;
 
@@ -34,7 +34,7 @@ public class Controller extends QueryObject{
             }
 
             case USER: {
-                UserController userController = loader.getController();
+                UserAccountController userController = loader.getController();
                 break;
             }
             case LOGIN: {

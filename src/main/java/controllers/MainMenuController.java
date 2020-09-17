@@ -17,7 +17,7 @@ public class MainMenuController extends Controller implements Initializable {
     }
 
     public void userPushed(ActionEvent event) throws IOException {
-        loadScene(event, "/views/User.fxml", ControllerType.USER);
+        loadScene(event, "/views/UserAccount.fxml", ControllerType.USER);
     }
 
     public void logOutPushed(ActionEvent event) throws IOException {

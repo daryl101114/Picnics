@@ -18,6 +18,8 @@ import java.util.ResourceBundle;
 
 public class LogInController extends Controller implements Initializable {
 
+    // Administrator - password
+    // eduardo - eduardo or
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
 
@@ -45,7 +47,7 @@ public class LogInController extends Controller implements Initializable {
             UserAccount user = new UserAccount();
             user = user.findByUsername(username);
             if(user != null){
-                if (user.getPassword().equals(password)) {
+                if (UserAccount.checkPassword(password, user.getPassword())) {
                     SESSION_USER = user;
                     loadScene(event, "/views/MainMenu.fxml", ControllerType.MAIN_MENU);
                 } else {

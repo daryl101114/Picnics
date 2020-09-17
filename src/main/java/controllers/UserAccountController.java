@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class UserController extends Controller implements Initializable {
+public class UserAccountController extends Controller implements Initializable {
 
     @FXML
     private TableColumn<UserAccount, String> column1;
@@ -58,15 +58,8 @@ public class UserController extends Controller implements Initializable {
         // When a row is selected, populates the text fields with the information from the row.
         tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-
-                selectedObject = tableView.getSelectionModel().getSelectedItem();
-
-                textfield1.setText(selectedObject.getUsername());
-                for(Employee employee : employeeObservableList) {
-                    if (selectedObject.getEmployeeID() == employee.getID()){
-                        comboBox1.getSelectionModel().select(employee);
-                    }
-                }
+                selectedObject = newSelection;
+                loadSelectedRecord();
             }
         });
 
@@ -90,6 +83,7 @@ public class UserController extends Controller implements Initializable {
                             if (!temp.exists()) {
                                 if (temp.add()) {
                                     clearTextBox();
+                                    clearPasswordTextBox();
                                     loadData();
 
                                     successAlert.setContentText("Record successfully added");
@@ -104,6 +98,7 @@ public class UserController extends Controller implements Initializable {
                             }
                         }
                     } else {
+                        clearPasswordTextBox();
                         failureAlert.setContentText("Passwords do not match.");
                         failureAlert.showAndWait();
                     }
@@ -131,7 +126,7 @@ public class UserController extends Controller implements Initializable {
                     loadData();
 
                     clearTextBox();
-
+                    clearPasswordTextBox();
                     successAlert.setContentText("Record successfully deleted");
                     successAlert.showAndWait();
                 } else {
@@ -151,11 +146,15 @@ public class UserController extends Controller implements Initializable {
                 if(textfield1.getText().equals(selectedObject.getUsername())) {
                     if (!passwordField1.getText().equals("") && !passwordField2.getText().equals("")) {
                         if(passwordField1.getText().equals(passwordField2.getText())){
-                            String tempPassword = passwordField1.getText();
                             result = confirmationAlert.showAndWait();
                             if (result.get() == ButtonType.OK) {
-                                if (selectedObject.edit(tempPassword)) {
+                                int employeeID = comboBox1.getSelectionModel().getSelectedItem().getID();
+                                String tempPassword = passwordField1.getText();
+                                selectedObject.setEmployeeID(employeeID);
+                                selectedObject.setPassword(tempPassword);
+                                if (selectedObject.edit()) {
                                     clearTextBox();
+                                    clearPasswordTextBox();
                                     loadData();
 
                                     successAlert.setContentText("Record successfully updated");
@@ -166,6 +165,7 @@ public class UserController extends Controller implements Initializable {
                                 }
                             }
                         }else {
+                            clearPasswordTextBox();
                             failureAlert.setContentText("Passwords do not match.");
                             failureAlert.showAndWait();
                         }
@@ -175,7 +175,9 @@ public class UserController extends Controller implements Initializable {
                         failureAlert.showAndWait();
                     }
                 } else {
-                    failureAlert.setContentText("You can't edit the username for an account. Please enter the same username to the text field.");
+                    loadSelectedRecord();
+                    clearPasswordTextBox();
+                    failureAlert.setContentText("You can't edit the username for an account.");
                     failureAlert.showAndWait();
                 }
             } else {
@@ -190,9 +192,21 @@ public class UserController extends Controller implements Initializable {
 
     public void clearTextBox(){
         textfield1.clear();
+        comboBox1.getSelectionModel().clearSelection();
+    }
+
+    public void clearPasswordTextBox(){
         passwordField1.clear();
         passwordField2.clear();
-        comboBox1.getSelectionModel().clearSelection();
+    }
+
+    public void loadSelectedRecord(){
+        textfield1.setText(selectedObject.getUsername());
+        for(Employee employee : employeeObservableList) {
+            if (selectedObject.getEmployeeID() == employee.getID()){
+                comboBox1.getSelectionModel().select(employee);
+            }
+        }
     }
 
     public void loadData() {
