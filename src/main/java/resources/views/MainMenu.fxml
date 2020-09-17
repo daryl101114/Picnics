@@ -18,6 +18,11 @@
         <RowConstraints maxHeight="512.0" minHeight="10.0" prefHeight="300.0" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="200.0" minHeight="0.0" prefHeight="98.0" vgrow="SOMETIMES" />
     </rowConstraints>
+    <JFXButton buttonType="RAISED" layoutX="123.0" layoutY="256.0" onAction="#userPushed" prefHeight="38.0" prefWidth="208.0" style="-fx-background-color: rgba(167,167,167,0.51);" text="Manage Users">
+        <font>
+            <Font size="19.0" />
+        </font>
+    </JFXButton>
     <JFXButton onAction="#logOutPushed" prefHeight="28.0" prefWidth="75.0" style="-fx-background-color: rgba(200,167,167,0.51)" text="Log Out" GridPane.columnIndex="2" GridPane.rowIndex="2">
         <font>
             <Font size="14.0" />

@@ -1,5 +1,5 @@
 package entities;
 
 public enum ControllerType {
-    MAINMENU, LOGIN
+    MAIN_MENU, LOGIN, USER
 }

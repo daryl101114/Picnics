@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="900.0" style="-fx-background-color: white" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.UserController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="0.0" prefWidth="10.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="869.8594360351562" minWidth="10.0" prefWidth="869.8594360351562" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="0.0" prefWidth="10.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="220.0" minHeight="0.0" prefHeight="65.20945739746094" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="681.0" minHeight="10.0" prefHeight="557.8250122070312" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="314.248291015625" minHeight="10.0" prefHeight="183.17498779296875" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="85.54669189453125" minHeight="0.0" prefHeight="71.38165283203125" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <HBox prefHeight="75.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
+            <children>
+                <HBox prefHeight="67.0" prefWidth="224.0" />
+                <HBox prefHeight="73.0" prefWidth="570.0">
+                    <children>
+                        <JFXButton buttonType="RAISED" minWidth="75.0" onAction="#addButtonPushed" style="-fx-background-color: rgba(167,167,167,0.51);" text="Add">
+                            <HBox.margin>
+                                <Insets left="100.0" right="20.0" top="20.0" />
+                            </HBox.margin>
+                        </JFXButton>
+                        <JFXButton buttonType="RAISED" minWidth="75.0" onAction="#editButtonPushed" style="-fx-background-color: rgba(167,167,167,0.51);" text="Edit">
+                            <HBox.margin>
+                                <Insets right="20.0" top="20.0" />
+                            </HBox.margin>
+                        </JFXButton>
+                        <JFXButton buttonType="RAISED" minWidth="75.0" onAction="#deleteButtonPushed" style="-fx-background-color: rgba(167,167,167,0.51);" text="Delete">
+                            <HBox.margin>
+                                <Insets top="20.0" />
+                            </HBox.margin></JFXButton>
+                    </children>
+                </HBox>
+                <HBox prefHeight="73.0" prefWidth="108.0">
+                    <children>
+                        <JFXButton buttonType="RAISED" onAction="#mainMenuPushed" style="-fx-background-color: rgba(167,167,167,0.51);" text="Main Menu">
+                            <HBox.margin>
+                                <Insets right="10.0" top="20.0" />
+                            </HBox.margin>
+                        </JFXButton>
+                    </children>
+                </HBox>
+            </children>
+        </HBox>
+        <TableView fx:id="tableView" prefHeight="417.0" prefWidth="919.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <columns>
+                <TableColumn fx:id="column1" minWidth="12.0" prefWidth="217.44329261779785" text="Username" />
+                <TableColumn fx:id="column2" prefWidth="354.0566864013672" text="Employee Name" />
+                <TableColumn fx:id="column3" prefWidth="278.477783203125" text="Employee Email" />
+            </columns>
+            <GridPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </GridPane.margin>
+        </TableView>
+        <Label text="Users" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+            <font>
+                <Font size="36.0" />
+            </font>
+        </Label>
+        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <children>
+                <HBox prefHeight="72.0" prefWidth="870.0">
+                    <children>
+                        <VBox prefHeight="72.0" prefWidth="60.0" />
+                        <VBox prefHeight="72.0" prefWidth="210.0">
+                            <children>
+                                <Label text="Username:">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                    <padding>
+                                        <Insets left="120.0" top="30.0" />
+                                    </padding>
+                                </Label>
+                            </children>
+                        </VBox>
+                        <VBox prefHeight="72.0" prefWidth="177.0">
+                            <children>
+                                <TextField fx:id="textfield1" prefHeight="27.0" prefWidth="106.0">
+                                    <VBox.margin>
+                                        <Insets top="30.0" />
+                                    </VBox.margin>
+                                </TextField>
+                            </children>
+                        </VBox>
+                        <VBox prefHeight="72.0" prefWidth="112.0">
+                            <children>
+                                <Label text="Password:">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                    <padding>
+                                        <Insets left="30.0" top="30.0" />
+                                    </padding>
+                                </Label>
+                            </children>
+                        </VBox>
+                        <VBox prefHeight="72.0" prefWidth="173.0">
+                            <padding>
+                                <Insets top="30.0" />
+                            </padding>
+                            <children>
+                                <PasswordField fx:id="passwordField1">
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </PasswordField>
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+                <HBox prefHeight="72.0" prefWidth="870.0">
+                    <children>
+                        <VBox prefHeight="72.0" prefWidth="60.0" />
+                        <VBox prefHeight="72.0" prefWidth="210.0">
+                            <children>
+                                <Label text="Employee:">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                    <padding>
+                                        <Insets left="120.0" top="30.0" />
+                                    </padding>
+                                </Label>
+                            </children>
+                        </VBox>
+                        <VBox prefHeight="72.0" prefWidth="177.0">
+                            <children>
+                                <JFXComboBox fx:id="comboBox1" prefHeight="27.0" prefWidth="179.0">
+                                    <padding>
+                                        <Insets top="30.0" />
+                                    </padding>
+                                </JFXComboBox>
+                            </children>
+                        </VBox>
+                        <VBox prefHeight="72.0" prefWidth="112.0">
+                            <children>
+                                <Label prefHeight="48.0" prefWidth="114.0" text="Verify:">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                    <padding>
+                                        <Insets left="50.0" top="30.0" />
+                                    </padding>
+                                </Label>
+                            </children>
+                        </VBox>
+                        <VBox prefHeight="72.0" prefWidth="173.0">
+                            <padding>
+                                <Insets top="30.0" />
+                            </padding>
+                            <children>
+                                <PasswordField fx:id="passwordField2" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</GridPane>
