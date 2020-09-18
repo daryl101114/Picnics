@@ -1,5 +1,6 @@
 package entities;
 
+import controllers.AddUserController;
 import controllers.LogInController;
 import controllers.MainMenuController;
 import controllers.UserAccountController;
@@ -44,6 +45,12 @@ public abstract class Controller{
             }
             case LOGIN: {
                 LogInController logInController = loader.getController();
+                MIN_HEIGHT = 550;
+                MIN_WIDTH = 400;
+                break;
+            }
+            case ADDUSER: {
+                AddUserController addUserController = loader.getController();
                 MIN_HEIGHT = 550;
                 MIN_WIDTH = 400;
                 break;

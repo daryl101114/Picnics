@@ -1,16 +1,19 @@
 package controllers;
 
 import entities.Controller;
+import entities.ControllerType;
 import entities.Employee;
 import entities.UserAccount;
 
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.*;
 
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -78,52 +81,8 @@ public class UserAccountController extends Controller implements Initializable {
         column2.setOnEditCommit(event -> editRecord(event) );
     }
 
-    public void addButtonPushed() {
-//        if(comboBox1.getSelectionModel().getSelectedIndex() != -1) {
-//            if(!textField1.getText().isEmpty()) {
-//                if (!passwordField1.getText().equals("") && !passwordField2.getText().equals("")) {
-//                    if (passwordField1.getText().equals(passwordField2.getText())) {
-//                        String tempUsername = textField1.getText();
-//                        int tempEmployeeID = comboBox1.getSelectionModel().getSelectedItem().getID();
-//                        String tempPassword = passwordField1.getText();
-//                        UserAccount temp = new UserAccount(tempUsername, tempPassword, tempEmployeeID);
-//
-//                        result = confirmationAlert.showAndWait();
-//                        if (result.get() == ButtonType.OK) {
-//                            if (!temp.exists()) {
-//                                if (temp.add()) {
-//                                    clearTextBox();
-//                                    clearPasswordTextBox();
-//                                    loadData();
-//
-//                                    successAlert.setContentText("Record successfully added");
-//                                    successAlert.showAndWait();
-//                                } else {
-//                                    failureAlert.setContentText("There was an error adding the record to the database.");
-//                                    failureAlert.showAndWait();
-//                                }
-//                            } else {
-//                                failureAlert.setContentText("That username is already taken. Please select a different one.");
-//                                failureAlert.showAndWait();
-//                            }
-//                        }
-//                    } else {
-//                        clearPasswordTextBox();
-//                        failureAlert.setContentText("Passwords do not match.");
-//                        failureAlert.showAndWait();
-//                    }
-//                } else {
-//                    failureAlert.setContentText("Please enter a password.");
-//                    failureAlert.showAndWait();
-//                }
-//            } else {
-//                failureAlert.setContentText("Please insert a username.");
-//                failureAlert.showAndWait();
-//            }
-//        } else {
-//            failureAlert.setContentText("Please select an employee.");
-//            failureAlert.showAndWait();
-//        }
+    public void addButtonPushed(ActionEvent event) throws IOException {
+        loadScene(event, "/views/AddUser.fxml", ControllerType.ADDUSER);
     }
 
     public void editRecord(TableColumn.CellEditEvent<UserAccount, Employee> event){
