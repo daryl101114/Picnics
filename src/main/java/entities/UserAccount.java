@@ -129,8 +129,14 @@ public class UserAccount extends QueryObject {
         return this.employee;
     }
 
+    public void setEmployee(Employee employee){
+        this.employee = employee;
+    }
+
     public void clearEmployee() {
         this.employee = null;
+        this.employeeEmail = null;
+        this.employeeName = null;
     }
 
     public String getEmployeeName(){
