@@ -105,8 +105,7 @@ public class UserAccount extends QueryObject {
 
     public void setPassword(String password) {
         String salt = BCrypt.gensalt(12);
-        String hashedPassword = BCrypt.hashpw(password, salt);
-        this.password = hashedPassword;
+        this.password = BCrypt.hashpw(password, salt);
     }
 
     public void setPassword(String password, boolean encrypt) {

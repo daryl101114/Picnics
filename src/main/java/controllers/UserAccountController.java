@@ -127,7 +127,7 @@ public class UserAccountController extends Controller implements Initializable {
 
     public void loadData() {
         userAccountObservableList = UserAccount.findAll();
-        employeeObservableList = Employee.findAll();
+        employeeObservableList = Employee.findAll(true);
         if (!userAccountObservableList.isEmpty())
             tableView.setItems(userAccountObservableList);
         else

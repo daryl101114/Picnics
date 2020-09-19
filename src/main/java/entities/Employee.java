@@ -65,7 +65,25 @@ public class Employee extends QueryObject {
     public static ObservableList<Employee> findAll(){
         List<Employee> employees = new ArrayList<>();
         try {
-            statement = "SELECT * FROM employee";
+            statement = "SELECT * FROM employee ORDER BY active DESC, first_name, last_name";
+            executeQuery(statement);
+            while(resultSet.next()) {
+                Employee employee = new Employee();
+                setEmployeeFromQuery(employee);
+                employees.add(employee);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            terminateQuery();
+        }
+        return FXCollections.observableList(employees);
+    }
+
+    public static ObservableList<Employee> findAll(boolean active){
+        List<Employee> employees = new ArrayList<>();
+        try {
+            statement = "SELECT * FROM employee WHERE active = " + (active ? 1 : 0) + " ORDER BY first_name, last_name";
             executeQuery(statement);
             while(resultSet.next()) {
                 Employee employee = new Employee();
