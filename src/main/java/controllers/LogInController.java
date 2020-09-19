@@ -18,28 +18,24 @@ import java.util.ResourceBundle;
 
 public class LogInController extends Controller implements Initializable {
 
-    // Administrator - password
-    // eduardo - eduardo or
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
 
-    private Alert wrongCredentialsAlert;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        wrongCredentialsAlert = new Alert(Alert.AlertType.WARNING);
-        wrongCredentialsAlert.setTitle("Error");
+        warningAlert = new Alert(Alert.AlertType.WARNING);
+        warningAlert.setTitle("Error");
     }
 
     public void enterButtonPressed(ActionEvent event) throws IOException {
         if (usernameField.getText().isEmpty()) {
-            wrongCredentialsAlert.setHeaderText("Empty Username");
-            wrongCredentialsAlert.setContentText("Please enter a username");
-            wrongCredentialsAlert.showAndWait();
+            warningAlert.setHeaderText("Empty Username");
+            warningAlert.setContentText("Please enter a username");
+            warningAlert.showAndWait();
         } else if (passwordField.getText().isEmpty()) {
-            wrongCredentialsAlert.setHeaderText("Empty Password");
-            wrongCredentialsAlert.setContentText("Please enter a password");
-            wrongCredentialsAlert.showAndWait();
+            warningAlert.setHeaderText("Empty Password");
+            warningAlert.setContentText("Please enter a password");
+            warningAlert.showAndWait();
         } else {
             String username = usernameField.getText();
             String password = passwordField.getText();
@@ -47,18 +43,27 @@ public class LogInController extends Controller implements Initializable {
             UserAccount user = new UserAccount();
             user = user.findByUsername(username);
             if(user != null){
-                if (UserAccount.checkPassword(password, user.getPassword())) {
-                    SESSION_USER = user;
-                    loadScene(event, "/views/MainMenu.fxml", ControllerType.MAIN_MENU);
+                if(user.getEmployee().getActive()){
+                    if (UserAccount.checkPassword(password, user.getPassword())) {
+                        SESSION_USER = user;
+                        loadScene(event, "/views/MainMenu.fxml", ControllerType.MAIN_MENU);
+                    } else {
+                        passwordField.setText("");
+                        warningAlert.setHeaderText("Invalid Password ");
+                        warningAlert.setContentText("Please enter a valid Password");
+                        warningAlert.showAndWait();
+                    }
                 } else {
-                    wrongCredentialsAlert.setHeaderText("Invalid Password ");
-                    wrongCredentialsAlert.setContentText("Please enter a valid Password");
-                    wrongCredentialsAlert.showAndWait();
+                    passwordField.setText("");
+                    warningAlert.setHeaderText("Inactive User ");
+                    warningAlert.setContentText("This employee has been deactivated.");
+                    warningAlert.showAndWait();
                 }
             } else {
-                wrongCredentialsAlert.setHeaderText("Invalid username ");
-                wrongCredentialsAlert.setContentText("Please enter a valid username");
-                wrongCredentialsAlert.showAndWait();
+                passwordField.setText("");
+                warningAlert.setHeaderText("Invalid username ");
+                warningAlert.setContentText("Please enter a valid username");
+                warningAlert.showAndWait();
             }
         }
     }

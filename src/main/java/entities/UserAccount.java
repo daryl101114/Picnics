@@ -76,7 +76,7 @@ public class UserAccount extends QueryObject {
     public UserAccount findByUsername(String username){
         UserAccount userAccount = new UserAccount();
         try {
-            statement = "SELECT * FROM user_account WHERE username = '" + username + "'";
+            statement = "SELECT username, password, employee_id, active FROM user_account JOIN employee ON user_account.employee_id = employee.id WHERE username = '" + username + "'";
             executeQuery(statement);
             if (resultSet.next()) {
                 setUserFromQuery(userAccount);

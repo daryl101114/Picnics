@@ -24,4 +24,9 @@ public class MainMenuController extends Controller implements Initializable {
         SESSION_USER = null;
         loadScene(event, "/views/LogIn.fxml", ControllerType.LOGIN);
     }
+
+    public void employeesPushed(ActionEvent event) throws IOException {
+        SESSION_USER = null;
+        loadScene(event, "/views/Employee.fxml", ControllerType.EMPLOYEE);
+    }
 }

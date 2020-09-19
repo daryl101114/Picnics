@@ -22,6 +22,14 @@
          <Insets right="10.0" top="10.0" />
       </GridPane.margin>
     </JFXButton>
+   <JFXButton buttonType="RAISED" onAction="#employeesPushed" style="-fx-background-color: rgba(167,167,167,0.51);" text="Employees" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
+      <font>
+         <Font size="14.0" />
+      </font>
+      <GridPane.margin>
+         <Insets right="125.0" top="10.0" />
+      </GridPane.margin>
+   </JFXButton>
     <JFXButton buttonType="RAISED" onAction="#logOutPushed" style="-fx-background-color: rgba(167,167,167,0.51);" text="Log Out" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">
         <font>
             <Font size="14.0" />

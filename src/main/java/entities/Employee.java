@@ -15,6 +15,7 @@ public class Employee extends QueryObject {
     private String email;
     private String address;
     private String phoneNumber;
+    private boolean active;
 
     public Employee(int id, String firstName, String lastName, String email, String address, String phoneNumber) {
         setID(id);
@@ -23,17 +24,13 @@ public class Employee extends QueryObject {
         setEmail(email);
         setAddress(address);
         setPhoneNumber(phoneNumber);
+        setActive(true);
     }
 
     public Employee(){
     }
 
-    public boolean edit(String firstName, String lastName, String email, String address, String phoneNumber){
-        setFirstName(firstName);
-        setLastName(lastName);
-        setEmail(email);
-        setAddress(address);
-        setPhoneNumber(phoneNumber);
+    public boolean edit(){
 
         statement = "UPDATE employee " +
                 "SET " +
@@ -42,6 +39,7 @@ public class Employee extends QueryObject {
                 "email = '" + this.getEmail() +  "', " +
                 "address = '" + this.getAddress() +  "', " +
                 "phone_number = '" + this.getPhoneNumber() +  "', " +
+                "active = " + this.getActiveBit() + " " +
                 "WHERE id = " + this.getID();
 
         return executeUpdate(statement);
@@ -55,12 +53,14 @@ public class Employee extends QueryObject {
         return executeUpdate(statement);
     }
 
-    public boolean delete(){
+    /* Disabled because we don't want to delete employees given that they might be referenced in other tables.
+     private boolean delete(){
         statement =
                 "DELETE FROM employee WHERE id = " +
                         this.getID();
         return executeUpdate(statement);
     }
+    */
 
     public static ObservableList<Employee> findAll(){
         List<Employee> employees = new ArrayList<>();
@@ -146,9 +146,13 @@ public class Employee extends QueryObject {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getPhoneNumberWithFormat(){
-        return this.phoneNumber.replaceFirst("(\\d{3})(\\d{3})(\\d+)", "($1) $2-$3");
+    public boolean getActive(){ return active; }
+
+    public int getActiveBit(){
+        return active ? 1 : 0;
     }
+
+    public void setActive(boolean active){ this.active = active; }
 
     public String toString(){
         return this.getFirstName() + " " + this.getLastName();
@@ -161,5 +165,6 @@ public class Employee extends QueryObject {
         employee.setEmail(resultSet.getString("email"));
         employee.setAddress(resultSet.getString("address"));
         employee.setPhoneNumber(resultSet.getString("phone_number"));
+        employee.setActive(resultSet.getBoolean("active"));
     }
 }
