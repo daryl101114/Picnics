@@ -5,62 +5,28 @@ import entities.ControllerType;
 import entities.Employee;
 import entities.UserAccount;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class UserAccountController extends Controller implements Initializable {
-    @FXML
-    private Pane newUser;
-
     @FXML private TableColumn<UserAccount, String> column1;
     @FXML private TableColumn<UserAccount, Employee> column2;
     @FXML private TableColumn<UserAccount, String> column3;
 
     @FXML private TableView<UserAccount> tableView;
 
-    private ObservableList<UserAccount> userAccountObservableList;
-    private ObservableList<Employee> employeeObservableList;
-
     private UserAccount selectedObject;
-
-    private Alert successAlert;
-    private Alert failureAlert;
-    private Alert confirmationAlert;
-    Optional<ButtonType> result;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        successAlert = new Alert(Alert.AlertType.INFORMATION);
-        successAlert.setTitle("Success");
-        successAlert.setHeaderText(null);
-        failureAlert = new Alert(Alert.AlertType.ERROR);
-        failureAlert.setTitle("Failure");
-        failureAlert.setHeaderText(null);
-        confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmationAlert.setTitle("");
-        confirmationAlert.setHeaderText(null);
-        confirmationAlert.setContentText("Are you sure you want to perform this operation?");
-
-        // Loads the data into the TableView and ComboBox
         loadData();
 
         // When a row is selected, populates the text fields with the information from the row.
@@ -88,13 +54,11 @@ public class UserAccountController extends Controller implements Initializable {
         column3.setCellValueFactory(new PropertyValueFactory<>("employeeEmail"));
 
         column2.setCellFactory(ComboBoxTableCell.forTableColumn(employeeObservableList));
-        column2.setOnEditCommit(event -> editRecord(event) );
+        column2.setOnEditCommit(this::editRecord);
     }
     @FXML
     public void addButtonPushed(ActionEvent event) throws IOException {
-        loadScene(event, "/views/AddUser.fxml", ControllerType.ADDUSER);
-
-
+        loadChildScene(event, "/views/AddUser.fxml", ControllerType.ADD_USER);
     }
 
     public void editRecord(TableColumn.CellEditEvent<UserAccount, Employee> event){
@@ -120,8 +84,7 @@ public class UserAccountController extends Controller implements Initializable {
     public void deleteRecord() {
         selectedObject = tableView.getSelectionModel().getSelectedItem();
         if (selectedObject != null) {
-            result = confirmationAlert.showAndWait();
-            if (result.get() == ButtonType.OK) {
+            confirmationAlert.showAndWait().filter(response -> response == ButtonType.OK).ifPresent(response -> {
                 if (selectedObject.delete()) {
                     tableView.getItems().remove(selectedObject);
                     successAlert.setContentText("Record successfully deleted");
@@ -130,7 +93,7 @@ public class UserAccountController extends Controller implements Initializable {
                     failureAlert.setContentText("There was an error deleting the record from the database.");
                     failureAlert.showAndWait();
                 }
-            }
+            });
         } else {
             failureAlert.setContentText("Please select a valid record.");
             failureAlert.showAndWait();
@@ -138,8 +101,11 @@ public class UserAccountController extends Controller implements Initializable {
     }
 
     public void loadData() {
-        userAccountObservableList = UserAccount.findAll();
-        employeeObservableList = Employee.findAll(true);
+        if(userAccountObservableList == null)
+            userAccountObservableList = UserAccount.findAll();
+        if(employeeObservableList == null)
+            employeeObservableList = Employee.findAll(true);
+
         if (!userAccountObservableList.isEmpty())
             tableView.setItems(userAccountObservableList);
         else

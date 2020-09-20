@@ -4,6 +4,7 @@ import entities.Controller;
 import entities.ControllerType;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 
 import java.io.IOException;
 import java.net.URL;
@@ -13,7 +14,16 @@ public class MainMenuController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        successAlert = new Alert(Alert.AlertType.INFORMATION);
+        successAlert.setTitle("Success");
+        successAlert.setHeaderText(null);
+        failureAlert = new Alert(Alert.AlertType.ERROR);
+        failureAlert.setTitle("Failure");
+        failureAlert.setHeaderText(null);
+        confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to perform this operation?");
     }
 
     public void userPushed(ActionEvent event) throws IOException {

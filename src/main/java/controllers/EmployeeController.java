@@ -4,7 +4,6 @@ import entities.Controller;
 import entities.ControllerType;
 import entities.Employee;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -31,17 +30,6 @@ public class EmployeeController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        successAlert = new Alert(Alert.AlertType.INFORMATION);
-        successAlert.setTitle("Success");
-        successAlert.setHeaderText(null);
-        failureAlert = new Alert(Alert.AlertType.ERROR);
-        failureAlert.setTitle("Failure");
-        failureAlert.setHeaderText(null);
-        confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmationAlert.setTitle("Confirm");
-        confirmationAlert.setHeaderText(null);
-        confirmationAlert.setContentText("Are you sure you want to perform this operation?");
-
         // Loads the data into the TableView and ComboBox
         loadData();
 
@@ -57,8 +45,10 @@ public class EmployeeController extends Controller implements Initializable {
         menuItem1.setOnAction(event -> deleteRecord() );
         MenuItem menuItem2 = new MenuItem("Toggle Active");
         menuItem2.setOnAction(event -> toggleActiveRecord() );
+
         // We don't want to delete Employees
         // contextMenu.getItems().add(menuItem1);
+
         contextMenu.getItems().add(menuItem2);
         tableView.setContextMenu(contextMenu);
 
@@ -90,7 +80,7 @@ public class EmployeeController extends Controller implements Initializable {
     }
 
     public void addButtonPushed(ActionEvent event) throws IOException {
-       // loadScene(event, "/views/AddEmployee.fxml", ControllerType.ADDUSER);
+        // loadScene(event, "/views/AddEmployee.fxml", ControllerType.ADD_EMPLOYEE);
     }
 
     public void editRecord(TableColumn.CellEditEvent<Employee, String> event, int column){
@@ -186,7 +176,9 @@ public class EmployeeController extends Controller implements Initializable {
 
 
     public void loadData() {
-        ObservableList<Employee> employeeObservableList = Employee.findAll();
+        if(employeeObservableList == null)
+            employeeObservableList = Employee.findAll();
+
         if (!employeeObservableList.isEmpty())
             tableView.setItems(employeeObservableList);
         else

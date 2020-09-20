@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
@@ -11,112 +11,111 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<GridPane prefHeight="600.0" prefWidth="600" style="-fx-background-color: azure" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AddUserController">
-  <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints percentHeight="20.0" vgrow="SOMETIMES" />
-    <RowConstraints percentHeight="80.0" vgrow="SOMETIMES" />
-  </rowConstraints>
-   <children>
-      <Label text="Add User" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-         <font>
-            <Font size="36.0" />
-         </font>
-      </Label>
-      <GridPane GridPane.rowIndex="1">
+<GridPane prefHeight="400.0" prefWidth="400" style="-fx-background-color: azure"
+          xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="controllers.AddUserController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="20.0" vgrow="SOMETIMES"/>
+        <RowConstraints percentHeight="80.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <Label text="Add User" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+        <font>
+          <Font size="36.0"/>
+        </font>
+    </Label>
+    <GridPane GridPane.rowIndex="1">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0"/>
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints percentHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints percentHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints percentHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints percentHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints percentHeight="20.0" vgrow="SOMETIMES"/>
+            <RowConstraints percentHeight="20.0" vgrow="SOMETIMES"/>
+            <RowConstraints percentHeight="20.0" vgrow="SOMETIMES"/>
+            <RowConstraints percentHeight="20.0" vgrow="SOMETIMES"/>
+            <RowConstraints percentHeight="20.0" vgrow="SOMETIMES"/>
         </rowConstraints>
-         <children>
-            <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Username:" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="16.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets right="125.0" />
-               </GridPane.margin>
-            </Label>
-            <TextField fx:id="textfield1" maxWidth="125.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-               <GridPane.margin>
-                  <Insets left="125.0" />
-               </GridPane.margin>
-            </TextField>
-            <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Employee:" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="16.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets right="125.0" />
-               </GridPane.margin>
-            </Label>
-            <JFXComboBox fx:id="comboBox1" maxWidth="125.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-               <GridPane.margin>
-                  <Insets left="125.0" />
-               </GridPane.margin>
-            </JFXComboBox>
-            <Label alignment="CENTER_RIGHT" text="Password:" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="16.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets right="125.0" />
-               </GridPane.margin>
-            </Label>
-            <PasswordField fx:id="passwordField1" maxWidth="125.0" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-               <GridPane.margin>
-                  <Insets left="125.0" />
-               </GridPane.margin>
-            </PasswordField>
-            <Label alignment="CENTER_RIGHT" text="Verify:" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-               <GridPane.margin>
-                  <Insets right="125.0" />
-               </GridPane.margin>
-               <font>
-                  <Font size="16.0" />
-               </font></Label>
-            <PasswordField fx:id="passwordField2" maxWidth="125.0" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-               <GridPane.margin>
-                  <Insets left="125.0" />
-               </GridPane.margin></PasswordField>
-            <GridPane GridPane.rowIndex="4">
-              <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="516.0" minWidth="10.0" prefWidth="516.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="84.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                <JFXButton buttonType="RAISED" style="-fx-background-color: rgba(167,167,167,0.51);" mnemonicParsing="false" onAction="#addButtonPushed" text="Confirm" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets left="145.0" />
-                     </GridPane.margin>
-                  </JFXButton>
-                  <JFXButton layoutX="306.0" layoutY="43.0" buttonType="RAISED" style="-fx-background-color: rgba(167,167,167,0.51);" mnemonicParsing="false" onAction="#cancelButtonPushed" text="Cancel" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets right="5.0" />
-                     </GridPane.margin>
-                  </JFXButton>
-               </children>
-            </GridPane>
-         </children>
-      </GridPane>
+        <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Username:" GridPane.halignment="CENTER"
+               GridPane.valignment="CENTER">
+            <font>
+                <Font size="16.0"/>
+            </font>
+            <GridPane.margin>
+                <Insets right="125.0"/>
+            </GridPane.margin>
+        </Label>
+        <TextField fx:id="textField1" maxWidth="125.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+            <GridPane.margin>
+                <Insets left="125.0"/>
+            </GridPane.margin>
+        </TextField>
+        <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Employee:" GridPane.halignment="CENTER"
+               GridPane.rowIndex="1" GridPane.valignment="CENTER">
+            <font>
+                <Font size="16.0"/>
+            </font>
+            <GridPane.margin>
+                <Insets right="125.0"/>
+            </GridPane.margin>
+        </Label>
+        <JFXComboBox fx:id="comboBox1" maxWidth="125.0" GridPane.halignment="CENTER" GridPane.rowIndex="1"
+                     GridPane.valignment="CENTER">
+            <GridPane.margin>
+                <Insets left="125.0"/>
+            </GridPane.margin>
+        </JFXComboBox>
+        <Label alignment="CENTER_RIGHT" text="Password:" GridPane.halignment="CENTER" GridPane.rowIndex="2"
+               GridPane.valignment="CENTER">
+            <font>
+                <Font size="16.0"/>
+            </font>
+            <GridPane.margin>
+                <Insets right="125.0"/>
+            </GridPane.margin>
+        </Label>
+        <PasswordField fx:id="passwordField1" maxWidth="125.0" GridPane.halignment="CENTER" GridPane.rowIndex="2"
+                       GridPane.valignment="CENTER">
+            <GridPane.margin>
+                <Insets left="125.0"/>
+            </GridPane.margin>
+        </PasswordField>
+        <Label alignment="CENTER_RIGHT" text="Verify:" GridPane.halignment="CENTER" GridPane.rowIndex="3"
+               GridPane.valignment="CENTER">
+            <GridPane.margin>
+                <Insets right="125.0"/>
+            </GridPane.margin>
+            <font>
+                <Font size="16.0"/>
+            </font>
+        </Label>
+        <PasswordField fx:id="passwordField2" maxWidth="125.0" GridPane.halignment="CENTER" GridPane.rowIndex="3"
+                       GridPane.valignment="CENTER">
+            <GridPane.margin>
+                <Insets left="125.0"/>
+            </GridPane.margin>
+        </PasswordField>
+        <JFXButton buttonType="RAISED" mnemonicParsing="false" onAction="#addButtonPushed"
+                   style="-fx-background-color: rgba(167,167,167,0.51);" text="Confirm" GridPane.halignment="CENTER"
+                   GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+            <font>
+                <Font size="14.0"/>
+            </font>
+            <GridPane.margin>
+                <Insets bottom="10.0"/>
+            </GridPane.margin>
+        </JFXButton>
+        <JFXButton buttonType="RAISED" mnemonicParsing="false" onAction="#cancelButtonPushed"
+                   style="-fx-background-color: rgba(167,167,167,0.51);" text="Cancel" GridPane.halignment="RIGHT"
+                   GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+            <font>
+                <Font size="14.0"/>
+            </font>
+            <GridPane.margin>
+                <Insets bottom="10.0" right="10.0"/>
+            </GridPane.margin>
+        </JFXButton>
+    </GridPane>
 
-   </children>
 </GridPane>
