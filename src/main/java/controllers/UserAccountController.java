@@ -8,9 +8,17 @@ import entities.UserAccount;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 
 import java.io.IOException;
@@ -19,6 +27,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class UserAccountController extends Controller implements Initializable {
+    @FXML
+    private Pane newUser;
 
     @FXML private TableColumn<UserAccount, String> column1;
     @FXML private TableColumn<UserAccount, Employee> column2;
@@ -80,9 +90,11 @@ public class UserAccountController extends Controller implements Initializable {
         column2.setCellFactory(ComboBoxTableCell.forTableColumn(employeeObservableList));
         column2.setOnEditCommit(event -> editRecord(event) );
     }
-
+    @FXML
     public void addButtonPushed(ActionEvent event) throws IOException {
         loadScene(event, "/views/AddUser.fxml", ControllerType.ADDUSER);
+
+
     }
 
     public void editRecord(TableColumn.CellEditEvent<UserAccount, Employee> event){

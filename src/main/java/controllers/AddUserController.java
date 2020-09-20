@@ -103,6 +103,10 @@ public class AddUserController extends Controller implements Initializable {
         }
 
     }
+
+    public void cancelButtonPushed(ActionEvent event) throws IOException{
+        loadScene(event, "/views/UserAccount.fxml", ControllerType.USER);
+    }
     public void clearTextBox(){
         textfield1.clear();
         comboBox1.getSelectionModel().clearSelection();
