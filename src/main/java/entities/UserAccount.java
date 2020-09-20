@@ -14,8 +14,6 @@ public class UserAccount extends QueryObject {
     private int employeeID;
 
     private Employee employee;
-    private String employeeName;
-    private String employeeEmail;
 
     public UserAccount(String username, String password, int employeeID) {
         setUsername(username);
@@ -56,13 +54,11 @@ public class UserAccount extends QueryObject {
     public static ObservableList<UserAccount> findAll(){
         List<UserAccount> userAccounts = new ArrayList<>();
         try {
-            statement = "SELECT username, password, employee_id, first_name, last_name, email FROM user_account JOIN employee ON user_account.employee_id = employee.id";
+            statement = "SELECT username, password, employee_id FROM user_account";
             executeQuery(statement);
             while(resultSet.next()) {
                 UserAccount userAccount = new UserAccount();
                 setUserFromQuery(userAccount);
-                userAccount.setEmployeeName(resultSet.getString("first_name") + " " + resultSet.getString("last_name"));
-                userAccount.setEmployeeEmail(resultSet.getString("email"));
                 userAccounts.add(userAccount);
             }
         } catch (SQLException e) {
@@ -134,31 +130,15 @@ public class UserAccount extends QueryObject {
 
     public void clearEmployee() {
         this.employee = null;
-        this.employeeEmail = null;
-        this.employeeName = null;
     }
 
     public String getEmployeeName(){
-        if(employeeName != null) {
-            return this.employeeName;
-        }
-        else {
-            return this.getEmployee().getFirstName() + " " + this.getEmployee().getLastName();
-        }
+        return this.getEmployee().getFirstName() + " " + this.getEmployee().getLastName();
     }
 
-    public void setEmployeeName(String employeeName){this.employeeName = employeeName;}
-
-    public String getEmployeeEmail()
-    {
-        if(employeeEmail != null) {
-            return this.employeeEmail;
-    }
-    else {
+    public String getEmployeeEmail(){
         return this.getEmployee().getEmail();
-    } }
-
-    public void setEmployeeEmail(String employeeEmail){ this.employeeEmail = employeeEmail;}
+     }
 
     public boolean exists() {
         return (findByUsername(username) != null);

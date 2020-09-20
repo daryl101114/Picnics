@@ -95,6 +95,14 @@ public abstract class Controller{
                 break;
             }
 
+            case ADD_EMPLOYEE: {
+                MIN_HEIGHT = 464;
+                MIN_WIDTH = 464;
+                PREF_HEIGHT = 464;
+                PREF_WIDTH = 464;
+                break;
+            }
+
             default:
                 break;
         }

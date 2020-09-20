@@ -80,7 +80,7 @@ public class EmployeeController extends Controller implements Initializable {
     }
 
     public void addButtonPushed(ActionEvent event) throws IOException {
-        // loadScene(event, "/views/AddEmployee.fxml", ControllerType.ADD_EMPLOYEE);
+         loadChildScene(event, "/views/AddEmployee.fxml", ControllerType.ADD_EMPLOYEE);
     }
 
     public void editRecord(TableColumn.CellEditEvent<Employee, String> event, int column){

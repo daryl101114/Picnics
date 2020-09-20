@@ -5,24 +5,27 @@ import entities.ControllerType;
 import entities.Employee;
 import entities.UserAccount;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.*;
 
-
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class UserAccountController extends Controller implements Initializable {
     @FXML private TableColumn<UserAccount, String> column1;
     @FXML private TableColumn<UserAccount, Employee> column2;
     @FXML private TableColumn<UserAccount, String> column3;
-
     @FXML private TableView<UserAccount> tableView;
 
+    private ObservableList<Employee> activeEmployeeObservableList;
     private UserAccount selectedObject;
 
     @Override
@@ -53,7 +56,7 @@ public class UserAccountController extends Controller implements Initializable {
         column2.setCellValueFactory(new PropertyValueFactory<>("employee"));
         column3.setCellValueFactory(new PropertyValueFactory<>("employeeEmail"));
 
-        column2.setCellFactory(ComboBoxTableCell.forTableColumn(employeeObservableList));
+        column2.setCellFactory(ComboBoxTableCell.forTableColumn(activeEmployeeObservableList));
         column2.setOnEditCommit(this::editRecord);
     }
     @FXML
@@ -101,10 +104,26 @@ public class UserAccountController extends Controller implements Initializable {
     }
 
     public void loadData() {
-        if(userAccountObservableList == null)
+        if(employeeObservableList == null) {
+            employeeObservableList = Employee.findAll();
+        }
+
+        if(userAccountObservableList == null) {
             userAccountObservableList = UserAccount.findAll();
-        if(employeeObservableList == null)
-            employeeObservableList = Employee.findAll(true);
+            for(UserAccount userAccount : userAccountObservableList){
+                int employeeID = userAccount.getEmployeeID();
+                Employee tempEmployee = employeeObservableList.stream().filter(employee -> employeeID == employee.getID()).findFirst().orElse(null);
+                userAccount.setEmployee(tempEmployee);
+            }
+        }
+
+        List<Employee> activeEmployeeList = new ArrayList<>();
+        for (Employee employee: employeeObservableList) {
+            if(employee.getActive()){
+                activeEmployeeList.add(employee);
+            }
+        }
+        activeEmployeeObservableList = FXCollections.observableList(activeEmployeeList);
 
         if (!userAccountObservableList.isEmpty())
             tableView.setItems(userAccountObservableList);

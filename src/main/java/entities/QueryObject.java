@@ -49,4 +49,20 @@ public abstract class QueryObject {
             } catch (SQLException e) { /* ignored */}
         }
     }
+
+    protected static int getLastID(String tableName){
+        int id = -1;
+        try {
+            statement = "SELECT ident_current('" + tableName + "') as id";
+            executeQuery(statement);
+            if (resultSet.next()) {
+                id = resultSet.getInt("id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            terminateQuery();
+        }
+        return id;
+    }
 }
