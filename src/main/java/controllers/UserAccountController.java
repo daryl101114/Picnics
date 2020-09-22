@@ -2,8 +2,8 @@ package controllers;
 
 import entities.Controller;
 import entities.ControllerType;
-import entities.Employee;
-import entities.UserAccount;
+import models.Employee;
+import models.UserAccount;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

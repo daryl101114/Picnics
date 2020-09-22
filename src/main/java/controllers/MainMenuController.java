@@ -2,12 +2,18 @@ package controllers;
 
 import entities.Controller;
 import entities.ControllerType;
+import entities.GmailService;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class MainMenuController extends Controller implements Initializable {
@@ -24,6 +30,18 @@ public class MainMenuController extends Controller implements Initializable {
         confirmationAlert.setTitle("Confirmation");
         confirmationAlert.setHeaderText(null);
         confirmationAlert.setContentText("Are you sure you want to perform this operation?");
+
+        /////////////////////////////////////////////
+        GmailService gmail = new GmailService();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date begDate = dateFormat.parse("2020-09-01");
+            Date endDate = Calendar.getInstance().getTime();
+            squareEmailObservableList = FXCollections.observableList(gmail.getEmails(begDate, endDate, 100));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        /////////////////////////////////////////////
     }
 
     public void userPushed(ActionEvent event) throws IOException {

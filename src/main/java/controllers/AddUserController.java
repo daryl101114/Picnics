@@ -2,8 +2,8 @@ package controllers;
 
 import com.jfoenix.controls.JFXComboBox;
 import entities.Controller;
-import entities.Employee;
-import entities.UserAccount;
+import models.Employee;
+import models.UserAccount;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

@@ -3,7 +3,7 @@ package controllers;
 import entities.Controller;
 import entities.ControllerType;
 
-import entities.UserAccount;
+import models.UserAccount;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

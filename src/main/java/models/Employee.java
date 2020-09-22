@@ -1,5 +1,6 @@
-package entities;
+package models;
 
+import entities.QueryObject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

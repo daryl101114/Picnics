@@ -10,6 +10,9 @@ import javafx.scene.control.Alert;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import models.Employee;
+import models.SquareEmail;
+import models.UserAccount;
 
 import java.io.IOException;
 
@@ -28,6 +31,7 @@ public abstract class Controller{
 
     protected static ObservableList<UserAccount> userAccountObservableList;
     protected static ObservableList<Employee> employeeObservableList;
+    protected static ObservableList<SquareEmail> squareEmailObservableList;
 
     public void mainMenuPushed(ActionEvent event) throws IOException {
         loadScene(event, "/views/MainMenu.fxml", ControllerType.MAIN_MENU);

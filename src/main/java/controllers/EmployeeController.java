@@ -2,7 +2,7 @@ package controllers;
 
 import entities.Controller;
 import entities.ControllerType;
-import entities.Employee;
+import models.Employee;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
