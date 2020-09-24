@@ -149,6 +149,10 @@ public class Employee extends QueryObject {
 
     public boolean getActive(){ return active; }
 
+    public boolean exists() {
+        return (findByID(this.id) != null);
+    }
+
     public int getActiveBit(){
         return active ? 1 : 0;
     }
@@ -171,5 +175,9 @@ public class Employee extends QueryObject {
         employee.setAddress(resultSet.getString("address"));
         employee.setPhoneNumber(resultSet.getString("phone_number"));
         employee.setActive(resultSet.getBoolean("active"));
+    }
+
+    public static int getChecksum(){
+        return getChecksum("employee");
     }
 }

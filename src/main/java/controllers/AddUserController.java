@@ -22,6 +22,7 @@ public class AddUserController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        clearSelectedObjects();
         loadData();
     }
 
@@ -37,6 +38,7 @@ public class AddUserController extends Controller implements Initializable {
                         if (!temp.exists()) {
                             if (temp.add()) {
                                 userAccountObservableList.add(temp);
+                                userAccountChecksum = UserAccount.getChecksum();
                                 clearTextBox();
                                 clearPasswordTextBox();
                                 closeChildWindow(event);
@@ -83,8 +85,11 @@ public class AddUserController extends Controller implements Initializable {
     }
 
     public void loadData(){
-        if(employeeObservableList == null)
+        int tmpEmployeeChecksum = Employee.getChecksum();
+        if(employeeObservableList == null || employeeChecksum != tmpEmployeeChecksum) {
             employeeObservableList = Employee.findAll();
+            employeeChecksum = tmpEmployeeChecksum;
+        }
         comboBox1.setItems(employeeObservableList);
     }
 }

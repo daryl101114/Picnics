@@ -30,6 +30,7 @@ public class EmployeeController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        clearSelectedObjects();
         // Loads the data into the TableView and ComboBox
         loadData();
 
@@ -105,6 +106,7 @@ public class EmployeeController extends Controller implements Initializable {
                 break;
         }
         if (selectedObject.edit()) {
+            employeeChecksum = Employee.getChecksum();
             tableView.refresh();
         } else {
             switch (column){
@@ -158,6 +160,7 @@ public class EmployeeController extends Controller implements Initializable {
             confirmationAlert.showAndWait().filter(response -> response == ButtonType.OK).ifPresent(response -> {
                 selectedObject.setActive(!selectedObject.getActive());
                 if (selectedObject.edit()) {
+                    employeeChecksum = Employee.getChecksum();
                     tableView.refresh();
                     successAlert.setContentText("Employee successfully activated/deactivated");
                     successAlert.showAndWait();
@@ -176,8 +179,11 @@ public class EmployeeController extends Controller implements Initializable {
 
 
     public void loadData() {
-        if(employeeObservableList == null)
+        int tmpEmployeeChecksum = Employee.getChecksum();
+        if(employeeObservableList == null || employeeChecksum != tmpEmployeeChecksum) {
             employeeObservableList = Employee.findAll();
+            employeeChecksum = tmpEmployeeChecksum;
+        }
 
         if (!employeeObservableList.isEmpty())
             tableView.setItems(employeeObservableList);

@@ -21,6 +21,7 @@ public class AddEmployeeController extends Controller implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        clearSelectedObjects();
         clearTextBox();
     }
 
@@ -36,6 +37,7 @@ public class AddEmployeeController extends Controller implements Initializable{
                 if (temp.add()) {
                     temp.getIDFromDB();
                     employeeObservableList.add(temp);
+                    employeeChecksum = Employee.getChecksum();
                     clearTextBox();
                     closeChildWindow(event);
                 } else {

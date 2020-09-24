@@ -23,8 +23,9 @@ public class LogInController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        clearSelectedObjects();
         warningAlert = new Alert(Alert.AlertType.WARNING);
-        warningAlert.setTitle("Error");
+        warningAlert.setTitle("Warning");
     }
 
     public void enterButtonPressed(ActionEvent event) throws IOException {

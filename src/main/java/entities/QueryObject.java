@@ -65,4 +65,20 @@ public abstract class QueryObject {
         }
         return id;
     }
+
+    protected static int getChecksum(String tableName){
+        statement = "SELECT CHECKSUM_AGG(BINARY_CHECKSUM(*)) AS checksum FROM " + tableName + " WITH (NOLOCK)";
+        int checksum = 0;
+        try {
+            executeQuery(statement);
+            if (resultSet.next()) {
+                checksum = resultSet.getInt("checksum");
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        } finally {
+            terminateQuery();
+        }
+        return checksum;
+    }
 }

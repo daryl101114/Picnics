@@ -30,6 +30,7 @@ public class UserAccountController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        clearSelectedObjects();
         loadData();
 
         // When a row is selected, populates the text fields with the information from the row.
@@ -59,7 +60,7 @@ public class UserAccountController extends Controller implements Initializable {
         column2.setCellFactory(ComboBoxTableCell.forTableColumn(activeEmployeeObservableList));
         column2.setOnEditCommit(this::editRecord);
     }
-    @FXML
+
     public void addButtonPushed(ActionEvent event) throws IOException {
         loadChildScene(event, "/views/AddUser.fxml", ControllerType.ADD_USER);
     }
@@ -70,6 +71,7 @@ public class UserAccountController extends Controller implements Initializable {
         if (selectedObject.edit()) {
             selectedObject.clearEmployee();
             selectedObject.setEmployee(event.getNewValue());
+            userAccountChecksum = UserAccount.getChecksum();
             tableView.refresh();
             if(SESSION_USER != null){
                 if(SESSION_USER.getUsername().equals(selectedObject.getUsername())) {
@@ -89,6 +91,7 @@ public class UserAccountController extends Controller implements Initializable {
         if (selectedObject != null) {
             confirmationAlert.showAndWait().filter(response -> response == ButtonType.OK).ifPresent(response -> {
                 if (selectedObject.delete()) {
+                    userAccountChecksum = UserAccount.getChecksum();
                     tableView.getItems().remove(selectedObject);
                     successAlert.setContentText("Record successfully deleted");
                     successAlert.showAndWait();
@@ -104,12 +107,16 @@ public class UserAccountController extends Controller implements Initializable {
     }
 
     public void loadData() {
-        if(employeeObservableList == null) {
+        int tmpEmployeeChecksum = Employee.getChecksum();
+        if(employeeObservableList == null || employeeChecksum != tmpEmployeeChecksum) {
             employeeObservableList = Employee.findAll();
+            employeeChecksum = tmpEmployeeChecksum;
         }
 
-        if(userAccountObservableList == null) {
+        int tmpUserAccountChecksum = UserAccount.getChecksum();
+        if(userAccountObservableList == null || userAccountChecksum != tmpUserAccountChecksum) {
             userAccountObservableList = UserAccount.findAll();
+            userAccountChecksum = tmpUserAccountChecksum;
             for(UserAccount userAccount : userAccountObservableList){
                 int employeeID = userAccount.getEmployeeID();
                 Employee tempEmployee = employeeObservableList.stream().filter(employee -> employeeID == employee.getID()).findFirst().orElse(null);

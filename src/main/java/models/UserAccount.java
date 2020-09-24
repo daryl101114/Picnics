@@ -154,4 +154,8 @@ public class UserAccount extends QueryObject {
         userAccount.setPassword(resultSet.getString("password"), false);
         userAccount.setEmployeeID(resultSet.getInt("employee_id"));
     }
+
+    public static int getChecksum(){
+        return getChecksum("user_account");
+    }
 }

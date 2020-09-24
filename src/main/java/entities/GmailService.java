@@ -14,12 +14,14 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.model.*;
-import javafx.collections.ObservableList;
 import models.SquareEmail;
 
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class GmailService {
@@ -45,35 +47,46 @@ public class GmailService {
         }
     }
 
-    public List<SquareEmail> getEmails(Date startDate, Date endDate, long max_results){
+    public List<SquareEmail> getEmails(LocalDate startDate, LocalDate endDate, long max_results){
         Gmail.Users.Messages.List request;
         List<Message> messageList = new LinkedList<>();
+        String epochStartDateInSeconds = Long.toString(java.sql.Date.valueOf(startDate).getTime() / 1000);
+        String epochEndDateInSeconds = Long.toString(java.sql.Date.valueOf(endDate).getTime() / 1000);
         try {
             do {
                 request = service.users().messages().list(USER)
-                        .setQ("from:squarespace subject:Form before:" + endDate + " after:" + startDate)
+                        .setQ("from:squarespace subject:Form after:" + epochStartDateInSeconds + " before:" + epochEndDateInSeconds)
                         .setMaxResults(max_results);
 
                 ListMessagesResponse response = request.execute();
-                messageList.addAll(response.getMessages());
+                try {
+                    messageList.addAll(response.getMessages());
+                } catch (NullPointerException e){
+                    return new ArrayList<>();
+                }
                 request.setPageToken(response.getNextPageToken());
             } while (request.getPageToken() != null && request.getPageToken().length() > 0 && max_results > 500);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        String startDateString = startDate.format(formatter);
+        String endDateString = endDate.format(formatter);
+
+        List<String> squareEmailIdList = SquareEmail.getAllIdWithinDate(startDateString, endDateString);
         List<SquareEmail> squareEmailList = new LinkedList<>();
         for(Message message : messageList){
-            SquareEmail tempSquareEmail = new SquareEmail();
-            tempSquareEmail.setId(message.getId());
-            tempSquareEmail.setEmailDate(new Date(message.getInternalDate()));
-            if(!tempSquareEmail.exists())
-                squareEmailList.add(tempSquareEmail);
+            if(!squareEmailIdList.contains(message.getId())) {
+                SquareEmail tempSquareEmail = new SquareEmail();
+                tempSquareEmail.setId(message.getId());
+                    squareEmailList.add(tempSquareEmail);
+            }
         }
-        return squareEmailList;
+        return getFullMessages(squareEmailList);
     }
 
-    public void getFullMessages(ObservableList<SquareEmail> squareEmails){
+    public List<SquareEmail> getFullMessages(List<SquareEmail> squareEmails){
         try {
             for (SquareEmail squareEmail : squareEmails) {
                 if (squareEmail != null) {
@@ -91,38 +104,46 @@ public class GmailService {
                             trimmedList.add(item.trim());
                     }
 
-                    String name = trimmedList.get(0);
-                    String email = trimmedList.get(1);
-                    String phoneNumber = trimmedList.get(2);
-                    String source = trimmedList.get(3);
-                    String date = trimmedList.get(4);
-                    String time = trimmedList.get(5);
-                    String guestCount = trimmedList.get(6);
-                    String[] locationArray = (trimmedList.get(7)).split(",");
-                    String address = trimmedList.get(8);
-                    String[] eventArray = (trimmedList.get(9)).split(",");
-                    String[] styleArray = (trimmedList.get(10)).split(",");
-                    String[] addonsArray = (trimmedList.get(11)).split(",");
+                    squareEmail.setEmailDate(new Date(tmp.getInternalDate()));
+                    squareEmail.setEventName(trimmedList.get(0));
+                    squareEmail.setEventEmail(trimmedList.get(1));
+                    squareEmail.setEventPhoneNumber(trimmedList.get(2));
+                    squareEmail.setEventSource(trimmedList.get(3));
+                    squareEmail.setEventDate(trimmedList.get(4));
+                    squareEmail.setEventTime(trimmedList.get(5));
+                    squareEmail.setEventGuestCount(trimmedList.get(6));
+                    squareEmail.setEventLocationArray((trimmedList.get(7)).split(","));
+                    squareEmail.setEventAddress(trimmedList.get(8));
+                    squareEmail.setEventTypeArray((trimmedList.get(9)).split(","));
+                    squareEmail.setEventStyleArray((trimmedList.get(10)).split(","));
+                    squareEmail.setEventAddonsArray((trimmedList.get(11)).split(","));
 
-                    for (int i = 0; i < locationArray.length; i++) {
-                        if (locationArray[i].contains("Home delivery"))
-                            locationArray[i] = "Home delivery";
+                    String[] eventLocationArray = squareEmail.getEventLocationArray();
+                    for (int i = 0; i < eventLocationArray.length; i++) {
+                        if (eventLocationArray[i].contains("Home delivery"))
+                            eventLocationArray[i] = "Home delivery";
                     }
+                    squareEmail.setEventLocationArray(eventLocationArray);
 
-                    for (int i = 0; i < styleArray.length; i++) {
-                        if (styleArray[i].contains("Custom color pallette"))
-                            styleArray[i] = "Custom color pallette";
+                    String[] eventStyleArray = squareEmail.getEventStyleArray();
+                    for (int i = 0; i < eventStyleArray.length; i++) {
+                        if (eventStyleArray[i].contains("Custom color pallette"))
+                            eventStyleArray[i] = "Custom color pallette";
                     }
+                    squareEmail.setEventStyleArray(eventStyleArray);
 
-                    for (int i = 0; i < addonsArray.length; i++) {
-                        if (addonsArray[i].contains("Cinema experience"))
-                            addonsArray[i] = "Cinema experience";
+                    String[] eventAddonsArray = squareEmail.getEventAddonsArray();
+                    for (int i = 0; i < eventAddonsArray.length; i++) {
+                        if (eventAddonsArray[i].contains("Cinema experience"))
+                            eventAddonsArray[i] = "Cinema experience";
                     }
+                    squareEmail.setEventAddonsArray(eventAddonsArray);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return squareEmails;
     }
 
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
@@ -144,14 +165,9 @@ public class GmailService {
 
     private String getContent(MessagePart msgPart) {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            getPlainTextFromMessageParts(msgPart, stringBuilder);
-            byte[] bodyBytes = Base64.decodeBase64(stringBuilder.toString());
-            return new String(bodyBytes, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            System.out.println("UnsupportedEncoding: " + e.toString());
-            return "Error getting body.";
-        }
+        getPlainTextFromMessageParts(msgPart, stringBuilder);
+        byte[] bodyBytes = Base64.decodeBase64(stringBuilder.toString());
+        return new String(bodyBytes, StandardCharsets.UTF_8);
     }
 
     private void getPlainTextFromMessageParts(MessagePart msgPart, StringBuilder stringBuilder) {

@@ -38,4 +38,9 @@
             <Insets bottom="10.0" right="10.0" />
         </GridPane.margin>
     </JFXButton>
+   <JFXButton buttonType="RAISED" onAction="#importEmailsPushed" style="-fx-background-color: rgba(167,167,167,0.51);" text="Import Emails" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+      <font>
+         <Font size="14.0" />
+      </font>
+   </JFXButton>
 </GridPane>

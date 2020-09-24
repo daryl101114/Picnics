@@ -19,10 +19,10 @@ import java.io.IOException;
 public abstract class Controller{
 
     protected static UserAccount SESSION_USER;
-    protected static double MIN_WIDTH = 600;
-    protected static double MIN_HEIGHT = 600;
-    protected static double PREF_WIDTH = 600;
-    protected static double PREF_HEIGHT = 600;
+    protected static double MIN_WIDTH;
+    protected static double MIN_HEIGHT;
+    protected static double PREF_WIDTH;
+    protected static double PREF_HEIGHT;
 
     protected static Alert successAlert;
     protected static Alert failureAlert;
@@ -30,45 +30,31 @@ public abstract class Controller{
     protected static Alert warningAlert;
 
     protected static ObservableList<UserAccount> userAccountObservableList;
+    protected static int userAccountChecksum;
+
     protected static ObservableList<Employee> employeeObservableList;
+    protected static int employeeChecksum;
+
     protected static ObservableList<SquareEmail> squareEmailObservableList;
+    protected static SquareEmail selectedSquareEmail;
 
     public void mainMenuPushed(ActionEvent event) throws IOException {
         loadScene(event, "/views/MainMenu.fxml", ControllerType.MAIN_MENU);
     }
 
-    public void loadScene(ActionEvent event, String file, ControllerType type) throws IOException {
+    protected void loadScene(ActionEvent event, String file, ControllerType type) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(file));
         Parent parent = loader.load();
 
         switch (type){
-            case MAIN_MENU: {
-                MIN_HEIGHT = 400;
-                MIN_WIDTH = 400;
-                PREF_HEIGHT = 600;
-                PREF_WIDTH = 600;
-                break;
-            }
-
-            case USER: {
-                MIN_HEIGHT = 400;
-                MIN_WIDTH = 400;
-                PREF_HEIGHT = 600;
-                PREF_WIDTH = 600;
-                break;
-            }
-            case LOGIN: {
-                MIN_HEIGHT = 550;
-                MIN_WIDTH = 400;
-                PREF_HEIGHT = 550;
-                PREF_WIDTH = 400;
-                break;
-            }
-
-            case EMPLOYEE: {
-                MIN_HEIGHT = 400;
-                MIN_WIDTH = 400;
+            case MAIN_MENU:
+            case USER:
+            case LOGIN:
+            case EMPLOYEE:
+            case EMAIL: {
+                MIN_HEIGHT = 600;
+                MIN_WIDTH = 600;
                 PREF_HEIGHT = 600;
                 PREF_WIDTH = 600;
                 break;
@@ -85,7 +71,7 @@ public abstract class Controller{
         window.show();
     }
 
-    public void loadChildScene(ActionEvent event, String file, ControllerType type) throws IOException{
+    protected void loadChildScene(ActionEvent event, String file, ControllerType type) throws IOException{
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(file));
         Parent parent = loader.load();
@@ -107,6 +93,16 @@ public abstract class Controller{
                 break;
             }
 
+            case ADD_INVOICE: {
+             //   CustomerController controller = loader.getController();
+             //   controller.setSelectedEmail(selectedSquareEmail);
+                MIN_HEIGHT = 500;
+                MIN_WIDTH = 500;
+                PREF_HEIGHT = 500;
+                PREF_WIDTH = 500;
+                break;
+            }
+
             default:
                 break;
         }
@@ -123,9 +119,13 @@ public abstract class Controller{
         childWindow.show();
     }
 
-    public void closeChildWindow(ActionEvent event){
+    protected void closeChildWindow(ActionEvent event){
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
+    }
+
+    protected void clearSelectedObjects(){
+        selectedSquareEmail = null;
     }
 }
