@@ -91,20 +91,20 @@ public class GoogleCalendarService {
             }
         }
     }
-// Event description, location, date and time
-    public void insertEvent(String description, String eventName, String location)  throws IOException{
-        Event event = new Event()
+// PARAMETERS: Event Name, description, location, date and time\\
+    public void insertEvent(String description, String eventName, String location,String startTime, String endTime)  throws IOException{
+        com.google.api.services.calendar.model.Event event = new com.google.api.services.calendar.model.Event()
                 .setSummary(eventName)
                 .setLocation(location)
                 .setDescription(description);
 
-        DateTime startDateTime = new DateTime("2018-09-28T09:00:00-07:00");
+        DateTime startDateTime = new DateTime(startTime);
         EventDateTime start = new EventDateTime()
                 .setDateTime(startDateTime)
                 .setTimeZone("America/Los_Angeles");
         event.setStart(start);
 
-        DateTime endDateTime = new DateTime("2019-09-28T17:00:00-07:00");
+        DateTime endDateTime = new DateTime(endTime);
         EventDateTime end = new EventDateTime()
                 .setDateTime(endDateTime)
                 .setTimeZone("America/Los_Angeles");
@@ -113,17 +113,11 @@ public class GoogleCalendarService {
         String[] recurrence = new String[] {"RRULE:FREQ=DAILY;COUNT=2"};
         event.setRecurrence(Arrays.asList(recurrence));
 
-        EventAttendee[] attendees = new EventAttendee[] {
-                new EventAttendee().setEmail("lpage@example.com"),
-                new EventAttendee().setEmail("sbrin@example.com"),
-        };
-        event.setAttendees(Arrays.asList(attendees));
-
         EventReminder[] reminderOverrides = new EventReminder[] {
                 new EventReminder().setMethod("email").setMinutes(24 * 60),
-                new EventReminder().setMethod("popup").setMinutes(10),
+                new EventReminder().setMethod("popup").setMinutes(30),
         };
-        Event.Reminders reminders = new Event.Reminders()
+        com.google.api.services.calendar.model.Event.Reminders reminders = new Event.Reminders()
                 .setUseDefault(false)
                 .setOverrides(Arrays.asList(reminderOverrides));
         event.setReminders(reminders);
@@ -132,4 +126,53 @@ public class GoogleCalendarService {
         event = service.events().insert(calendarId, event).execute();
         System.out.printf("Event created: %s\n", event.getHtmlLink());
     }
+//public List<models.Event> createEvents(List<models.Event> listEvents) throws IOException {
+////    com.google.api.services.calendar.model.Event events = new com.google.api.services.calendar.model.Event();
+//
+//    for (models.Event listEvent: listEvents){
+//        if (listEvent != null){
+//            com.google.api.services.calendar.model.Event event2 = new com.google.api.services.calendar.model.Event()
+//
+//                    .setLocation(listEvent.getEventAddress());
+////                    .setDescription(description);
+//
+//            DateTime startDateTime = new DateTime(listEvent.getPicnicDateTime());
+//            EventDateTime start = new EventDateTime()
+//                    .setDateTime(startDateTime)
+//                    .setTimeZone("America/Los_Angeles");
+//            event2.setStart(start);
+//
+//            DateTime endDateTime = new DateTime(listEvent.getPicnicDateTime());
+//            EventDateTime end = new EventDateTime()
+//                    .setDateTime(endDateTime)
+//                    .setTimeZone("America/Los_Angeles");
+//            event2.setEnd(end);
+//
+//            String[] recurrence = new String[] {"RRULE:FREQ=DAILY;COUNT=2"};
+//            event2.setRecurrence(Arrays.asList(recurrence));
+//
+////        EventAttendee[] attendees = new EventAttendee[] {
+////                new EventAttendee().setEmail("lpage@example.com"),
+////                new EventAttendee().setEmail("sbrin@example.com"),
+////        };
+////        event.setAttendees(Arrays.asList(attendees));
+//
+//            EventReminder[] reminderOverrides = new EventReminder[] {
+//                    new EventReminder().setMethod("email").setMinutes(24 * 60),
+//                    new EventReminder().setMethod("popup").setMinutes(10),
+//            };
+//            com.google.api.services.calendar.model.Event.Reminders reminders = new Event.Reminders()
+//                    .setUseDefault(false)
+//                    .setOverrides(Arrays.asList(reminderOverrides));
+//            event2.setReminders(reminders);
+//
+//            String calendarId = "primary";
+//            event2 = service.events().insert(calendarId, event2).execute();
+//            System.out.printf("Event created: %s\n", event2.getHtmlLink());
+//        }
+//    }
+//
+//
+// return listEvents;
+//}
 }
