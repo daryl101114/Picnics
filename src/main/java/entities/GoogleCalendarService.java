@@ -126,53 +126,5 @@ public class GoogleCalendarService {
         event = service.events().insert(calendarId, event).execute();
         System.out.printf("Event created: %s\n", event.getHtmlLink());
     }
-//public List<models.Event> createEvents(List<models.Event> listEvents) throws IOException {
-////    com.google.api.services.calendar.model.Event events = new com.google.api.services.calendar.model.Event();
-//
-//    for (models.Event listEvent: listEvents){
-//        if (listEvent != null){
-//            com.google.api.services.calendar.model.Event event2 = new com.google.api.services.calendar.model.Event()
-//
-//                    .setLocation(listEvent.getEventAddress());
-////                    .setDescription(description);
-//
-//            DateTime startDateTime = new DateTime(listEvent.getPicnicDateTime());
-//            EventDateTime start = new EventDateTime()
-//                    .setDateTime(startDateTime)
-//                    .setTimeZone("America/Los_Angeles");
-//            event2.setStart(start);
-//
-//            DateTime endDateTime = new DateTime(listEvent.getPicnicDateTime());
-//            EventDateTime end = new EventDateTime()
-//                    .setDateTime(endDateTime)
-//                    .setTimeZone("America/Los_Angeles");
-//            event2.setEnd(end);
-//
-//            String[] recurrence = new String[] {"RRULE:FREQ=DAILY;COUNT=2"};
-//            event2.setRecurrence(Arrays.asList(recurrence));
-//
-////        EventAttendee[] attendees = new EventAttendee[] {
-////                new EventAttendee().setEmail("lpage@example.com"),
-////                new EventAttendee().setEmail("sbrin@example.com"),
-////        };
-////        event.setAttendees(Arrays.asList(attendees));
-//
-//            EventReminder[] reminderOverrides = new EventReminder[] {
-//                    new EventReminder().setMethod("email").setMinutes(24 * 60),
-//                    new EventReminder().setMethod("popup").setMinutes(10),
-//            };
-//            com.google.api.services.calendar.model.Event.Reminders reminders = new Event.Reminders()
-//                    .setUseDefault(false)
-//                    .setOverrides(Arrays.asList(reminderOverrides));
-//            event2.setReminders(reminders);
-//
-//            String calendarId = "primary";
-//            event2 = service.events().insert(calendarId, event2).execute();
-//            System.out.printf("Event created: %s\n", event2.getHtmlLink());
-//        }
-//    }
-//
-//
-// return listEvents;
-//}
+
 }
