@@ -38,6 +38,7 @@ public class GoogleCalendarService {
 
     /**
      * Creates an authorized Credential object.
+     *
      * @param HTTP_TRANSPORT The network HTTP Transport.
      * @return An authorized Credential object.
      * @throws IOException If the credentials.json file cannot be found.
@@ -64,35 +65,35 @@ public class GoogleCalendarService {
         // Build a new authorized API client service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
 //        Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-         service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+        service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
 
                 .setApplicationName(APPLICATION_NAME)
                 .build();
 
-        // List the next 10 events from the primary calendar.
-        DateTime now = new DateTime(System.currentTimeMillis());
-        Events events = service.events().list("primary")
-                .setMaxResults(10)
-                .setTimeMin(now)
-                .setOrderBy("startTime")
-                .setSingleEvents(true)
-                .execute();
-        List<Event> items = events.getItems();
-        if (items.isEmpty()) {
-            System.out.println("No upcoming events found.");
-        } else {
-            System.out.println("Upcoming events");
-            for (Event event : items) {
-                DateTime start = event.getStart().getDateTime();
-                if (start == null) {
-                    start = event.getStart().getDate();
-                }
-                System.out.printf("%s (%s)\n", event.getSummary(), start);
-            }
-        }
+//        // List the next 10 events from the primary calendar.
+//        DateTime now = new DateTime(System.currentTimeMillis());
+//        Events events = service.events().list("primary")
+//                .setMaxResults(10)
+//                .setTimeMin(now)
+//                .setOrderBy("startTime")
+//                .setSingleEvents(true)
+//                .execute();
+//        List<Event> items = events.getItems();
+//        if (items.isEmpty()) {
+//            System.out.println("No upcoming events found.");
+//        } else {
+//            System.out.println("Upcoming events");
+//            for (Event event : items) {
+//                DateTime start = event.getStart().getDateTime();
+//                if (start == null) {
+//                    start = event.getStart().getDate();
+//                }
+//                System.out.printf("%s (%s)\n", event.getSummary(), start);
+//            }
+//        }
     }
-// PARAMETERS: Event Name, description, location, date and time\\
-    public void insertEvent(String description, String eventName, String location,String startTime, String endTime)  throws IOException{
+
+    public void insertEvent(String description, String eventName, String location, String startTime, String endTime) throws IOException {
         com.google.api.services.calendar.model.Event event = new com.google.api.services.calendar.model.Event()
                 .setSummary(eventName)
                 .setLocation(location)
@@ -110,10 +111,10 @@ public class GoogleCalendarService {
                 .setTimeZone("America/Los_Angeles");
         event.setEnd(end);
 
-        String[] recurrence = new String[] {"RRULE:FREQ=DAILY;COUNT=2"};
+        String[] recurrence = new String[]{"RRULE:FREQ=DAILY;COUNT=2"};
         event.setRecurrence(Arrays.asList(recurrence));
 
-        EventReminder[] reminderOverrides = new EventReminder[] {
+        EventReminder[] reminderOverrides = new EventReminder[]{
                 new EventReminder().setMethod("email").setMinutes(24 * 60),
                 new EventReminder().setMethod("popup").setMinutes(30),
         };
@@ -125,6 +126,32 @@ public class GoogleCalendarService {
         String calendarId = "primary";
         event = service.events().insert(calendarId, event).execute();
         System.out.printf("Event created: %s\n", event.getHtmlLink());
+        System.out.println(event.getId());
     }
 
+    public void getCalList() throws IOException, GeneralSecurityException {
+        String pageToken = null;
+        do {
+            Events events = service.events().list("primary").setMaxResults(10).setPageToken(pageToken).execute();
+            List<Event> items = events.getItems();
+            for (Event event : items) {
+
+                System.out.println(event.getSummary());
+                System.out.println(event.getId());
+            }
+            pageToken = events.getNextPageToken();
+        } while (pageToken != null);
+    }
+    
+    public void updateEvent(String eventID,String summary) throws IOException, GeneralSecurityException{
+    // Retrieve the event from the API
+        Event event = service.events().get("primary",eventID).execute();
+
+    // Make a change
+        event.setSummary(summary);
+
+    // Update the event
+        Event updatedEvent = service.events().update("primary", event.getId(), event).execute();
+        System.out.println(updatedEvent.getUpdated());
+    }
 }

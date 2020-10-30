@@ -25,7 +25,6 @@ dependencies {
 //    compile 'com.google.api.client.googleapis.extensions.appengine.auth.oauth2'
 //    compile 'com.google.api.client.googleapis.auth.oauth2'
     compile group: 'org.jsoup', name: 'jsoup', version: '1.8.3'
-
 }
 
 sourceSets {
