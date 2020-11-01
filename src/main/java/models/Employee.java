@@ -54,15 +54,6 @@ public class Employee extends QueryObject {
         return executeUpdate(statement);
     }
 
-    /* Disabled because we don't want to delete employees given that they might be referenced in other tables.
-     private boolean delete(){
-        statement =
-                "DELETE FROM employee WHERE id = " +
-                        this.getID();
-        return executeUpdate(statement);
-    }
-    */
-
     public static ObservableList<Employee> findAll(){
         List<Employee> employees = new ArrayList<>();
         try {

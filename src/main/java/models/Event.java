@@ -15,23 +15,29 @@ public class Event extends QueryObject {
     private String picnicDateTime;
     private int invoiceId;
     private int customerId;
-    private int guestCount;
+    private String guestCount;
     private String eventAddress;
-    private int eventTypeId;
-    private int addonCount;
-    private int styleCount;
+    private String eventType;
+    private int employeeId;
+    private int googleCalendarId;
+    private String style;
+    private String customPalette;
+    private String marqueeLetters;
 
-    public Event(int id, String squareEmailId, String picnicDateTime, int invoiceId, int customerId, int guestCount, String eventAddress, int eventTypeId, int addonCount, int styleCount) {
-        setId(id);
-        setSquareEmailId(squareEmailId);
-        setPicnicDateTime(picnicDateTime);
-        setInvoiceId(invoiceId);
-        setCustomerId(customerId);
-        setGuestCount(guestCount);
-        setEventAddress(eventAddress);
-        setEventTypeId(eventTypeId);
-        setAddonCount(addonCount);
-        setStyleCount(styleCount);
+    public Event(int id, String squareEmailId, String picnicDateTime, int invoiceId, int customerId, String guestCount, String eventAddress, String eventType, int employeeId, int googleCalendarId, String style, String customPalette, String marqueeLetters) {
+        this.id = id;
+        this.squareEmailId = squareEmailId;
+        this.picnicDateTime = picnicDateTime;
+        this.invoiceId = invoiceId;
+        this.customerId = customerId;
+        this.guestCount = guestCount;
+        this.eventAddress = eventAddress;
+        this.eventType = eventType;
+        this.employeeId = employeeId;
+        this.googleCalendarId = googleCalendarId;
+        this.style = style;
+        this.customPalette = customPalette;
+        this.marqueeLetters = marqueeLetters;
     }
 
     public Event(){
@@ -41,36 +47,30 @@ public class Event extends QueryObject {
 
         statement = "UPDATE event " +
                 "SET " +
-                "square_email_id = '" + this.getSquareEmailId() +  "' " +
-                "picnic_date_time = '" + this.getPicnicDateTime() +  "' " +
-                "invoice_id = " + this.getInvoiceId() +  " " +
-                "customer_id = " + this.getCustomerId() +  " " +
-                "guest_count = " + this.getGuestCount() +  " " +
-                "event_address = '" + this.getEventAddress() +  "' " +
-                "event_type_id = " + this.getEventTypeId() +  " " +
-                "addon_count = " + this.getAddonCount() +  " " +
-                "style_count = " + this.getStyleCount() +  " " +
+                "square_email_id = '" + this.getSquareEmailId() +  "', " +
+                "picnic_date_time = '" + this.getPicnicDateTime() +  "', " +
+                "invoice_id = " + this.getInvoiceId() +  ", " +
+                "customer_id = " + this.getCustomerId() +  ", " +
+                "guest_count = " + this.getGuestCount() +  ", " +
+                "event_address = '" + this.getEventAddress() +  "', " +
+                "event_type = '" + this.getEventType() +  "', " +
+                "employee_id = " + this.getEmployeeId() +  ", " +
+                "google_calendar_id = " + this.getGoogleCalendarId() +  ", " +
+                "style = '" + this.getStyle() +  "', " +
+                "custom_palette = '" + this.getCustomPalette() +  "', " +
+                "marquee_letters = '" + this.getMarqueeLetters() +  "' " +
                 "WHERE id = " + this.getId();
 
         return executeUpdate(statement);
     }
 
     public boolean add(){
-        statement = "INSERT INTO event (square_email_id, picnic_date_time, invoice_id, customer_id, guest_count, event_address, event_type_id, addon_count, style_count) VALUES ('" +
-                this.getSquareEmailId() + ", '" + this.getPicnicDateTime() + "', " + this.getInvoiceId() + ", " + this.getCustomerId() + ", " + this.getGuestCount() + ", '" + this.getEventAddress() + "', " + this.getEventTypeId() + ", " + this.getAddonCount() + ", " + this.getStyleCount() +
+        statement = "Insert INTO event (square_email_id, picnic_date_time, invoice_id, customer_id, guest_count, event_address, event_type, employee_id, google_calendar_id, custom_palette, marquee_letters, style)  VALUES ('" +
+                this.getSquareEmailId() + ", '" + this.getPicnicDateTime() + "', " + this.getInvoiceId() + ", " + this.getCustomerId() + ", '" + this.getGuestCount() + "', '" + this.getEventAddress() + "', '" + this.getEventType() + "', " + this.getEmployeeId() + ", " + this.getGoogleCalendarId() + ", '" + this.getCustomPalette() + ", '" + ", '" + this.getMarqueeLetters() + ", '" + this.getStyle() +
                 "')";
 
         return executeUpdate(statement);
     }
-
-    /* Disabled because we don't want to delete customers given that they might be referenced in other tables.
-     private boolean delete(){
-        statement =
-                "DELETE FROM employee WHERE id = " +
-                        this.getID();
-        return executeUpdate(statement);
-    }
-    */
 
     public static ObservableList<Event> findAll(){
         List<Event> events = new ArrayList<>();
@@ -148,11 +148,11 @@ public class Event extends QueryObject {
         this.customerId = customerId;
     }
 
-    public int getGuestCount() {
+    public String getGuestCount() {
         return guestCount;
     }
 
-    public void setGuestCount(int guestCount) {
+    public void setGuestCount(String guestCount) {
         this.guestCount = guestCount;
     }
 
@@ -164,28 +164,52 @@ public class Event extends QueryObject {
         this.eventAddress = eventAddress;
     }
 
-    public int getEventTypeId() {
-        return eventTypeId;
+    public String getEventType() {
+        return eventType;
     }
 
-    public void setEventTypeId(int eventTypeId) {
-        this.eventTypeId = eventTypeId;
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
     }
 
-    public int getAddonCount() {
-        return addonCount;
+    public int getEmployeeId() {
+        return employeeId;
     }
 
-    public void setAddonCount(int addonCount) {
-        this.addonCount = addonCount;
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
     }
 
-    public int getStyleCount() {
-        return styleCount;
+    public int getGoogleCalendarId() {
+        return googleCalendarId;
     }
 
-    public void setStyleCount(int styleCount) {
-        this.styleCount = styleCount;
+    public void setGoogleCalendarId(int googleCalendarId) {
+        this.googleCalendarId = googleCalendarId;
+    }
+
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
+    }
+
+    public String getCustomPalette() {
+        return customPalette;
+    }
+
+    public void setCustomPalette(String customPalette) {
+        this.customPalette = customPalette;
+    }
+
+    public String getMarqueeLetters() {
+        return marqueeLetters;
+    }
+
+    public void setMarqueeLetters(String marqueeLetters) {
+        this.marqueeLetters = marqueeLetters;
     }
 
     public boolean exists() {
@@ -202,11 +226,14 @@ public class Event extends QueryObject {
         event.setPicnicDateTime(resultSet.getString("picnic_date_time"));
         event.setInvoiceId(resultSet.getInt("invoice_id"));
         event.setCustomerId(resultSet.getInt("customer_id"));
-        event.setGuestCount(resultSet.getInt("guest_count"));
+        event.setGuestCount(resultSet.getString("guest_count"));
         event.setEventAddress(resultSet.getString("event_address"));
-        event.setEventTypeId(resultSet.getInt("event_type_id"));
-        event.setAddonCount(resultSet.getInt("addon_count"));
-        event.setStyleCount(resultSet.getInt("style_count"));
+        event.setEventType(resultSet.getString("event_type"));
+        event.setEmployeeId(resultSet.getInt("employee_id"));
+        event.setGoogleCalendarId(resultSet.getInt("google_calendar_id"));
+        event.setStyle(resultSet.getString("style"));
+        event.setCustomPalette(resultSet.getString("custom_palette"));
+        event.setMarqueeLetters(resultSet.getString("marquee_letters"));
     }
 
     public static int getChecksum(){

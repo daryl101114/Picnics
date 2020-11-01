@@ -1,5 +1,6 @@
 package entities;
 
+import controllers.AddEvent;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -7,6 +8,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -38,6 +41,8 @@ public abstract class Controller{
     protected static ObservableList<SquareEmail> squareEmailObservableList;
     protected static SquareEmail selectedSquareEmail;
 
+    protected static Stage window;
+
     public void mainMenuPushed(ActionEvent event) throws IOException {
         loadScene(event, "/views/MainMenu.fxml", ControllerType.MAIN_MENU);
     }
@@ -64,7 +69,7 @@ public abstract class Controller{
                 break;
         }
         Scene scene  = new Scene(parent, PREF_WIDTH, PREF_HEIGHT);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
         window.setMinHeight(MIN_HEIGHT);
         window.setMinWidth(MIN_WIDTH);
@@ -75,9 +80,11 @@ public abstract class Controller{
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(file));
         Parent parent = loader.load();
+        Stage parentWindow;
 
         switch (type){
             case ADD_USER: {
+                parentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 MIN_HEIGHT = 400;
                 MIN_WIDTH = 400;
                 PREF_HEIGHT = 400;
@@ -86,6 +93,7 @@ public abstract class Controller{
             }
 
             case ADD_EMPLOYEE: {
+                parentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 MIN_HEIGHT = 464;
                 MIN_WIDTH = 464;
                 PREF_HEIGHT = 464;
@@ -96,6 +104,7 @@ public abstract class Controller{
             case ADD_INVOICE: {
              //   CustomerController controller = loader.getController();
              //   controller.setSelectedEmail(selectedSquareEmail);
+                parentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 MIN_HEIGHT = 500;
                 MIN_WIDTH = 500;
                 PREF_HEIGHT = 500;
@@ -104,11 +113,42 @@ public abstract class Controller{
             }
 
             default:
+                parentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 break;
         }
         Scene scene  = new Scene(parent, PREF_WIDTH, PREF_HEIGHT);
         Stage childWindow = new Stage();
-        Stage parentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        childWindow.setScene(scene);
+        childWindow.setMinHeight(MIN_HEIGHT);
+        childWindow.setMinWidth(MIN_WIDTH);
+        childWindow.initStyle(StageStyle.DECORATED);
+        childWindow.initModality(Modality.WINDOW_MODAL);
+        childWindow.initOwner(parentWindow);
+        parentWindow.toFront();
+        childWindow.show();
+    }
+
+    protected void loadChildScene(Stage parentWindow, String file, ControllerType type) throws IOException{
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource(file));
+        Parent parent = loader.load();
+
+        switch (type){
+            case ADD_EVENT: {
+                MIN_HEIGHT = 900;
+                MIN_WIDTH = 900;
+                PREF_HEIGHT = 900;
+                PREF_WIDTH = 900;
+                break;
+            }
+
+            default:
+                break;
+        }
+        Scene scene  = new Scene(parent, PREF_WIDTH, PREF_HEIGHT);
+        Stage childWindow = new Stage();
+
         childWindow.setScene(scene);
         childWindow.setMinHeight(MIN_HEIGHT);
         childWindow.setMinWidth(MIN_WIDTH);

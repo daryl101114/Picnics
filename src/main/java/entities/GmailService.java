@@ -20,6 +20,7 @@ import models.SquareEmail;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -87,61 +88,79 @@ public class GmailService {
     }
 
     public List<SquareEmail> getFullMessages(List<SquareEmail> squareEmails){
-        try {
-            for (SquareEmail squareEmail : squareEmails) {
+        for (SquareEmail squareEmail : squareEmails) {
+            try {
                 if (squareEmail != null) {
                     Message tmp = service.users().messages().get(USER, squareEmail.getId())
                             .setFormat("FULL")
                             .execute();
                     MessagePart msgPart = tmp.getPayload();
                     String body = getContent(msgPart);
-                    body = body.replaceAll("[\\n\\r]", " ").split("\\(Sent via Fancy Picnics <https://www.fancypicnicshouston.com> \\)")[0];
-                    String[] bodyArray = body.split("Name: | Email: | Phone number: | How did you hear about us: | Picnic Date: | Time of picnic: | Estimated guest count: | Location of your picnic : | Address: | Type of event: | Picnic style: | Add on preferences: ");
+                    body = body.replaceAll("[\\n\\r]", " ");
+
+                    if(body.contains("html lang")) {
+                        body = body.substring(0, body.indexOf("html lang"));
+                    }
+                    SimpleDateFormat dateformat = new SimpleDateFormat("MMM dd yyyy HH:mm:ss");
+                    Date latestChangeDate = dateformat.parse("Oct 27 2020 20:00:00");
+                    Date previousChangeDate = dateformat.parse("Oct 12 2020 00:00:00");
+                    Date previousChangeDate2 = dateformat.parse("Oct 08 2020 08:00:00");
+                    String[] bodyArray;
+                    int maxRows;
+                    int counter = 1;
+                    if(new Date(tmp.getInternalDate()).after(latestChangeDate)) {
+                        bodyArray = body.split("Name: | Email: | Phone number: | How did you hear about us: | Picnic Date: | Time of picnic: | Guest Count: | Location of your picnic: | Provide your address ONLY if your picnic will be a home delivery: | Type of Event: | Picnic Style: | Is there a specific color palette or theme that you are requesting\\?: | Add on preferences: | If you chose marquee letters, please let us know which word or number you   would like:");
+                        maxRows = 15;
+                    }
+                    else if(new Date(tmp.getInternalDate()).after(previousChangeDate)){
+                        bodyArray = body.split("Name: | Email: | Phone number: | How did you hear about us: | Picnic Date: | Time of picnic: | Estimated guest count: | Location of your picnic : | Provide your address ONLY if your picnic will be a home delivery: | Type of event: | Picnic style: | Is there a specific color palette or theme that you are requesting\\?: | Add on preferences: | If you chose marquee letters, please let us know which word or number you   would like:");
+                        maxRows = 15;
+                    } else if(new Date(tmp.getInternalDate()).after(previousChangeDate2)){
+                        bodyArray = body.split("Name: | Email: | Phone number: | How did you hear about us: | Picnic Date: | Time of picnic: | Estimated guest count: | Location of your picnic : | Provide your address if your picnic will be a home delivery: | Type of event: | Picnic style: | Which color palette or theme are you requesting\\?: | Add on preferences: | If you chose marquee letters, please let us know which word or number you   would like:");
+                        maxRows = 14;
+                    }
+                    else {
+                        bodyArray = body.split("Name: | Email: | Phone number: | How did you hear about us: | Picnic Date: | Time of picnic: | Estimated guest count: | Location of your picnic : |  Address: | Type of event: | Picnic style: | Add on preferences: | If you chose marquee letters, please let us know which word or number you\\'d  like:");
+                        maxRows = 13;
+                    }
                     List<String> bodyList = new ArrayList<>(Arrays.asList(bodyArray));
                     List<String> trimmedList = new ArrayList<>();
                     for (String item : bodyList) {
-                        if (!item.isEmpty())
-                            trimmedList.add(item.trim());
+                        if(counter > maxRows)
+                            break;
+                        if (item.contains("Sent via form submission from Fancy Picnics")){
+                            item = item.split("Sent via form submission from Fancy Picnics")[0];
+                        }
+                        trimmedList.add(item.trim());
+                        counter++;
                     }
 
                     squareEmail.setEmailDate(new Date(tmp.getInternalDate()));
-                    squareEmail.setEventName(trimmedList.get(0));
-                    squareEmail.setEventEmail(trimmedList.get(1));
-                    squareEmail.setEventPhoneNumber(trimmedList.get(2));
-                    squareEmail.setEventSource(trimmedList.get(3));
-                    squareEmail.setEventDate(trimmedList.get(4));
-                    squareEmail.setEventTime(trimmedList.get(5));
-                    squareEmail.setEventGuestCount(trimmedList.get(6));
-                    squareEmail.setEventLocationArray((trimmedList.get(7)).split(","));
-                    squareEmail.setEventAddress(trimmedList.get(8));
-                    squareEmail.setEventTypeArray((trimmedList.get(9)).split(","));
-                    squareEmail.setEventStyleArray((trimmedList.get(10)).split(","));
-                    squareEmail.setEventAddonsArray((trimmedList.get(11)).split(","));
-
-                    String[] eventLocationArray = squareEmail.getEventLocationArray();
-                    for (int i = 0; i < eventLocationArray.length; i++) {
-                        if (eventLocationArray[i].contains("Home delivery"))
-                            eventLocationArray[i] = "Home delivery";
-                    }
-                    squareEmail.setEventLocationArray(eventLocationArray);
-
-                    String[] eventStyleArray = squareEmail.getEventStyleArray();
-                    for (int i = 0; i < eventStyleArray.length; i++) {
-                        if (eventStyleArray[i].contains("Custom color pallette"))
-                            eventStyleArray[i] = "Custom color pallette";
-                    }
-                    squareEmail.setEventStyleArray(eventStyleArray);
-
+                    squareEmail.setEventName(trimmedList.get(1));
+                    squareEmail.setEventEmail(trimmedList.get(2));
+                    squareEmail.setEventPhoneNumber(trimmedList.get(3));
+                    squareEmail.setEventSource(trimmedList.get(4));
+                    squareEmail.setEventDate(trimmedList.get(5));
+                    squareEmail.setEventTime(trimmedList.get(6));
+                    squareEmail.setEventGuestCount(trimmedList.get(7));
+                    squareEmail.setEventLocation((trimmedList.get(8)));
+                    squareEmail.setEventAddress(trimmedList.get(9));
+                    squareEmail.setEventType(trimmedList.get(10));
+                    squareEmail.setEventStyle(trimmedList.get(11));
+                    squareEmail.setCustomPalette(trimmedList.get(12));
+                    squareEmail.setEventAddonsArray((trimmedList.get(13)).split(","));
                     String[] eventAddonsArray = squareEmail.getEventAddonsArray();
                     for (int i = 0; i < eventAddonsArray.length; i++) {
                         if (eventAddonsArray[i].contains("Cinema experience"))
                             eventAddonsArray[i] = "Cinema experience";
                     }
                     squareEmail.setEventAddonsArray(eventAddonsArray);
+                    if(maxRows > 14)
+                        squareEmail.setMarqueeLetters(trimmedList.get(14).split("Sent via form submission from Fancy Picnics")[0]);
                 }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
         }
         return squareEmails;
     }

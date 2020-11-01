@@ -92,4 +92,9 @@
          <Insets bottom="10.0" left="10.0" />
       </GridPane.margin>
    </JFXButton>
+   <JFXButton buttonType="RAISED" onAction="#resetIgnoresPushed" style="-fx-background-color: rgba(167,167,167,0.51);" text="Reset Ignores" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
+      <GridPane.margin>
+         <Insets bottom="10.0" left="10.0" />
+      </GridPane.margin>
+   </JFXButton>
 </GridPane>

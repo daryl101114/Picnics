@@ -50,15 +50,6 @@ public class Customer extends QueryObject {
         return executeUpdate(statement);
     }
 
-    /* Disabled because we don't want to delete customers given that they might be referenced in other tables.
-     private boolean delete(){
-        statement =
-                "DELETE FROM employee WHERE id = " +
-                        this.getID();
-        return executeUpdate(statement);
-    }
-    */
-
     public static ObservableList<Customer> findAll(){
         List<Customer> customers = new ArrayList<>();
         try {

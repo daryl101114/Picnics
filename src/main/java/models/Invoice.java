@@ -11,7 +11,6 @@ import java.util.List;
 public class Invoice extends QueryObject {
 
     private int id;
-
     private Float subtotal;
     private Float taxRate;
     private Float total;
@@ -34,7 +33,7 @@ public class Invoice extends QueryObject {
                 "SET " +
                 "subtotal = '" + this.getSubtotal() +  "', " +
                 "tax_rate = '" + this.getTaxRate() +  "', " +
-                "is_payed = " + this.getIsPayed() +  ", " +
+                "is_payed = " + this.getIsPayedBit() +  ", " +
                 "total = '" + this.getTotal() +  "', " +
                 "WHERE id = " + this.getID();
 
@@ -42,21 +41,12 @@ public class Invoice extends QueryObject {
     }
 
     public boolean add(){
-        statement = "INSERT INTO invoice (subtotal, tax_rate, is_payed, total) VALUES ('" +
-                this.getSubtotal() + "', '" + this.getTaxRate() + "', " + this.getIsPayed() + ", '" + this.getTotal() +
-                "')";
+        statement = "INSERT INTO invoice (id, subtotal, tax_rate, is_payed, total) VALUES (" +
+                this.getID() + ", " + this.getSubtotal() + ", " + this.getTaxRate() + ", " + this.getIsPayedBit() + ", " + this.getTotal() +
+                ")";
 
         return executeUpdate(statement);
     }
-
-    /* Disabled because we don't want to delete customers given that they might be referenced in other tables.
-     private boolean delete(){
-        statement =
-                "DELETE FROM employee WHERE id = " +
-                        this.getID();
-        return executeUpdate(statement);
-    }
-    */
 
     public static ObservableList<Invoice> findAll(){
         List<Invoice> invoices = new ArrayList<>();
@@ -132,6 +122,10 @@ public class Invoice extends QueryObject {
 
     public void setIsPayed(boolean payed) {
         isPayed = payed;
+    }
+
+    public int getIsPayedBit(){
+        return isPayed ? 1 : 0;
     }
 
     public boolean exists() {
