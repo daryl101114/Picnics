@@ -80,11 +80,9 @@ public abstract class Controller{
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(file));
         Parent parent = loader.load();
-        Stage parentWindow;
 
         switch (type){
             case ADD_USER: {
-                parentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 MIN_HEIGHT = 400;
                 MIN_WIDTH = 400;
                 PREF_HEIGHT = 400;
@@ -93,7 +91,6 @@ public abstract class Controller{
             }
 
             case ADD_EMPLOYEE: {
-                parentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 MIN_HEIGHT = 464;
                 MIN_WIDTH = 464;
                 PREF_HEIGHT = 464;
@@ -104,7 +101,6 @@ public abstract class Controller{
             case ADD_INVOICE: {
              //   CustomerController controller = loader.getController();
              //   controller.setSelectedEmail(selectedSquareEmail);
-                parentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 MIN_HEIGHT = 500;
                 MIN_WIDTH = 500;
                 PREF_HEIGHT = 500;
@@ -113,12 +109,12 @@ public abstract class Controller{
             }
 
             default:
-                parentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
                 break;
         }
         Scene scene  = new Scene(parent, PREF_WIDTH, PREF_HEIGHT);
         Stage childWindow = new Stage();
-
+        Stage parentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
         childWindow.setScene(scene);
         childWindow.setMinHeight(MIN_HEIGHT);
         childWindow.setMinWidth(MIN_WIDTH);
