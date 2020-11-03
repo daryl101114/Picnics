@@ -103,4 +103,7 @@
          </ImageView>
       </children>
    </GridPane>
+   <effect>
+      <InnerShadow />
+   </effect>
 </GridPane>

@@ -5,6 +5,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -12,15 +15,16 @@
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600" style="-fx-background-color: azure;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.EmployeeController">
     <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
         <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0" />
         <ColumnConstraints />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
-        <RowConstraints percentHeight="82.0" vgrow="SOMETIMES" />
+        <RowConstraints percentHeight="20.0" vgrow="SOMETIMES" />
+        <RowConstraints percentHeight="72.0" vgrow="SOMETIMES" />
         <RowConstraints percentHeight="8.0" vgrow="SOMETIMES" />
     </rowConstraints>
-    <TableView fx:id="tableView" editable="true" GridPane.rowIndex="1">
+    <TableView fx:id="tableView" editable="true" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
         <columns>
             <TableColumn fx:id="column1" maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="First Name" />
             <TableColumn fx:id="column2" maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="Last Name" />
@@ -36,19 +40,50 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
         </columnResizePolicy>
     </TableView>
-    <Label text="Employees" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-        <font>
-            <Font size="36.0" />
-        </font>
-    </Label>
-    <JFXButton buttonType="RAISED" onAction="#mainMenuPushed" style="-fx-background-color: rgba(167,167,167,0.51);" text="Main Menu" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+    <JFXButton buttonType="RAISED" onAction="#mainMenuPushed" style="-fx-background-color: #2F2F38;" text="Main Menu" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
         <GridPane.margin>
             <Insets bottom="10.0" right="10.0" />
         </GridPane.margin>
     </JFXButton>
-    <JFXButton buttonType="RAISED" onAction="#addButtonPushed" style="-fx-background-color: rgba(167,167,167,0.51);" text="Create Employee" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+    <JFXButton buttonType="RAISED" onAction="#addButtonPushed" ripplerFill="#dad9d9" style="-fx-background-color: #2F2F38;" text="Create Employee" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
         <GridPane.margin>
-            <Insets bottom="10.0" />
+            <Insets bottom="10.0" right="100.0" />
         </GridPane.margin>
     </JFXButton>
+   <GridPane style="-fx-background-color: #F2BEB9;" GridPane.columnSpan="2147483647">
+     <columnConstraints>
+       <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
+       <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0" />
+     </columnConstraints>
+     <rowConstraints>
+       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+     </rowConstraints>
+      <children>
+          <Label alignment="CENTER" contentDisplay="CENTER" text="Employees" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+              <font>
+                  <Font name="Arial Bold" size="36.0" />
+              </font>
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
+            <GridPane.margin>
+               <Insets right="100.0" />
+            </GridPane.margin>
+          </Label>
+         <ImageView fitHeight="84.0" fitWidth="82.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+            <image>
+               <Image url="@../images/Fancy-Picnics-Logo.png" />
+            </image>
+            <GridPane.margin>
+               <Insets />
+            </GridPane.margin>
+            <effect>
+               <InnerShadow color="#b95252" />
+            </effect>
+         </ImageView>
+      </children>
+   </GridPane>
+   <effect>
+      <InnerShadow />
+   </effect>
 </GridPane>

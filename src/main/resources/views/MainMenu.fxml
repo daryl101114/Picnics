@@ -97,12 +97,12 @@
              <RowConstraints percentHeight="33.333" vgrow="SOMETIMES" />
            </rowConstraints>
             <children>
-                <JFXButton buttonType="RAISED" minHeight="50.0" minWidth="120.0" onAction="#userPushed" style="-fx-background-color: #2F2F38;" text="Manage Users" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER">
+                <JFXButton buttonType="RAISED" minHeight="50.0" minWidth="120.0" onAction="#userPushed" style="-fx-background-color: #2F2F38;" text="Manage Users" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                     <font>
                         <Font size="14.0" />
                     </font>
                   <GridPane.margin>
-                     <Insets />
+                     <Insets left="10.0" right="10.0" />
                   </GridPane.margin>
                 </JFXButton>
                <JFXButton buttonType="RAISED" minHeight="50.0" minWidth="120.0" onAction="#importEmailsPushed" style="-fx-background-color: #2F2F38;" text="Import Emails" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
@@ -110,7 +110,7 @@
                      <Font size="14.0" />
                   </font>
                   <GridPane.margin>
-                     <Insets />
+                     <Insets left="10.0" right="10.0" />
                   </GridPane.margin>
                </JFXButton>
                <JFXButton buttonType="RAISED" minHeight="50.0" minWidth="120.0" onAction="#employeesPushed" style="-fx-background-color: #2F2F38;" text="Employees" textFill="WHITE" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
@@ -118,11 +118,30 @@
                      <Font size="14.0" />
                   </font>
                   <GridPane.margin>
-                     <Insets />
+                     <Insets left="10.0" right="10.0" />
+                  </GridPane.margin>
+               </JFXButton>
+               <JFXButton buttonType="RAISED" layoutX="230.0" layoutY="75.0" minHeight="50.0" minWidth="120.0" onAction="#userPushed" style="-fx-background-color: #2F2F38;" text="BUTTON" textAlignment="CENTER" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+                  <GridPane.margin>
+                     <Insets left="190.0" right="10.0" />
+                  </GridPane.margin>
+               </JFXButton>
+               <JFXButton buttonType="RAISED" layoutX="230.0" layoutY="75.0" minHeight="50.0" minWidth="120.0" onAction="#userPushed" style="-fx-background-color: #2F2F38;" text="BUTTON" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+                  <GridPane.margin>
+                     <Insets left="190.0" right="10.0" />
                   </GridPane.margin>
                </JFXButton>
             </children>
          </GridPane>
       </children>
    </GridPane>
+   <effect>
+      <InnerShadow />
+   </effect>
 </GridPane>

@@ -7,6 +7,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -14,16 +17,18 @@
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600" style="-fx-background-color: azure;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.EmailController">
     <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
         <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0" />
         <ColumnConstraints />
     </columnConstraints>
     <rowConstraints>
         <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         <RowConstraints percentHeight="72.0" vgrow="SOMETIMES" />
         <RowConstraints percentHeight="8.0" vgrow="SOMETIMES" />
     </rowConstraints>
-    <TableView fx:id="tableView" editable="true" GridPane.rowIndex="2">
+    <TableView fx:id="tableView" editable="true" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
         <columns>
             <TableColumn fx:id="column1" maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="Email Date" />
             <TableColumn fx:id="column2" maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="Customer Name" />
@@ -38,22 +43,17 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
         </columnResizePolicy>
     </TableView>
-    <Label text="Automatic Email Import" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-        <font>
-            <Font size="36.0" />
-        </font>
-    </Label>
-    <JFXButton buttonType="RAISED" onAction="#mainMenuPushed" style="-fx-background-color: rgba(167,167,167,0.51);" text="Main Menu" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
+    <JFXButton buttonType="RAISED" onAction="#mainMenuPushed" style="-fx-background-color: #2F2F38;" text="Main Menu" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
         <GridPane.margin>
             <Insets bottom="10.0" right="10.0" />
         </GridPane.margin>
     </JFXButton>
-   <JFXDatePicker fx:id="dpFrom" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+   <JFXDatePicker fx:id="dpFrom" GridPane.columnSpan="2147483647" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
       <GridPane.margin>
          <Insets bottom="5.0" left="65.0" />
       </GridPane.margin>
    </JFXDatePicker>
-   <Label text="From:" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+   <Label text="From:" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
       <font>
          <Font size="16.0" />
       </font>
@@ -61,12 +61,12 @@
          <Insets bottom="5.0" left="20.0" />
       </GridPane.margin>
    </Label>
-   <JFXDatePicker fx:id="dpTo" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+   <JFXDatePicker fx:id="dpTo" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" GridPane.valignment="CENTER">
       <GridPane.margin>
          <Insets bottom="5.0" left="280.0" />
       </GridPane.margin>
    </JFXDatePicker>
-   <Label text="To:" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+   <Label text="To:" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" GridPane.valignment="CENTER">
       <font>
          <Font size="16.0" />
       </font>
@@ -74,12 +74,12 @@
          <Insets bottom="5.0" left="250.0" />
       </GridPane.margin>
    </Label>
-   <JFXComboBox fx:id="cbMaxEmails" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+   <JFXComboBox fx:id="cbMaxEmails" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" GridPane.valignment="CENTER">
       <GridPane.margin>
          <Insets bottom="5.0" left="500.0" />
       </GridPane.margin>
    </JFXComboBox>
-   <Label text="Max" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+   <Label text="Max" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" GridPane.valignment="CENTER">
       <font>
          <Font size="16.0" />
       </font>
@@ -87,14 +87,41 @@
          <Insets bottom="5.0" left="465.0" />
       </GridPane.margin>
    </Label>
-   <JFXButton buttonType="RAISED" onAction="#reloadTablePushed" style="-fx-background-color: rgba(167,167,167,0.51);" text="Reload Table" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
+   <JFXButton buttonType="RAISED" onAction="#reloadTablePushed" style="-fx-background-color: #2F2F38;" text="Reload Table" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
       <GridPane.margin>
          <Insets bottom="10.0" left="10.0" />
       </GridPane.margin>
    </JFXButton>
-   <JFXButton buttonType="RAISED" onAction="#resetIgnoresPushed" style="-fx-background-color: rgba(167,167,167,0.51);" text="Reset Ignores" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
+   <JFXButton buttonType="RAISED" onAction="#resetIgnoresPushed" style="-fx-background-color: #2F2F38;" text="Reset Ignores" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
       <GridPane.margin>
          <Insets bottom="10.0" left="10.0" />
       </GridPane.margin>
    </JFXButton>
+   <GridPane prefHeight="111.0" prefWidth="600.0" style="-fx-background-color: #F2BEB9;" GridPane.columnSpan="2147483647" GridPane.rowSpan="2">
+     <columnConstraints>
+       <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
+       <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0" />
+     </columnConstraints>
+     <rowConstraints>
+       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+     </rowConstraints>
+      <children>
+         <ImageView fitHeight="84.0" fitWidth="82.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER">
+            <image>
+               <Image url="@../images/Fancy-Picnics-Logo.png" />
+            </image>
+            <effect>
+               <InnerShadow />
+            </effect>
+         </ImageView>
+          <Label text="Automatic Email Import" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+              <font>
+                  <Font size="36.0" />
+              </font>
+          </Label>
+      </children>
+   </GridPane>
+   <effect>
+      <InnerShadow />
+   </effect>
 </GridPane>
