@@ -103,6 +103,74 @@ public class AddEventController extends Controller implements Initializable{
         column5.setOnEditCommit(event -> editRecord(event, 5) );
     }
 
+    public void autoPopulate(){
+        if(selectedSquareEmail != null){
+            customer_textField1.setText(selectedSquareEmail.getEventName());
+            customer_textField2.setText(selectedSquareEmail.getEventEmail());
+            customer_textField3.setText(selectedSquareEmail.getEventPhoneNumber());
+            customer_textField4.setText(selectedSquareEmail.getEventSource());
+
+            boolean isAm = selectedSquareEmail.getEventTime().toUpperCase().contains("AM");
+            String timeString;
+            String dateString = selectedSquareEmail.getEventDate();
+            if(isAm)
+                timeString = selectedSquareEmail.getEventTime().toUpperCase().split("AM")[0].trim();
+            else
+                timeString = selectedSquareEmail.getEventTime().toUpperCase().split("PM")[0].trim();
+
+            String[] timeArray = timeString.split(":");
+            String[] dateArray = dateString.split("/");
+            timeString = "";
+            dateString = "";
+            for (int i = 0; i < timeArray.length; i++) {
+                if(timeArray[i].length() == 1) {
+                    timeArray[i] = "0" + timeArray[i];
+                }
+                if(i == 0){
+                    timeArray[0] = isAm ? timeArray[0] : String.valueOf(Integer.parseInt(timeArray[0]) + 12);
+                }
+                if(i + 1 < timeArray.length)
+                    timeString += timeArray[i] + ":";
+                else{
+                    timeString += timeArray[i];
+                }
+            }
+
+            for (int i = 0; i < dateArray.length; i++) {
+                if(i < 2 && dateArray[i].length() == 1) {
+                    dateArray[i] = "0" + dateArray[i];
+                }
+                if(i + 1 < timeArray.length)
+                    dateString += dateArray[i] + "/";
+                else{
+                    dateString += dateArray[i];
+                }
+            }
+
+            DateTimeFormatter formatter =  DateTimeFormatter.ofPattern("MM/dd/yyyy");
+            LocalDate date = LocalDate.parse(dateString, formatter);
+
+            event_datePicker.setValue(date);
+            event_textfield1.setText(timeString);
+            event_textfield2.setText(selectedSquareEmail.getEventGuestCount());
+
+            Addon guestPriceAddon = new Addon();
+            guestPriceAddon.setName(selectedSquareEmail.getEventGuestCount());
+            if(guestPriceAddon.exists()){
+                guestPriceAddon = Addon.findByName(selectedSquareEmail.getEventGuestCount());
+                event_textfield3.setText(String.valueOf(guestPriceAddon.getPrice()));
+            }
+
+            event_textfield4.setText(selectedSquareEmail.getEventLocation());
+            event_textfield5.setText(selectedSquareEmail.getEventAddress());
+            event_textfield6.setText(selectedSquareEmail.getEventStyle());
+            event_textfield7.setText(selectedSquareEmail.getCustomPalette());
+            event_textfield8.setText(selectedSquareEmail.getEventType());
+
+            // Get the addons
+        }
+    }
+
     public void setIsNew(boolean isNew){
         this.isNew = isNew;
     }
@@ -113,6 +181,9 @@ public class AddEventController extends Controller implements Initializable{
 
     public void setIsImport(boolean isImport){
         this.isImport = isImport;
+        if(isImport){
+            autoPopulate();
+        }
     }
 
     public void editRecord(TableColumn.CellEditEvent<InvoiceItem, String> event, int column){
@@ -350,7 +421,7 @@ public class AddEventController extends Controller implements Initializable{
                 }
                 successAlert.setContentText("Success.");
                 successAlert.showAndWait();
-               // closeChildWindow(event);
+                closeChildWindow(event);
             });
         }
     }

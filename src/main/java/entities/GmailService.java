@@ -148,16 +148,15 @@ public class GmailService {
                     squareEmail.setEventDate(trimmedList.get(5));
                     squareEmail.setEventTime(trimmedList.get(6));
                     squareEmail.setEventGuestCount(trimmedList.get(7));
-                    squareEmail.setEventLocation((trimmedList.get(8)));
+                    squareEmail.setEventLocation((trimmedList.get(8).split("\\(")[0].trim()));
                     squareEmail.setEventAddress(trimmedList.get(9));
                     squareEmail.setEventType(trimmedList.get(10));
-                    squareEmail.setEventStyle(trimmedList.get(11));
+                    squareEmail.setEventStyle(trimmedList.get(11).split("\\(")[0].trim());
                     squareEmail.setCustomPalette(trimmedList.get(12));
                     squareEmail.setEventAddonsArray((trimmedList.get(13)).split(","));
                     String[] eventAddonsArray = squareEmail.getEventAddonsArray();
                     for (int i = 0; i < eventAddonsArray.length; i++) {
-                        if (eventAddonsArray[i].contains("Cinema experience"))
-                            eventAddonsArray[i] = "Cinema experience";
+                            eventAddonsArray[i] = eventAddonsArray[i].split("\\(")[0].trim();
                     }
                     squareEmail.setEventAddonsArray(eventAddonsArray);
                     if(maxRows > 14)

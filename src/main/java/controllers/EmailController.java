@@ -128,7 +128,6 @@ public class EmailController extends Controller implements Initializable {
     }
 
     private void generateInvoice(ActionEvent event){
-        // Pre-populate add invoice screen.
         if(selectedObject != null) {
             selectedSquareEmail = selectedObject;
             try {
