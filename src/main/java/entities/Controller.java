@@ -1,6 +1,6 @@
 package entities;
 
-import controllers.AddEvent;
+import controllers.AddEventController;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -8,8 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -125,13 +123,17 @@ public abstract class Controller{
         childWindow.show();
     }
 
-    protected void loadChildScene(Stage parentWindow, String file, ControllerType type) throws IOException{
+    protected void loadEventScene(Stage parentWindow, String file, ControllerType type, boolean isNew, boolean createSquareInvoice, boolean isImport) throws IOException{
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(file));
         Parent parent = loader.load();
 
         switch (type){
             case ADD_EVENT: {
+                AddEventController controller = loader.getController();
+                controller.setIsNew(isNew);
+                controller.setIsImport(isImport);
+                controller.setCreateSquareInvoice(createSquareInvoice);
                 MIN_HEIGHT = 900;
                 MIN_WIDTH = 900;
                 PREF_HEIGHT = 900;

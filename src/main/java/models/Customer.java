@@ -89,7 +89,7 @@ public class Customer extends QueryObject {
     public static Customer findByEmail(String email){
         Customer customer = new Customer();
         try {
-            statement = "SELECT * FROM customer WHERE email = " + email;
+            statement = "SELECT * FROM customer WHERE email = '" + email + "'";
             executeQuery(statement);
             if (resultSet.next()) {
                 setEmployeeFromQuery(customer);

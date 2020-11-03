@@ -132,7 +132,7 @@ public class EmailController extends Controller implements Initializable {
         if(selectedObject != null) {
             selectedSquareEmail = selectedObject;
             try {
-                loadChildScene((Stage) dpFrom.getScene().getWindow(), "/views/AddEvent.fxml", ControllerType.ADD_EVENT);
+                loadEventScene((Stage) dpFrom.getScene().getWindow(), "/views/AddEvent.fxml", ControllerType.ADD_EVENT, true, false, true);
             } catch (IOException e) {
                 e.printStackTrace();
             }

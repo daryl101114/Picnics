@@ -49,6 +49,8 @@ public class GmailService {
     }
 
     public List<SquareEmail> getEmails(LocalDate startDate, LocalDate endDate, long max_results){
+        int counter = 1;
+        long gmailResults = 499;
         Gmail.Users.Messages.List request;
         List<Message> messageList = new LinkedList<>();
         String epochStartDateInSeconds = Long.toString(java.sql.Date.valueOf(startDate).getTime() / 1000);
@@ -57,7 +59,7 @@ public class GmailService {
             do {
                 request = service.users().messages().list(USER)
                         .setQ("from:squarespace subject:Form after:" + epochStartDateInSeconds + " before:" + epochEndDateInSeconds)
-                        .setMaxResults(max_results);
+                        .setMaxResults(gmailResults);
 
                 ListMessagesResponse response = request.execute();
                 try {
@@ -66,7 +68,7 @@ public class GmailService {
                     return new ArrayList<>();
                 }
                 request.setPageToken(response.getNextPageToken());
-            } while (request.getPageToken() != null && request.getPageToken().length() > 0 && max_results > 500);
+            } while (request.getPageToken() != null && request.getPageToken().length() > 0 && gmailResults > 500);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -79,9 +81,12 @@ public class GmailService {
         List<SquareEmail> squareEmailList = new LinkedList<>();
         for(Message message : messageList){
             if(!squareEmailIdList.contains(message.getId())) {
+                counter++;
                 SquareEmail tempSquareEmail = new SquareEmail();
                 tempSquareEmail.setId(message.getId());
-                    squareEmailList.add(tempSquareEmail);
+                squareEmailList.add(tempSquareEmail);
+                if(counter > max_results)
+                    break;
             }
         }
         return getFullMessages(squareEmailList);

@@ -17,11 +17,11 @@ public class Invoice extends QueryObject {
     private boolean isPayed;
 
     public Invoice(int id, Float subtotal, Float taxRate, Float total, boolean isPayed) {
-        setID(id);
-        setSubtotal(subtotal);
-        setTaxRate(taxRate);
-        setTotal(total);
-        setIsPayed(isPayed);
+        this.id = id;
+        this.subtotal = subtotal;
+        this.taxRate = taxRate;
+        this.total = total;
+        this.isPayed = isPayed;
     }
 
     public Invoice(){
@@ -92,6 +92,23 @@ public class Invoice extends QueryObject {
         this.id = id;
     }
 
+    public int getNewIDFromDB() {
+        int result = -1;
+        try {
+            statement = "SELECT NEXT VALUE FOR invoice_id_sequence";
+            executeQuery(statement);
+            if (resultSet.next()) {
+                result = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            terminateQuery();
+        }
+
+        return result;
+    }
+
     public Float getSubtotal() {
         return subtotal;
     }
@@ -109,11 +126,7 @@ public class Invoice extends QueryObject {
     }
 
     public Float getTotal() {
-        return total;
-    }
-
-    public void setTotal(Float total) {
-        this.total = total;
+        return Math.round((subtotal * (1 + (taxRate / 100))) * 100.0) / 100.0f;
     }
 
     public boolean getIsPayed() {

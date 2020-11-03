@@ -15,39 +15,34 @@ public class InvoiceItem extends QueryObject {
     private int itemQuantity;
     private double itemCost;
     private double itemSupplierCost;
-    private String itemCostString;
-    private String itemQuantityString;
-    private String itemSupplierCostString;
+    private String note;
 
-    public InvoiceItem(int invoiceId, String itemDesc, int itemQuantity, double itemCost, double itemSupplierCost) {
+    public InvoiceItem(int invoiceId, String itemDesc, int itemQuantity, double itemCost, double itemSupplierCost, String note) {
         this.invoiceId = invoiceId;
         this.itemDesc = itemDesc;
         this.itemQuantity = itemQuantity;
         this.itemCost = itemCost;
         this.itemSupplierCost = itemSupplierCost;
-        this.itemCostString = String.valueOf(itemCost);
-        this.itemQuantityString = String.valueOf(itemQuantity);
-        this.itemSupplierCostString = String.valueOf(itemSupplierCost);
+        this.note = note;
     }
 
     public InvoiceItem(){
+        this.itemQuantity = 1;
+        this.itemCost = 0.00;
+        this.itemSupplierCost = 0.00;
     }
 
-    public boolean edit(){
-        statement = "UPDATE invoice_item " +
-                "SET " +
-                "item_desc = '" + this.getItemDesc() +  "', " +
-                "item_quantity = " + this.getItemQuantity() +  ", " +
-                "item_cost = " + this.getItemCost() + ", " +
-                "item_cost = " + this.getItemSupplierCost() + " " +
-                "WHERE invoice_id = " + this.getInvoiceId();
+    public boolean add(){
+        statement = "INSERT INTO invoice_item (invoice_id, item_desc, item_quantity, item_cost, item_supplier_cost, note) VALUES (" +
+                this.getInvoiceId() + ", '" + this.getItemDesc() + "', " + this.getItemQuantity() +  ", " + this.getItemCost() +  ", " + this.getItemSupplierCost() + ", '" + this.getNote() +
+                "')";
 
         return executeUpdate(statement);
     }
 
-    public boolean add(){
-        statement = "INSERT INTO invoice_item (item_desc, item_quantity, item_cost, item_supplier_cost) VALUES ('" +
-                this.getItemDesc() + "', " + this.getItemQuantity() +  ", " + this.getItemCost() +  ", " + this.getItemSupplierCost() +
+    public boolean deleteAllFromInvoice(){
+        statement = "DELETE FROM invoice_item WHERE invoice_id = " +
+                this.getInvoiceId() +
                 ")";
 
         return executeUpdate(statement);
@@ -130,27 +125,23 @@ public class InvoiceItem extends QueryObject {
     }
 
     public String getItemCostString() {
-        return itemCostString;
-    }
-
-    public void setItemCostString(String itemCostString) {
-        this.itemCostString = itemCostString;
+        return String.valueOf(itemCost);
     }
 
     public String getItemQuantityString() {
-        return itemQuantityString;
-    }
-
-    public void setItemQuantityString(String itemQuantityString) {
-        this.itemQuantityString = itemQuantityString;
+        return String.valueOf(itemQuantity);
     }
 
     public String getItemSupplierCostString() {
-        return itemSupplierCostString;
+        return String.valueOf(itemSupplierCost);
     }
 
-    public void setItemSupplierCostString(String itemSupplierString) {
-        this.itemSupplierCostString = itemSupplierString;
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public boolean exists() {
@@ -167,6 +158,7 @@ public class InvoiceItem extends QueryObject {
         invoiceItem.setItemQuantity(resultSet.getInt("item_quantity"));
         invoiceItem.setItemCost(resultSet.getDouble("item_cost"));
         invoiceItem.setItemSupplierCost(resultSet.getDouble("item_supplier_cost"));
+        invoiceItem.setNote(resultSet.getString("note"));
     }
 
     public static int getChecksum(){
