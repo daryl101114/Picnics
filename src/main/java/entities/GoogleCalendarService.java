@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class GoogleCalendarService {
@@ -143,12 +144,23 @@ public class GoogleCalendarService {
         } while (pageToken != null);
     }
     
-    public void updateEvent(String eventID,String summary) throws IOException, GeneralSecurityException{
+    public void updateEvent(String eventID,String summary, String startDate,String endDate, String description) throws IOException, GeneralSecurityException{
     // Retrieve the event from the API
         Event event = service.events().get("primary",eventID).execute();
 
     // Make a change
         event.setSummary(summary);
+        event.setDescription(description);
+        DateTime startDateTime = new DateTime(startDate);
+        EventDateTime start = new EventDateTime()
+                .setDateTime(startDateTime)
+                .setTimeZone("America/Los_Angeles");
+        event.setStart(start);
+        DateTime endDateTime = new DateTime(endDate);
+        EventDateTime end = new EventDateTime()
+                .setDateTime(endDateTime)
+                .setTimeZone("America/Los_Angeles");
+        event.setEnd(end);
 
     // Update the event
         Event updatedEvent = service.events().update("primary", event.getId(), event).execute();
