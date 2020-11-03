@@ -31,10 +31,10 @@ public class Invoice extends QueryObject {
 
         statement = "UPDATE invoice " +
                 "SET " +
-                "subtotal = '" + this.getSubtotal() +  "', " +
-                "tax_rate = '" + this.getTaxRate() +  "', " +
+                "subtotal = " + this.getSubtotal() +  ", " +
+                "tax_rate = " + this.getTaxRate() +  ", " +
                 "is_payed = " + this.getIsPayedBit() +  ", " +
-                "total = '" + this.getTotal() +  "', " +
+                "total = " + this.getTotal() +  ", " +
                 "WHERE id = " + this.getID();
 
         return executeUpdate(statement);

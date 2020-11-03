@@ -48,27 +48,38 @@ public class Event extends QueryObject {
 
         statement = "UPDATE event " +
                 "SET " +
-                "square_email_id = '" + this.getSquareEmailId() +  "', " +
+                "square_email_id = " + (this.getSquareEmailId() == null ? this.getSquareEmailId() : "'" + this.getSquareEmailId().replaceAll("'","''") + "'") + ", " +
                 "picnic_date_time = '" + this.getPicnicDateTime().toInstant() +  "', " +
                 "invoice_id = " + this.getInvoiceId() +  ", " +
                 "customer_id = " + this.getCustomerId() +  ", " +
-                "guest_count = " + this.getGuestCount() +  ", " +
-                "event_location = '" + this.getEventLocation() +  "', " +
-                "event_address = '" + this.getEventAddress() +  "', " +
-                "event_type = '" + this.getEventType() +  "', " +
+                "guest_count = " + (this.getGuestCount() == null ? this.getGuestCount() : "'" + this.getGuestCount().replaceAll("'","''") + "'") + ", " +
+                "event_location = " + (this.getEventLocation() == null ? this.getEventLocation() : "'" + this.getEventLocation().replaceAll("'","''") + "'") + ", " +
+                "event_address = " + (this.getEventAddress() == null ? this.getEventAddress() : "'" + this.getEventAddress().replaceAll("'","''") + "'") + ", " +
+                "event_type = " + (this.getEventType() == null ? this.getEventType() : "'" + this.getEventType().replaceAll("'","''") + "'") + ", " +
                 "employee_id = " + (this.getEmployeeId() == 0 ? "null" : this.getEmployeeId()) +  ", " +
                 "google_calendar_id = " + (this.getGoogleCalendarId() == 0 ? "null" : this.getGoogleCalendarId()) +  ", " +
-                "style = '" + this.getStyle() +  "', " +
-                "custom_palette = '" + this.getCustomPalette() +  "' " +
+                "style = " + (this.getStyle() == null ? this.getStyle() : "'" + this.getStyle().replaceAll("'","''") + "'") + ", " +
+                "custom_palette = " + (this.getCustomPalette() == null ? this.getCustomPalette() : "'" + this.getCustomPalette().replaceAll("'","''") + "'") + ", " +
                 "WHERE id = " + this.getId();
 
         return executeUpdate(statement);
     }
 
     public boolean add(){
-        statement = "Insert INTO event (square_email_id, picnic_date_time, invoice_id, customer_id, guest_count, event_location, event_address, event_type, employee_id, google_calendar_id, custom_palette, style)  VALUES ('" +
-                this.getSquareEmailId() + "', '" + this.getPicnicDateTime().toInstant() + "', " + this.getInvoiceId() + ", " + this.getCustomerId() + ", '" + this.getGuestCount() + "', '"  + this.getEventLocation() + "', '" + this.getEventAddress() + "', '" + this.getEventType() + "', " + (this.getEmployeeId() == 0 ? "null" : this.getEmployeeId()) + ", " + (this.getGoogleCalendarId() == 0 ? "null" : this.getGoogleCalendarId()) + ", '" + this.getCustomPalette() + "', '" + this.getStyle() +
-                "')";
+        statement = "Insert INTO event (square_email_id, picnic_date_time, invoice_id, customer_id, guest_count, event_location, event_address, event_type, employee_id, google_calendar_id, custom_palette, style)  VALUES (" +
+                (this.getSquareEmailId() == null ? this.getSquareEmailId() : "'" + this.getSquareEmailId().replaceAll("'","''") + "'") + ", " +
+                "'" + this.getPicnicDateTime().toInstant() + "', " +
+                this.getInvoiceId() + ", " +
+                this.getCustomerId() + ", " +
+                (this.getGuestCount() == null ? this.getGuestCount() : "'" + this.getGuestCount().replaceAll("'","''") + "'") + ", " +
+                (this.getEventLocation() == null ? this.getEventLocation() : "'" + this.getEventLocation().replaceAll("'","''") + "'") + ", " +
+                (this.getEventAddress() == null ? this.getEventAddress() : "'" + this.getEventAddress().replaceAll("'","''") + "'") + ", " +
+                (this.getEventType() == null ? this.getEventType() : "'" + this.getEventType().replaceAll("'","''") + "'") + ", " +
+                (this.getEmployeeId() == 0 ? "null" : this.getEmployeeId()) + ", " +
+                (this.getGoogleCalendarId() == 0 ? "null" : this.getGoogleCalendarId()) + ", " +
+                (this.getCustomPalette() == null ? this.getCustomPalette() : "'" + this.getCustomPalette().replaceAll("'","''") + "'") + ", " +
+                (this.getStyle() == null ? this.getStyle() : "'" + this.getStyle().replaceAll("'","''") + "'") +
+                ")";
 
         return executeUpdate(statement);
     }

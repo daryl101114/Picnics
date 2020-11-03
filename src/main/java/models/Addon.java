@@ -30,7 +30,8 @@ public class Addon extends QueryObject {
                 "SET " +
                 "price = " + this.getPrice() +  ", " +
                 "supplier_cost = " + this.getSupplierCost() +  " " +
-                "WHERE name = '" + this.getName() + "' AND type_code = '" + this.getTypeCode() + "'";
+                "WHERE name = " + (this.getName() == null ? this.getName() : "'" + this.getName().replaceAll("'","''") + "'") + " " +
+                "AND type_code = " + (this.getTypeCode() == null ? this.getTypeCode() : "'" + this.getTypeCode().replaceAll("'","''") + "'");
 
 
         return executeUpdate(statement);
@@ -38,7 +39,10 @@ public class Addon extends QueryObject {
 
     public boolean add(){
         statement = "INSERT INTO addon (price, name, type_code, supplier_cost) VALUES (" +
-                this.getPrice() + ", '" + this.getName() + "', '" + this.getTypeCode() + "', " + this.getSupplierCost() +
+                this.getPrice() + ", " +
+                (this.getName() == null ? this.getName() : "'" + this.getName().replaceAll("'","''") + "'") + ", " +
+                (this.getTypeCode() == null ? this.getTypeCode() : "'" + this.getTypeCode().replaceAll("'","''") + "'") + ", " +
+                this.getSupplierCost() +
                 ")";
 
         return executeUpdate(statement);
@@ -65,7 +69,7 @@ public class Addon extends QueryObject {
     public static Addon findByName(String name){
         Addon addon = new Addon();
         try {
-            statement = "SELECT * FROM addon WHERE name = '" + name + "'";
+            statement = "SELECT * FROM addon WHERE name = '" + name.replaceAll("'","''") + "'";
             executeQuery(statement);
             if (resultSet.next()) {
                 setAddonFromQuery(addon);

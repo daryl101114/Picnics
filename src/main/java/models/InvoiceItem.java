@@ -34,8 +34,13 @@ public class InvoiceItem extends QueryObject {
 
     public boolean add(){
         statement = "INSERT INTO invoice_item (invoice_id, item_desc, item_quantity, item_cost, item_supplier_cost, note) VALUES (" +
-                this.getInvoiceId() + ", '" + this.getItemDesc() + "', " + this.getItemQuantity() +  ", " + this.getItemCost() +  ", " + this.getItemSupplierCost() + ", '" + this.getNote() +
-                "')";
+                this.getInvoiceId() + ", " +
+                (this.getItemDesc() == null ? this.getItemDesc() : "'" + this.getItemDesc().replaceAll("'","''") + "'") + ", " +
+                this.getItemQuantity() +  ", " +
+                this.getItemCost() +  ", " +
+                this.getItemSupplierCost() + ", " +
+                (this.getNote() == null ? this.getNote() : "'" + this.getNote().replaceAll("'","''") + "'") +
+                ")";
 
         return executeUpdate(statement);
     }

@@ -41,22 +41,24 @@ public class SquareEmail extends QueryObject {
     }
 
     public boolean add(){
-        statement = "INSERT INTO square_email (id, email_date, is_ignored) VALUES ('" +
-                this.getId() + "', '" + this.getEmailDateFormatted() + "', " + this.getIsIgnoredBit() +
+        statement = "INSERT INTO square_email (id, email_date, is_ignored) VALUES (" +
+                (this.getId() == null ? this.getId() : "'" + this.getId().replaceAll("'","''") + "'") + ", " +
+                "'" +this.getEmailDateFormatted() + "', " +
+                this.getIsIgnoredBit() +
                 ")";
         return executeUpdate(statement);
     }
 
     public boolean update(){
         statement = "UPDATE square_email SET is_ignored = " + this.getIsIgnoredBit() +
-                " WHERE id = " + this.getId();
+                " WHERE id = " + (this.getId() == null ? this.getId() : "'" + this.getId().replaceAll("'","''") + "'") + ";";
         return executeUpdate(statement);
     }
 
     public boolean delete(){
         statement =
-                "DELETE FROM square_email WHERE id = '" +
-                        this.getId() + "'";
+                "DELETE FROM square_email WHERE id = " +
+                        (this.getId() == null ? this.getId() : "'" + this.getId().replaceAll("'","''") + "'") + ";";
         return executeUpdate(statement);
     }
 
@@ -81,7 +83,7 @@ public class SquareEmail extends QueryObject {
     public SquareEmail findByID(String id){
         SquareEmail squareEmail = new SquareEmail();
         try {
-            statement = "SELECT id, email_date, is_ignored FROM square_email WHERE id = '" + id + "'";
+            statement = "SELECT id, email_date, is_ignored FROM square_email WHERE id = " + (this.getId() == null ? this.getId() : "'" + this.getId().replaceAll("'","''") + "'") + ";";
             executeQuery(statement);
             if (resultSet.next()) {
                 setUserFromQuery(squareEmail);

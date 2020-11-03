@@ -35,11 +35,11 @@ public class Employee extends QueryObject {
 
         statement = "UPDATE employee " +
                 "SET " +
-                "first_name = '" + this.getFirstName() +  "', " +
-                "last_name = '" + this.getLastName() +  "', " +
-                "email = '" + this.getEmail() +  "', " +
-                "address = '" + this.getAddress() +  "', " +
-                "phone_number = '" + this.getPhoneNumber() +  "', " +
+                "first_name = " + (this.getFirstName() == null ? this.getFirstName() : "'" + this.getFirstName().replaceAll("'","''") + "'") + ", " +
+                "last_name = " + (this.getLastName() == null ? this.getLastName() : "'" + this.getLastName().replaceAll("'","''") + "'") + ", " +
+                "email = " + (this.getEmail() == null ? this.getEmail() : "'" + this.getEmail().replaceAll("'","''") + "'") + ", " +
+                "address = " + (this.getAddress() == null ? this.getAddress() : "'" + this.getAddress().replaceAll("'","''") + "'") + ", " +
+                "phone_number = " + (this.getPhoneNumber() == null ? this.getPhoneNumber() : "'" + this.getPhoneNumber().replaceAll("'","''") + "'") + ", " +
                 "active = " + this.getActiveBit() + " " +
                 "WHERE id = " + this.getID();
 
@@ -47,9 +47,13 @@ public class Employee extends QueryObject {
     }
 
     public boolean add(){
-        statement = "INSERT INTO employee (first_name, last_name, email, address, phone_number) VALUES ('" +
-                this.getFirstName() + "', '" + this.getLastName() +  "', '" + this.getEmail() + "', '" + this.getAddress() + "', '" + this.getPhoneNumber() +
-                "')";
+        statement = "INSERT INTO employee (first_name, last_name, email, address, phone_number) VALUES (" +
+                (this.getFirstName() == null ? this.getFirstName() : "'" + this.getFirstName().replaceAll("'","''") + "'") + ", " +
+                (this.getLastName() == null ? this.getLastName() : "'" + this.getLastName().replaceAll("'","''") + "'") + ", " +
+                (this.getEmail() == null ? this.getEmail() : "'" + this.getEmail().replaceAll("'","''") + "'") + ", " +
+                (this.getAddress() == null ? this.getAddress() : "'" + this.getAddress().replaceAll("'","''") + "'") + ", " +
+                (this.getPhoneNumber() == null ? this.getPhoneNumber() : "'" + this.getPhoneNumber().replaceAll("'","''") + "'") +
+                ")";
 
         return executeUpdate(statement);
     }

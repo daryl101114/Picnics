@@ -103,7 +103,7 @@ public class AddEventController extends Controller implements Initializable{
         column5.setOnEditCommit(event -> editRecord(event, 5) );
     }
 
-    public void autoPopulate(){
+    public void autoPopulateImport(){
         if(selectedSquareEmail != null){
             customer_textField1.setText(selectedSquareEmail.getEventName());
             customer_textField2.setText(selectedSquareEmail.getEventEmail());
@@ -127,7 +127,7 @@ public class AddEventController extends Controller implements Initializable{
                     timeArray[i] = "0" + timeArray[i];
                 }
                 if(i == 0){
-                    timeArray[0] = isAm ? timeArray[0] : String.valueOf(Integer.parseInt(timeArray[0]) + 12);
+                    timeArray[0] = isAm ? timeArray[0] : String.valueOf((Integer.parseInt(timeArray[0]) % 12) + 12);
                 }
                 if(i + 1 < timeArray.length)
                     timeString += timeArray[i] + ":";
@@ -155,9 +155,9 @@ public class AddEventController extends Controller implements Initializable{
             event_textfield2.setText(selectedSquareEmail.getEventGuestCount());
 
             Addon guestPriceAddon = new Addon();
-            guestPriceAddon.setName(selectedSquareEmail.getEventGuestCount());
+            guestPriceAddon.setName(selectedSquareEmail.getEventGuestCount() + " Guests");
             if(guestPriceAddon.exists()){
-                guestPriceAddon = Addon.findByName(selectedSquareEmail.getEventGuestCount());
+                guestPriceAddon = Addon.findByName(selectedSquareEmail.getEventGuestCount() + " Guests");
                 event_textfield3.setText(String.valueOf(guestPriceAddon.getPrice()));
             }
 
@@ -167,7 +167,26 @@ public class AddEventController extends Controller implements Initializable{
             event_textfield7.setText(selectedSquareEmail.getCustomPalette());
             event_textfield8.setText(selectedSquareEmail.getEventType());
 
-            // Get the addons
+            String[] addonsArray = selectedSquareEmail.getEventAddonsArray();
+            for (int i = 0; i < addonsArray.length; i++) {
+                if(addonsArray[i].isEmpty())
+                    continue;
+                InvoiceItem invoiceItem = new InvoiceItem();
+                invoiceItem.setItemDesc(addonsArray[i]);
+                Addon addon = new Addon();
+                addon.setName(addonsArray[i]);
+                if(addon.getName().toLowerCase().equals("marquee letter")) {
+                    invoiceItem.setNote(selectedSquareEmail.getMarqueeLetters());
+                    invoiceItem.setItemQuantity(selectedSquareEmail.getMarqueeLetters().replaceAll("\\s", "").length());
+                }
+                if(addon.exists()) {
+                    addon = Addon.findByName(addonsArray[i]);
+                    invoiceItem.setItemCost(addon.getPrice());
+                    invoiceItem.setItemSupplierCost(addon.getSupplierCost());
+                }
+                invoiceItemObservableList.add(invoiceItem);
+            }
+            tableView.refresh();
         }
     }
 
@@ -182,7 +201,7 @@ public class AddEventController extends Controller implements Initializable{
     public void setIsImport(boolean isImport){
         this.isImport = isImport;
         if(isImport){
-            autoPopulate();
+            autoPopulateImport();
         }
     }
 
@@ -528,7 +547,7 @@ public class AddEventController extends Controller implements Initializable{
         }
 
         for (InvoiceItem addon:invoiceItemObservableList) {
-            if(addon.getItemDesc().equals("New Addon")){
+            if(addon.getItemDesc().equals("New Addon") || addon.getItemCost() == 0){
                 failureAlert.setContentText("Please enter addon details.");
                 failureAlert.showAndWait();
                 return false;
