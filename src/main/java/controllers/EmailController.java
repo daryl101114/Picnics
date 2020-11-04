@@ -82,6 +82,10 @@ public class EmailController extends Controller implements Initializable {
         column5.setCellValueFactory(new PropertyValueFactory<>("eventGuestCount"));
     }
 
+    public void refreshTable(){
+        tableView.refresh();
+    }
+
     public void reloadTablePushed() throws InterruptedException {
         GmailService gmail = new GmailService();
         LocalDate from = dpFrom.getValue();

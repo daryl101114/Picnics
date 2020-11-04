@@ -1,6 +1,7 @@
 package entities;
 
 import controllers.AddEventController;
+import controllers.EmailController;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +13,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import models.Employee;
+import models.Event;
 import models.SquareEmail;
 import models.UserAccount;
 
@@ -39,6 +41,9 @@ public abstract class Controller{
     protected static ObservableList<SquareEmail> squareEmailObservableList;
     protected static SquareEmail selectedSquareEmail;
 
+    protected static ObservableList<Event> eventObservableList;
+    protected static Event selectedEvent;
+
     protected static Stage window;
 
     public void mainMenuPushed(ActionEvent event) throws IOException {
@@ -55,6 +60,7 @@ public abstract class Controller{
             case USER:
             case LOGIN:
             case EMPLOYEE:
+            case EVENT:
             case EMAIL: {
                 MIN_HEIGHT = 600;
                 MIN_WIDTH = 600;
@@ -153,6 +159,7 @@ public abstract class Controller{
         childWindow.initStyle(StageStyle.DECORATED);
         childWindow.initModality(Modality.WINDOW_MODAL);
         childWindow.initOwner(parentWindow);
+
         parentWindow.toFront();
         childWindow.show();
     }
@@ -162,6 +169,8 @@ public abstract class Controller{
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
     }
+
+
 
     protected void clearSelectedObjects(){
         selectedSquareEmail = null;

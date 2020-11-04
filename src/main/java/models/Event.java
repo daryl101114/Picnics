@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,10 @@ public class Event extends QueryObject {
     private String style;
     private String customPalette;
 
+    private Customer customer;
+    private List<InvoiceItem> invoiceItemList;
+    private Invoice invoice;
+
     public Event(int id, String squareEmailId, Date picnicDateTime, int invoiceId, int customerId, String guestCount, String eventLocation, String eventAddress, String eventType, int employeeId, int googleCalendarId, String style, String customPalette) {
         this.id = id;
         this.squareEmailId = squareEmailId;
@@ -41,57 +46,57 @@ public class Event extends QueryObject {
         this.customPalette = customPalette;
     }
 
-    public Event(){
+    public Event() {
     }
 
-    public boolean edit(){
+    public boolean edit() {
 
         statement = "UPDATE event " +
                 "SET " +
-                "square_email_id = " + (this.getSquareEmailId() == null ? this.getSquareEmailId() : "'" + this.getSquareEmailId().replaceAll("'","''") + "'") + ", " +
-                "picnic_date_time = '" + this.getPicnicDateTime().toInstant() +  "', " +
-                "invoice_id = " + this.getInvoiceId() +  ", " +
-                "customer_id = " + this.getCustomerId() +  ", " +
-                "guest_count = " + (this.getGuestCount() == null ? this.getGuestCount() : "'" + this.getGuestCount().replaceAll("'","''") + "'") + ", " +
-                "event_location = " + (this.getEventLocation() == null ? this.getEventLocation() : "'" + this.getEventLocation().replaceAll("'","''") + "'") + ", " +
-                "event_address = " + (this.getEventAddress() == null ? this.getEventAddress() : "'" + this.getEventAddress().replaceAll("'","''") + "'") + ", " +
-                "event_type = " + (this.getEventType() == null ? this.getEventType() : "'" + this.getEventType().replaceAll("'","''") + "'") + ", " +
-                "employee_id = " + (this.getEmployeeId() == 0 ? "null" : this.getEmployeeId()) +  ", " +
-                "google_calendar_id = " + (this.getGoogleCalendarId() == 0 ? "null" : this.getGoogleCalendarId()) +  ", " +
-                "style = " + (this.getStyle() == null ? this.getStyle() : "'" + this.getStyle().replaceAll("'","''") + "'") + ", " +
-                "custom_palette = " + (this.getCustomPalette() == null ? this.getCustomPalette() : "'" + this.getCustomPalette().replaceAll("'","''") + "'") + ", " +
+                "square_email_id = " + (this.getSquareEmailId() == null ? this.getSquareEmailId() : "'" + this.getSquareEmailId().replaceAll("'", "''") + "'") + ", " +
+                "picnic_date_time = '" + this.getPicnicDateTime().toInstant() + "', " +
+                "invoice_id = " + this.getInvoiceId() + ", " +
+                "customer_id = " + this.getCustomerId() + ", " +
+                "guest_count = " + (this.getGuestCount() == null ? this.getGuestCount() : "'" + this.getGuestCount().replaceAll("'", "''") + "'") + ", " +
+                "event_location = " + (this.getEventLocation() == null ? this.getEventLocation() : "'" + this.getEventLocation().replaceAll("'", "''") + "'") + ", " +
+                "event_address = " + (this.getEventAddress() == null ? this.getEventAddress() : "'" + this.getEventAddress().replaceAll("'", "''") + "'") + ", " +
+                "event_type = " + (this.getEventType() == null ? this.getEventType() : "'" + this.getEventType().replaceAll("'", "''") + "'") + ", " +
+                "employee_id = " + (this.getEmployeeId() == 0 ? "null" : this.getEmployeeId()) + ", " +
+                "google_calendar_id = " + (this.getGoogleCalendarId() == 0 ? "null" : this.getGoogleCalendarId()) + ", " +
+                "style = " + (this.getStyle() == null ? this.getStyle() : "'" + this.getStyle().replaceAll("'", "''") + "'") + ", " +
+                "custom_palette = " + (this.getCustomPalette() == null ? this.getCustomPalette() : "'" + this.getCustomPalette().replaceAll("'", "''") + "'") + ", " +
                 "WHERE id = " + this.getId();
 
         return executeUpdate(statement);
     }
 
-    public boolean add(){
+    public boolean add() {
         statement = "Insert INTO event (square_email_id, picnic_date_time, invoice_id, customer_id, guest_count, event_location, event_address, event_type, employee_id, google_calendar_id, custom_palette, style)  VALUES (" +
-                (this.getSquareEmailId() == null ? this.getSquareEmailId() : "'" + this.getSquareEmailId().replaceAll("'","''") + "'") + ", " +
+                (this.getSquareEmailId() == null ? this.getSquareEmailId() : "'" + this.getSquareEmailId().replaceAll("'", "''") + "'") + ", " +
                 "'" + this.getPicnicDateTime().toInstant() + "', " +
                 this.getInvoiceId() + ", " +
                 this.getCustomerId() + ", " +
-                (this.getGuestCount() == null ? this.getGuestCount() : "'" + this.getGuestCount().replaceAll("'","''") + "'") + ", " +
-                (this.getEventLocation() == null ? this.getEventLocation() : "'" + this.getEventLocation().replaceAll("'","''") + "'") + ", " +
-                (this.getEventAddress() == null ? this.getEventAddress() : "'" + this.getEventAddress().replaceAll("'","''") + "'") + ", " +
-                (this.getEventType() == null ? this.getEventType() : "'" + this.getEventType().replaceAll("'","''") + "'") + ", " +
+                (this.getGuestCount() == null ? this.getGuestCount() : "'" + this.getGuestCount().replaceAll("'", "''") + "'") + ", " +
+                (this.getEventLocation() == null ? this.getEventLocation() : "'" + this.getEventLocation().replaceAll("'", "''") + "'") + ", " +
+                (this.getEventAddress() == null ? this.getEventAddress() : "'" + this.getEventAddress().replaceAll("'", "''") + "'") + ", " +
+                (this.getEventType() == null ? this.getEventType() : "'" + this.getEventType().replaceAll("'", "''") + "'") + ", " +
                 (this.getEmployeeId() == 0 ? "null" : this.getEmployeeId()) + ", " +
                 (this.getGoogleCalendarId() == 0 ? "null" : this.getGoogleCalendarId()) + ", " +
-                (this.getCustomPalette() == null ? this.getCustomPalette() : "'" + this.getCustomPalette().replaceAll("'","''") + "'") + ", " +
-                (this.getStyle() == null ? this.getStyle() : "'" + this.getStyle().replaceAll("'","''") + "'") +
+                (this.getCustomPalette() == null ? this.getCustomPalette() : "'" + this.getCustomPalette().replaceAll("'", "''") + "'") + ", " +
+                (this.getStyle() == null ? this.getStyle() : "'" + this.getStyle().replaceAll("'", "''") + "'") +
                 ")";
 
         return executeUpdate(statement);
     }
 
-    public static ObservableList<Event> findAll(){
+    public static ObservableList<Event> findAllForTable(LocalDate fromDate, LocalDate toDate) {
         List<Event> events = new ArrayList<>();
         try {
-            statement = "SELECT * FROM event";
+            statement = "SELECT * FROM event WHERE picnic_date_time BETWEEN '" + fromDate.toString() + "' AND '" + toDate.toString() + "';";
             executeQuery(statement);
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 Event event = new Event();
-                setEmployeeFromQuery(event);
+                setEventFromQuery(event);
                 events.add(event);
             }
         } catch (SQLException e) {
@@ -99,16 +104,20 @@ public class Event extends QueryObject {
         } finally {
             terminateQuery();
         }
+        for (Event event : events) {
+            setEventDetails(event);
+        }
         return FXCollections.observableList(events);
     }
 
-    public static Event findByID(int id){
+
+    public static Event findByID(int id) {
         Event event = new Event();
         try {
             statement = "SELECT * FROM event WHERE id = " + id;
             executeQuery(statement);
             if (resultSet.next()) {
-                setEmployeeFromQuery(event);
+                setEventFromQuery(event);
             } else {
                 event = null;
             }
@@ -224,15 +233,55 @@ public class Event extends QueryObject {
         this.customPalette = customPalette;
     }
 
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public List<InvoiceItem> getInvoiceItemList() {
+        return invoiceItemList;
+    }
+
+    public void setInvoiceItemList(List<InvoiceItem> invoiceItemList) {
+        this.invoiceItemList = invoiceItemList;
+    }
+
+    public Invoice getInvoice() {
+        return invoice;
+    }
+
+    public void setInvoice(Invoice invoice) {
+        this.invoice = invoice;
+    }
+
+    public String getCustomerName(){
+        return getCustomer().getName();
+    }
+
+    public String getCustomerEmail(){
+        return getCustomer().getEmail();
+    }
+
+    public String getCustomerPhone(){
+        return getCustomer().getPhone();
+    }
+
+    public Float getInvoiceTotal(){
+        return getInvoice().getTotal();
+    }
+
     public boolean exists() {
         return (findByID(this.id) != null);
     }
 
-    public void getIDFromDB(){
+    public void getIDFromDB() {
         setId(getLastID("event"));
     }
 
-    private static void setEmployeeFromQuery(Event event) throws SQLException {
+    private static void setEventFromQuery(Event event) throws SQLException {
         event.setId(resultSet.getInt("id"));
         event.setSquareEmailId(resultSet.getString("square_email_id"));
         event.setPicnicDateTime(resultSet.getDate("picnic_date_time"));
@@ -248,7 +297,13 @@ public class Event extends QueryObject {
         event.setCustomPalette(resultSet.getString("custom_palette"));
     }
 
-    public static int getChecksum(){
+    private static void setEventDetails(Event event) {
+        event.setCustomer(Customer.findByID(event.getCustomerId()));
+        event.setInvoice(Invoice.findByID(event.getInvoiceId()));
+        event.setInvoiceItemList(InvoiceItem.findAllByInvoiceID(event.getInvoiceId()));
+    }
+
+    public static int getChecksum() {
         return getChecksum("event");
     }
 }

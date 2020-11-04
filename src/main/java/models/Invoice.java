@@ -14,14 +14,14 @@ public class Invoice extends QueryObject {
     private Float subtotal;
     private Float taxRate;
     private Float total;
-    private boolean isPayed;
+    private boolean isPaid;
 
-    public Invoice(int id, Float subtotal, Float taxRate, Float total, boolean isPayed) {
+    public Invoice(int id, Float subtotal, Float taxRate, Float total, boolean isPaid) {
         this.id = id;
         this.subtotal = subtotal;
         this.taxRate = taxRate;
         this.total = total;
-        this.isPayed = isPayed;
+        this.isPaid = isPaid;
     }
 
     public Invoice(){
@@ -33,16 +33,16 @@ public class Invoice extends QueryObject {
                 "SET " +
                 "subtotal = " + this.getSubtotal() +  ", " +
                 "tax_rate = " + this.getTaxRate() +  ", " +
-                "is_payed = " + this.getIsPayedBit() +  ", " +
-                "total = " + this.getTotal() +  ", " +
+                "is_paid = " + this.getIsPaidBit() +  ", " +
+                "total = " + this.getTotal() +  " " +
                 "WHERE id = " + this.getID();
 
         return executeUpdate(statement);
     }
 
     public boolean add(){
-        statement = "INSERT INTO invoice (id, subtotal, tax_rate, is_payed, total) VALUES (" +
-                this.getID() + ", " + this.getSubtotal() + ", " + this.getTaxRate() + ", " + this.getIsPayedBit() + ", " + this.getTotal() +
+        statement = "INSERT INTO invoice (id, subtotal, tax_rate, is_paid, total) VALUES (" +
+                this.getID() + ", " + this.getSubtotal() + ", " + this.getTaxRate() + ", " + this.getIsPaidBit() + ", " + this.getTotal() +
                 ")";
 
         return executeUpdate(statement);
@@ -126,19 +126,23 @@ public class Invoice extends QueryObject {
     }
 
     public Float getTotal() {
-        return Math.round((subtotal * (1 + (taxRate / 100))) * 100.0) / 100.0f;
+        return this.total;
     }
 
-    public boolean getIsPayed() {
-        return isPayed;
+    public void setTotal(Float total) {
+        this.total = total;
     }
 
-    public void setIsPayed(boolean payed) {
-        isPayed = payed;
+    public boolean getIsPaid() {
+        return isPaid;
     }
 
-    public int getIsPayedBit(){
-        return isPayed ? 1 : 0;
+    public void setIsPaid(boolean isPaid) {
+        this.isPaid = isPaid;
+    }
+
+    public int getIsPaidBit(){
+        return isPaid ? 1 : 0;
     }
 
     public boolean exists() {
@@ -153,8 +157,8 @@ public class Invoice extends QueryObject {
         invoice.setID(resultSet.getInt("id"));
         invoice.setSubtotal(resultSet.getFloat("subtotal"));
         invoice.setTaxRate(resultSet.getFloat("tax_rate"));
-        invoice.setIsPayed(resultSet.getBoolean("is_payed"));
-        invoice.setTaxRate(resultSet.getFloat("total"));
+        invoice.setIsPaid(resultSet.getBoolean("is_paid"));
+        invoice.setTotal(resultSet.getFloat("total"));
     }
 
     public static int getChecksum(){

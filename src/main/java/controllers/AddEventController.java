@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -25,6 +26,8 @@ import java.util.Date;
 import java.util.ResourceBundle;
 
 public class AddEventController extends Controller implements Initializable{
+
+    private final float TAX_RATE = 6.25f;
 
     @FXML private TextField customer_textField1;
     @FXML private TextField customer_textField2;
@@ -318,8 +321,9 @@ public class AddEventController extends Controller implements Initializable{
 
                 Invoice invoice = new Invoice();
                 invoice.setSubtotal(subtotal);
-                invoice.setTaxRate(6.25f);
-                invoice.setIsPayed(false);
+                invoice.setTaxRate(TAX_RATE);
+                invoice.setIsPaid(false);
+                invoice.setTotal(Math.round((subtotal * (1 + (TAX_RATE / 100.0))) * 100.0) / 100.0f);
 
                 if(isNew){
                     if(!createSquareInvoice) {
@@ -419,6 +423,8 @@ public class AddEventController extends Controller implements Initializable{
                     tmpEvent.setInvoiceId(invoice.getID());
                     if(isImport){
                         selectedSquareEmail.add();
+                        squareEmailObservableList.remove(selectedSquareEmail);
+
                         tmpEvent.setSquareEmailId(selectedSquareEmail.getId());
                     }
                     tmpEvent.setCustomerId(customer.getID());
@@ -436,10 +442,14 @@ public class AddEventController extends Controller implements Initializable{
                     tmpEvent.setCustomPalette(event_textfield7.getText());
                     tmpEvent.add();
                 } else {
-
+                    if(createSquareInvoice){
+                        //Edits the invoice in square
+                    }
+                    // Edits the invoice in our system
                 }
                 successAlert.setContentText("Success.");
                 successAlert.showAndWait();
+
                 closeChildWindow(event);
             });
         }

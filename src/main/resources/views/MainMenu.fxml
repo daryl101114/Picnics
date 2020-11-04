@@ -121,7 +121,7 @@
                      <Insets left="10.0" right="10.0" />
                   </GridPane.margin>
                </JFXButton>
-               <JFXButton buttonType="RAISED" layoutX="230.0" layoutY="75.0" minHeight="50.0" minWidth="120.0" onAction="#userPushed" style="-fx-background-color: #2F2F38;" text="BUTTON" textAlignment="CENTER" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
+               <JFXButton buttonType="RAISED" layoutX="230.0" layoutY="75.0" minHeight="50.0" minWidth="120.0" onAction="#eventsEmailsPushed" style="-fx-background-color: #2F2F38;" text="Events" textAlignment="CENTER" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
                   <font>
                      <Font size="14.0" />
                   </font>
@@ -129,7 +129,7 @@
                      <Insets left="190.0" right="10.0" />
                   </GridPane.margin>
                </JFXButton>
-               <JFXButton buttonType="RAISED" layoutX="230.0" layoutY="75.0" minHeight="50.0" minWidth="120.0" onAction="#userPushed" style="-fx-background-color: #2F2F38;" text="BUTTON" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
+               <JFXButton buttonType="RAISED" layoutX="230.0" layoutY="75.0" minHeight="50.0" minWidth="120.0" style="-fx-background-color: #2F2F38;" text="Reports" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
                   <font>
                      <Font size="14.0" />
                   </font>

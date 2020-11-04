@@ -5,8 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class InvoiceItem extends QueryObject {
 
@@ -53,40 +52,22 @@ public class InvoiceItem extends QueryObject {
         return executeUpdate(statement);
     }
 
-    public static ObservableList<InvoiceItem> findAll(){
-        List<InvoiceItem> invoiceItems = new ArrayList<>();
+    public static List<InvoiceItem> findAllByInvoiceID(int id){
+        List<InvoiceItem> invoiceItemList = new ArrayList<>();
         try {
-            statement = "SELECT * FROM invoice_item ORDER BY name ASC";
+            statement = "SELECT * FROM invoice_item WHERE invoice_id = " + id;
             executeQuery(statement);
             while(resultSet.next()) {
                 InvoiceItem invoiceItem = new InvoiceItem();
                 setEmployeeFromQuery(invoiceItem);
-                invoiceItems.add(invoiceItem);
+                invoiceItemList.add(invoiceItem);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             terminateQuery();
         }
-        return FXCollections.observableList(invoiceItems);
-    }
-
-    public static InvoiceItem findByID(int id){
-        InvoiceItem invoiceItem = new InvoiceItem();
-        try {
-            statement = "SELECT * FROM invoice_item WHERE invoice_id = " + id;
-            executeQuery(statement);
-            if (resultSet.next()) {
-                setEmployeeFromQuery(invoiceItem);
-            } else {
-                invoiceItem = null;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            terminateQuery();
-        }
-        return invoiceItem;
+        return invoiceItemList;
     }
 
     public int getInvoiceId() {
@@ -147,10 +128,6 @@ public class InvoiceItem extends QueryObject {
 
     public void setNote(String note) {
         this.note = note;
-    }
-
-    public boolean exists() {
-        return (findByID(this.invoiceId) != null);
     }
 
     public void getIDFromDB(){

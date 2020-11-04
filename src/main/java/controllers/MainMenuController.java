@@ -62,5 +62,9 @@ public class MainMenuController extends Controller implements Initializable {
         loadScene(event, "/views/Email.fxml", ControllerType.EMAIL);
     }
 
+    public void eventsEmailsPushed(ActionEvent event) throws IOException {
+        loadScene(event, "/views/Event.fxml", ControllerType.EVENT);
+    }
+
 
 }
