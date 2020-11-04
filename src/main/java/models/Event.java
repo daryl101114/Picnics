@@ -1,20 +1,23 @@
 package models;
 
+import com.google.api.client.util.DateTime;
 import entities.QueryObject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 
 public class Event extends QueryObject {
 
     private int id;
     private String squareEmailId;
-    private Date picnicDateTime;
+    private LocalDateTime picnicDateTime;
     private int invoiceId;
     private int customerId;
     private String guestCount;
@@ -30,7 +33,7 @@ public class Event extends QueryObject {
     private List<InvoiceItem> invoiceItemList;
     private Invoice invoice;
 
-    public Event(int id, String squareEmailId, Date picnicDateTime, int invoiceId, int customerId, String guestCount, String eventLocation, String eventAddress, String eventType, int employeeId, int googleCalendarId, String style, String customPalette) {
+    public Event(int id, String squareEmailId, LocalDateTime picnicDateTime, int invoiceId, int customerId, String guestCount, String eventLocation, String eventAddress, String eventType, int employeeId, int googleCalendarId, String style, String customPalette) {
         this.id = id;
         this.squareEmailId = squareEmailId;
         this.picnicDateTime = picnicDateTime;
@@ -54,7 +57,7 @@ public class Event extends QueryObject {
         statement = "UPDATE event " +
                 "SET " +
                 "square_email_id = " + (this.getSquareEmailId() == null ? this.getSquareEmailId() : "'" + this.getSquareEmailId().replaceAll("'", "''") + "'") + ", " +
-                "picnic_date_time = '" + this.getPicnicDateTime().toInstant() + "', " +
+                "picnic_date_time = '" + this.getPicnicDateTimeString() + "', " +
                 "invoice_id = " + this.getInvoiceId() + ", " +
                 "customer_id = " + this.getCustomerId() + ", " +
                 "guest_count = " + (this.getGuestCount() == null ? this.getGuestCount() : "'" + this.getGuestCount().replaceAll("'", "''") + "'") + ", " +
@@ -73,7 +76,7 @@ public class Event extends QueryObject {
     public boolean add() {
         statement = "Insert INTO event (square_email_id, picnic_date_time, invoice_id, customer_id, guest_count, event_location, event_address, event_type, employee_id, google_calendar_id, custom_palette, style)  VALUES (" +
                 (this.getSquareEmailId() == null ? this.getSquareEmailId() : "'" + this.getSquareEmailId().replaceAll("'", "''") + "'") + ", " +
-                "'" + this.getPicnicDateTime().toInstant() + "', " +
+                "'" + this.getPicnicDateTimeString() + "', " +
                 this.getInvoiceId() + ", " +
                 this.getCustomerId() + ", " +
                 (this.getGuestCount() == null ? this.getGuestCount() : "'" + this.getGuestCount().replaceAll("'", "''") + "'") + ", " +
@@ -145,12 +148,17 @@ public class Event extends QueryObject {
         this.squareEmailId = squareEmailId;
     }
 
-    public Date getPicnicDateTime() {
+    public LocalDateTime getPicnicDateTime() {
         return picnicDateTime;
     }
 
-    public void setPicnicDateTime(Date picnicDateTime) {
+    public void setPicnicDateTime(LocalDateTime picnicDateTime) {
         this.picnicDateTime = picnicDateTime;
+    }
+
+    public String getPicnicDateTimeString(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm:ss");
+        return picnicDateTime.format(formatter);
     }
 
     public int getInvoiceId() {
@@ -284,7 +292,7 @@ public class Event extends QueryObject {
     private static void setEventFromQuery(Event event) throws SQLException {
         event.setId(resultSet.getInt("id"));
         event.setSquareEmailId(resultSet.getString("square_email_id"));
-        event.setPicnicDateTime(resultSet.getDate("picnic_date_time"));
+        event.setPicnicDateTime(resultSet.getTimestamp("picnic_date_time").toLocalDateTime());
         event.setInvoiceId(resultSet.getInt("invoice_id"));
         event.setCustomerId(resultSet.getInt("customer_id"));
         event.setGuestCount(resultSet.getString("guest_count"));

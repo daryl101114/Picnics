@@ -18,6 +18,7 @@ import models.Event;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.ResourceBundle;
 
@@ -26,7 +27,7 @@ public class EventController extends Controller implements Initializable {
     @FXML private TableColumn<Event, String> column1;
     @FXML private TableColumn<Event, String> column2;
     @FXML private TableColumn<Event, String> column3;
-    @FXML private TableColumn<Event, Date> column4;
+    @FXML private TableColumn<Event, LocalDateTime> column4;
     @FXML private TableColumn<Event, String> column5;
     @FXML private TableColumn<Event, String> column6;
     @FXML private TableColumn<Event, String> column7;
@@ -69,19 +70,19 @@ public class EventController extends Controller implements Initializable {
         contextMenu.getItems().add(menuItem2);
         tableView.setContextMenu(contextMenu);
 
-        column1.maxWidthProperty().bind(tableView.widthProperty().multiply(0.125));
-        column2.maxWidthProperty().bind(tableView.widthProperty().multiply(0.125));
-        column3.maxWidthProperty().bind(tableView.widthProperty().multiply(0.125));
-        column4.maxWidthProperty().bind(tableView.widthProperty().multiply(0.125));
-        column5.maxWidthProperty().bind(tableView.widthProperty().multiply(0.125));
-        column6.maxWidthProperty().bind(tableView.widthProperty().multiply(0.125));
-        column7.maxWidthProperty().bind(tableView.widthProperty().multiply(0.125));
-        column8.maxWidthProperty().bind(tableView.widthProperty().multiply(0.125));
+        column1.maxWidthProperty().bind(tableView.widthProperty().multiply(0.15));
+        column2.maxWidthProperty().bind(tableView.widthProperty().multiply(0.15));
+        column3.maxWidthProperty().bind(tableView.widthProperty().multiply(0.1));
+        column4.maxWidthProperty().bind(tableView.widthProperty().multiply(0.15));
+        column5.maxWidthProperty().bind(tableView.widthProperty().multiply(0.1));
+        column6.maxWidthProperty().bind(tableView.widthProperty().multiply(0.15));
+        column7.maxWidthProperty().bind(tableView.widthProperty().multiply(0.1));
+        column8.maxWidthProperty().bind(tableView.widthProperty().multiply(0.1));
 
         column1.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         column2.setCellValueFactory(new PropertyValueFactory<>("customerEmail"));
         column3.setCellValueFactory(new PropertyValueFactory<>("customerPhone"));
-        column4.setCellValueFactory(new PropertyValueFactory<>("picnicDateTime"));
+        column4.setCellValueFactory(new PropertyValueFactory<>("picnicDateTimeString"));
         column5.setCellValueFactory(new PropertyValueFactory<>("eventLocation"));
         column6.setCellValueFactory(new PropertyValueFactory<>("eventAddress"));
         column7.setCellValueFactory(new PropertyValueFactory<>("guestCount"));

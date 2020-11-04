@@ -18,8 +18,10 @@ import models.*;
 import java.net.URL;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 import java.util.Date;
@@ -419,7 +421,9 @@ public class AddEventController extends Controller implements Initializable{
                     shippingItem.add();
 
                     Event tmpEvent = new Event();
-                    tmpEvent.setPicnicDateTime(picnicDate);
+                    tmpEvent.setPicnicDateTime(Instant.ofEpochMilli(picnicDate.getTime())
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDateTime());
                     tmpEvent.setInvoiceId(invoice.getID());
                     if(isImport){
                         selectedSquareEmail.add();
