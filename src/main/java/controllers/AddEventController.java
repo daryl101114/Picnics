@@ -31,6 +31,8 @@ public class AddEventController extends Controller implements Initializable{
 
     private final float TAX_RATE = 6.25f;
 
+    @FXML private Label label1;
+
     @FXML private TextField customer_textField1;
     @FXML private TextField customer_textField2;
     @FXML private TextField customer_textField3;
@@ -57,6 +59,8 @@ public class AddEventController extends Controller implements Initializable{
 
     private ObservableList<InvoiceItem> invoiceItemObservableList;
     private InvoiceItem selectedAddon;
+
+    private EventController eventController;
 
     private boolean isNew = false;
     private boolean createSquareInvoice = false;
@@ -106,6 +110,38 @@ public class AddEventController extends Controller implements Initializable{
         column3.setOnEditCommit(event -> editRecord(event, 3) );
         column4.setOnEditCommit(event -> editRecord(event, 4) );
         column5.setOnEditCommit(event -> editRecord(event, 5) );
+    }
+
+    public void autoPopulateEdit(){
+        if(selectedEvent != null){
+            customer_textField1.setText(selectedEvent.getCustomer().getName());
+            customer_textField2.setText(selectedEvent.getCustomer().getEmail());
+            customer_textField3.setText(selectedEvent.getCustomer().getPhone());
+            customer_textField4.setText(selectedEvent.getCustomer().getSource());
+
+            event_datePicker.setValue(selectedEvent.getPicnicDateTime().toLocalDate());
+            event_textfield1.setText(selectedEvent.getPicnicTimeString());
+            event_textfield2.setText(selectedEvent.getGuestCount());
+
+            InvoiceItem guestInvoiceItem = InvoiceItem.findGuestCountByInvoice(selectedEvent.getInvoiceId());
+            if(guestInvoiceItem.getItemCost() > 0){
+                event_textfield3.setText(String.valueOf(guestInvoiceItem.getItemCost()));
+            }
+
+            event_textfield4.setText(selectedEvent.getEventLocation());
+            event_textfield5.setText(selectedEvent.getEventAddress());
+            event_textfield6.setText(selectedEvent.getStyle());
+            event_textfield7.setText(selectedEvent.getCustomPalette());
+            event_textfield8.setText(selectedEvent.getEventType());
+
+            InvoiceItem shippingInvoiceItem = InvoiceItem.findShippingByInvoice(selectedEvent.getInvoiceId());
+            if(shippingInvoiceItem.getItemCost() > 0){
+                event_textfield9.setText(String.valueOf(shippingInvoiceItem.getItemCost()));
+            }
+
+            invoiceItemObservableList = InvoiceItem.findAllAddonsByInvoiceID(selectedEvent.getInvoiceId());
+            tableView.setItems(invoiceItemObservableList);
+        }
     }
 
     public void autoPopulateImport(){
@@ -191,12 +227,35 @@ public class AddEventController extends Controller implements Initializable{
                 }
                 invoiceItemObservableList.add(invoiceItem);
             }
-            tableView.refresh();
+            tableView.setItems(invoiceItemObservableList);
         }
     }
 
     public void setIsNew(boolean isNew){
         this.isNew = isNew;
+        if(!isNew){
+            label1.setText("Edit Event");
+            customer_textField1.setDisable(true);
+            customer_textField2.setDisable(true);
+            customer_textField3.setDisable(true);
+            customer_textField4.setDisable(true);
+            autoPopulateEdit();
+            if(selectedEvent != null){
+                if(selectedEvent.getInvoice().getIsPaid()){
+                    label1.setText("Re-schedule Event");
+                    event_textfield2.setDisable(true);
+                    event_textfield3.setDisable(true);
+                    event_textfield4.setDisable(true);
+                    event_textfield5.setDisable(true);
+                    event_textfield6.setDisable(true);
+                    event_textfield7.setDisable(true);
+                    event_textfield8.setDisable(true);
+                    event_textfield9.setDisable(true);
+
+                    tableView.setDisable(true);
+                }
+            }
+        }
     }
 
     public void setCreateSquareInvoice(boolean createSquareInvoice){
@@ -275,6 +334,10 @@ public class AddEventController extends Controller implements Initializable{
         tableView.refresh();
     }
 
+    public void setParentController(EventController eventController){
+        this.eventController = eventController;
+    }
+
     public void removeAddon(){
         if(selectedAddon != null)
             invoiceItemObservableList.remove(selectedAddon);
@@ -288,7 +351,188 @@ public class AddEventController extends Controller implements Initializable{
         tableView.refresh();
     }
 
+    public void rescheduleEvent(ActionEvent event){
+        if(validateFields()) {
+            confirmationAlert.showAndWait().filter(response -> response == ButtonType.OK).ifPresent(response -> {
+                LocalDate picnicLocalDate = event_datePicker.getValue();
+                int year = picnicLocalDate.getYear();
+                int month = picnicLocalDate.getMonthValue();
+                int day = picnicLocalDate.getDayOfMonth();
+                String timeString = event_textfield1.getText();
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String dateString = year + "-" + month + "-" + day + " " + timeString;
+                Date picnicDate;
+
+                try {
+                    picnicDate = formatter.parse(dateString);
+                    selectedEvent.setPicnicDateTime(Instant.ofEpochMilli(picnicDate.getTime())
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDateTime());
+                    // Re-schedule google cal event
+
+                } catch (Exception e) {
+                    failureAlert.setContentText("Error updating the record.");
+                    failureAlert.showAndWait();
+                    e.printStackTrace();
+                    return;
+                }
+
+                if(selectedEvent.edit()) {
+                    successAlert.setContentText("Success.");
+                    successAlert.showAndWait();
+                    eventController.refreshTable();
+                    closeChildWindow(event);
+                } else {
+                    failureAlert.setContentText("Error updating the record.");
+                    failureAlert.showAndWait();
+                }
+            });
+        }
+    }
+
+    public void editEvent(ActionEvent event){
+        if(validateFields()) {
+            confirmationAlert.showAndWait().filter(response -> response == ButtonType.OK).ifPresent(response -> {
+                float subtotal = 0f;
+
+                double guestPrice = Double.parseDouble(event_textfield3.getText());
+                double shippingPrice = Double.parseDouble(event_textfield9.getText());
+                subtotal += guestPrice + shippingPrice;
+
+                for (InvoiceItem invoiceItem :invoiceItemObservableList) {
+                    subtotal += invoiceItem.getItemQuantity() * invoiceItem.getItemCost();
+                }
+
+                selectedEvent.getInvoice().setSubtotal(subtotal);
+                selectedEvent.getInvoice().setTotal(Math.round((subtotal * (1 + (TAX_RATE / 100.0))) * 100.0) / 100.0f);
+                selectedEvent.getInvoice().edit();
+
+                if(selectedEvent.getInvoiceId() < 10000000) {
+                    // Update square invoice
+                }
+
+                InvoiceItem.deleteAllFromInvoice(selectedEvent.getInvoiceId());
+
+                InvoiceItem guestItem = new InvoiceItem();
+                guestItem.setInvoiceId(selectedEvent.getInvoiceId());
+                guestItem.setItemQuantity(1);
+                guestItem.setItemCost(guestPrice);
+                guestItem.setItemDesc(event_textfield2.getText() + " Guests");
+                guestItem.setItemSupplierCost(0);
+
+                Addon addonGuestCount = Addon.findByName(guestItem.getItemDesc());
+                if(addonGuestCount == null){
+                    addonGuestCount = new Addon();
+                    addonGuestCount.setName(guestItem.getItemDesc());
+                    addonGuestCount.setTypeCode("GC");
+                    addonGuestCount.setPrice(guestItem.getItemCost());
+                    addonGuestCount.setSupplierCost(guestItem.getItemSupplierCost());
+                    addonGuestCount.add();
+                } else {
+                    addonGuestCount.setPrice(guestItem.getItemCost());
+                    addonGuestCount.setSupplierCost(guestItem.getItemSupplierCost());
+                    addonGuestCount.edit();
+                }
+
+                guestItem.add();
+
+                for (InvoiceItem invoiceItem : invoiceItemObservableList) {
+                    invoiceItem.setInvoiceId(selectedEvent.getInvoiceId());
+                    Addon addon = Addon.findByName(invoiceItem.getItemDesc());
+                    if(addon == null){
+                        addon = new Addon();
+                        addon.setName(invoiceItem.getItemDesc());
+                        addon.setTypeCode("AD");
+                        addon.setPrice(invoiceItem.getItemCost());
+                        addon.setSupplierCost(invoiceItem.getItemSupplierCost());
+                        addon.add();
+                    } else {
+                        addon.setPrice(invoiceItem.getItemCost());
+                        addon.setSupplierCost(invoiceItem.getItemSupplierCost());
+                        addon.edit();
+                    }
+                    invoiceItem.add();
+                }
+
+                LocalDate date = event_datePicker.getValue();
+                LocalTime time = LocalTime.parse(event_textfield1.getText(), DateTimeFormatter.ofPattern("HH:mm:ss"));
+                String guestCount = event_textfield2.getText();
+
+                LocalDate picnicLocalDate = event_datePicker.getValue();
+                int year = picnicLocalDate.getYear();
+                int month = picnicLocalDate.getMonthValue();
+                int day = picnicLocalDate.getDayOfMonth();
+                String timeString = event_textfield1.getText();
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String dateString = year + "-" + month + "-" + day + " " + timeString;
+                Date picnicDate = new Date();
+
+                try {
+                    picnicDate  = formatter.parse(dateString);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+
+                InvoiceItem shippingItem = new InvoiceItem();
+                shippingItem.setInvoiceId(selectedEvent.getInvoiceId());
+                shippingItem.setItemQuantity(1);
+                shippingItem.setItemCost(shippingPrice);
+                shippingItem.setItemDesc("Event:" + selectedEvent.getInvoiceId() + " Shipping");
+                shippingItem.setItemSupplierCost(0);
+
+                Addon addonShipping = Addon.findByName(shippingItem.getItemDesc());
+                if(addonShipping == null){
+                    addonShipping = new Addon();
+                    addonShipping.setName(shippingItem.getItemDesc());
+                    addonShipping.setTypeCode("SH");
+                    addonShipping.setPrice(shippingItem.getItemCost());
+                    addonShipping.setSupplierCost(shippingItem.getItemSupplierCost());
+                    addonShipping.add();
+                } else {
+                    addonShipping.setPrice(guestItem.getItemCost());
+                    addonShipping.setSupplierCost(guestItem.getItemSupplierCost());
+                    addonShipping.edit();
+                }
+
+                shippingItem.add();
+
+
+                selectedEvent.setPicnicDateTime(Instant.ofEpochMilli(picnicDate.getTime())
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime());
+
+                selectedEvent.setGuestCount(event_textfield2.getText());
+                selectedEvent.setEventLocation(event_textfield4.getText());
+
+                if(event_textfield4.getText().toLowerCase().contains("home delivery")){
+                    selectedEvent.setEventAddress(event_textfield5.getText());
+                } else {
+                    selectedEvent.setEventAddress(event_textfield4.getText().split("\\(")[0] + ", Houston TX");
+                }
+
+                selectedEvent.setEventType(event_textfield8.getText());
+                selectedEvent.setStyle(event_textfield6.getText());
+                selectedEvent.setCustomPalette(event_textfield7.getText());
+                selectedEvent.edit();
+
+                successAlert.setContentText("Success.");
+                successAlert.showAndWait();
+                eventController.refreshTable();
+                closeChildWindow(event);
+            });
+        }
+    }
+
     public void addButtonPushed(ActionEvent event) {
+        if(!isNew && selectedEvent != null){
+            if(selectedEvent.getInvoice().getIsPaid()){
+                rescheduleEvent(event);
+                return;
+            } else {
+                editEvent(event);
+                return;
+            }
+        }
         if(validateFields()){
             confirmationAlert.showAndWait().filter(response -> response == ButtonType.OK).ifPresent(response -> {
                 float subtotal = 0f;
@@ -307,7 +551,7 @@ public class AddEventController extends Controller implements Initializable{
                 String source = customer_textField4.getText();
 
                 Customer customer = Customer.findByEmail(email);
-                if(customer == null) {
+                if (customer == null) {
                     customer = new Customer();
                     customer.setName(name);
                     customer.setPhone(phone);
@@ -445,11 +689,6 @@ public class AddEventController extends Controller implements Initializable{
                     tmpEvent.setStyle(event_textfield6.getText());
                     tmpEvent.setCustomPalette(event_textfield7.getText());
                     tmpEvent.add();
-                } else {
-                    if(createSquareInvoice){
-                        //Edits the invoice in square
-                    }
-                    // Edits the invoice in our system
                 }
                 successAlert.setContentText("Success.");
                 successAlert.showAndWait();

@@ -14,6 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import models.Event;
+import models.SquareEmail;
 
 import java.io.IOException;
 import java.net.URL;
@@ -99,7 +100,7 @@ public class EventController extends Controller implements Initializable {
 
     public void addButtonPushed(ActionEvent event) throws IOException {
             try {
-                loadEventScene((Stage) tableView.getScene().getWindow(), "/views/AddEvent.fxml", ControllerType.ADD_EVENT, true, false, false);
+                loadEventScene((Stage) tableView.getScene().getWindow(), "/views/AddEvent.fxml", ControllerType.ADD_EVENT, true, false, false, this);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -113,13 +114,14 @@ public class EventController extends Controller implements Initializable {
         FilteredList<Event> filteredList = new FilteredList<>(eventObservableList);
         filteredList.setPredicate(i -> (i.getInvoice().getIsPaid() == checkBox1.isSelected()) && (textField1.getText().isEmpty() ? true : i.getCustomerName().toLowerCase().contains(textField1.getText().toLowerCase())));
         tableView.setItems(filteredList);
+        tableView.refresh();
     }
 
     public void editEvent() {
         if(selectedObject != null) {
             selectedEvent = selectedObject;
             try {
-                loadEventScene((Stage) tableView.getScene().getWindow(), "/views/AddEvent.fxml", ControllerType.ADD_EVENT, false, false, false);
+                loadEventScene((Stage) tableView.getScene().getWindow(), "/views/AddEvent.fxml", ControllerType.ADD_EVENT, false, false, false, this);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -150,7 +152,7 @@ public class EventController extends Controller implements Initializable {
 
 
     public void loadData() {
-        eventObservableList = Event.findAllForTable(dpFrom.getValue(), dpTo.getValue());
+        eventObservableList = Event.findAllForTable(dpFrom.getValue(), dpTo.getValue().plusDays(1));
         refreshTable();
     }
 }

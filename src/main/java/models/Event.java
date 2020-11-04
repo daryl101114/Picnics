@@ -67,7 +67,7 @@ public class Event extends QueryObject {
                 "employee_id = " + (this.getEmployeeId() == 0 ? "null" : this.getEmployeeId()) + ", " +
                 "google_calendar_id = " + (this.getGoogleCalendarId() == 0 ? "null" : this.getGoogleCalendarId()) + ", " +
                 "style = " + (this.getStyle() == null ? this.getStyle() : "'" + this.getStyle().replaceAll("'", "''") + "'") + ", " +
-                "custom_palette = " + (this.getCustomPalette() == null ? this.getCustomPalette() : "'" + this.getCustomPalette().replaceAll("'", "''") + "'") + ", " +
+                "custom_palette = " + (this.getCustomPalette() == null ? this.getCustomPalette() : "'" + this.getCustomPalette().replaceAll("'", "''") + "'") + " " +
                 "WHERE id = " + this.getId();
 
         return executeUpdate(statement);
@@ -158,6 +158,11 @@ public class Event extends QueryObject {
 
     public String getPicnicDateTimeString(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm:ss");
+        return picnicDateTime.format(formatter);
+    }
+
+    public String getPicnicTimeString(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         return picnicDateTime.format(formatter);
     }
 
@@ -308,7 +313,6 @@ public class Event extends QueryObject {
     private static void setEventDetails(Event event) {
         event.setCustomer(Customer.findByID(event.getCustomerId()));
         event.setInvoice(Invoice.findByID(event.getInvoiceId()));
-        event.setInvoiceItemList(InvoiceItem.findAllByInvoiceID(event.getInvoiceId()));
     }
 
     public static int getChecksum() {

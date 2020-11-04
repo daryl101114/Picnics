@@ -44,18 +44,17 @@ public class InvoiceItem extends QueryObject {
         return executeUpdate(statement);
     }
 
-    public boolean deleteAllFromInvoice(){
+    public static boolean deleteAllFromInvoice(int id){
         statement = "DELETE FROM invoice_item WHERE invoice_id = " +
-                this.getInvoiceId() +
-                ")";
+                id;
 
         return executeUpdate(statement);
     }
 
-    public static List<InvoiceItem> findAllByInvoiceID(int id){
+    public static ObservableList<InvoiceItem> findAllAddonsByInvoiceID(int id){
         List<InvoiceItem> invoiceItemList = new ArrayList<>();
         try {
-            statement = "SELECT * FROM invoice_item WHERE invoice_id = " + id;
+            statement = "SELECT * FROM invoice_item ii JOIN addon a ON ii.item_desc = a.name AND a.type_code = 'AD' WHERE invoice_id = " + id;
             executeQuery(statement);
             while(resultSet.next()) {
                 InvoiceItem invoiceItem = new InvoiceItem();
@@ -67,7 +66,39 @@ public class InvoiceItem extends QueryObject {
         } finally {
             terminateQuery();
         }
-        return invoiceItemList;
+        return FXCollections.observableList(invoiceItemList);
+    }
+
+    public static InvoiceItem findGuestCountByInvoice(int id){
+        InvoiceItem invoiceItem = new InvoiceItem();
+        try {
+            statement = "SELECT * FROM invoice_item ii JOIN addon a ON ii.item_desc = a.name AND a.type_code = 'GC' WHERE invoice_id = " + id;
+            executeQuery(statement);
+            if(resultSet.next()) {
+                setEmployeeFromQuery(invoiceItem);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            terminateQuery();
+        }
+        return invoiceItem;
+    }
+
+    public static InvoiceItem findShippingByInvoice(int id){
+        InvoiceItem invoiceItem = new InvoiceItem();
+        try {
+            statement = "SELECT * FROM invoice_item ii JOIN addon a ON ii.item_desc = a.name AND a.type_code = 'SH' WHERE invoice_id = " + id;
+            executeQuery(statement);
+            if(resultSet.next()) {
+                setEmployeeFromQuery(invoiceItem);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            terminateQuery();
+        }
+        return invoiceItem;
     }
 
     public int getInvoiceId() {

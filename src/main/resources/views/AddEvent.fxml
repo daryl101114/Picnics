@@ -281,7 +281,7 @@
                <InnerShadow color="#b95252" />
             </effect>
          </ImageView>
-          <Label text="Add Event" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+          <Label fx:id="label1" text="Add Event" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
               <font>
                   <Font size="36.0" />
               </font>

@@ -2,6 +2,7 @@ package entities;
 
 import controllers.AddEventController;
 import controllers.EmailController;
+import controllers.EventController;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -60,12 +61,18 @@ public abstract class Controller{
             case USER:
             case LOGIN:
             case EMPLOYEE:
-            case EVENT:
             case EMAIL: {
                 MIN_HEIGHT = 600;
                 MIN_WIDTH = 600;
                 PREF_HEIGHT = 600;
                 PREF_WIDTH = 600;
+                break;
+            }
+            case EVENT: {
+                MIN_HEIGHT = 600;
+                MIN_WIDTH = 900;
+                PREF_HEIGHT = 600;
+                PREF_WIDTH = 900;
                 break;
             }
 
@@ -129,7 +136,7 @@ public abstract class Controller{
         childWindow.show();
     }
 
-    protected void loadEventScene(Stage parentWindow, String file, ControllerType type, boolean isNew, boolean createSquareInvoice, boolean isImport) throws IOException{
+    protected void loadEventScene(Stage parentWindow, String file, ControllerType type, boolean isNew, boolean createSquareInvoice, boolean isImport, EventController eventController) throws IOException{
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(file));
         Parent parent = loader.load();
@@ -140,6 +147,8 @@ public abstract class Controller{
                 controller.setIsNew(isNew);
                 controller.setIsImport(isImport);
                 controller.setCreateSquareInvoice(createSquareInvoice);
+                if(eventController != null)
+                    controller.setParentController(eventController);
                 MIN_HEIGHT = 900;
                 MIN_WIDTH = 900;
                 PREF_HEIGHT = 900;
@@ -169,8 +178,6 @@ public abstract class Controller{
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
     }
-
-
 
     protected void clearSelectedObjects(){
         selectedSquareEmail = null;
