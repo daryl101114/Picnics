@@ -13,37 +13,30 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.*;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.gmail.GmailScopes;
 
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.List;
 
 public class GoogleCalendarService {
-    private static final String APPLICATION_NAME = "Google Calendar API Java Quickstart";
+    private static final String APPLICATION_NAME = "Fancy Picnics";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
-
-    /**
-     * Global instance of the scopes required by this quickstart.
-     * If modifying these scopes, delete your previously saved tokens/ folder.
-     */
-    private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
+    private static final String[] SCOPES_LIST = {GmailScopes.GMAIL_READONLY, CalendarScopes.CALENDAR};
+    private static final List<String> SCOPES = new ArrayList<>(Arrays.asList(SCOPES_LIST));
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
     private static Calendar service;
 
-    /**
-     * Creates an authorized Credential object.
-     *
-     * @param HTTP_TRANSPORT The network HTTP Transport.
-     * @return An authorized Credential object.
-     * @throws IOException If the credentials.json file cannot be found.
-     */
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
         InputStream in = GoogleCalendarService.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
@@ -65,58 +58,30 @@ public class GoogleCalendarService {
     public void GCalendar() throws IOException, GeneralSecurityException {
         // Build a new authorized API client service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-//        Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
         service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-
                 .setApplicationName(APPLICATION_NAME)
                 .build();
-
-//        // List the next 10 events from the primary calendar.
-//        DateTime now = new DateTime(System.currentTimeMillis());
-//        Events events = service.events().list("primary")
-//                .setMaxResults(10)
-//                .setTimeMin(now)
-//                .setOrderBy("startTime")
-//                .setSingleEvents(true)
-//                .execute();
-//        List<Event> items = events.getItems();
-//        if (items.isEmpty()) {
-//            System.out.println("No upcoming events found.");
-//        } else {
-//            System.out.println("Upcoming events");
-//            for (Event event : items) {
-//                DateTime start = event.getStart().getDateTime();
-//                if (start == null) {
-//                    start = event.getStart().getDate();
-//                }
-//                System.out.printf("%s (%s)\n", event.getSummary(), start);
-//            }
-//        }
     }
 
-    public void insertEvent(String description, String eventName, String location, String startTime, String endTime) throws IOException {
+    public String insertEvent(String description, String eventName, String location, String startTime, String endTime) throws IOException, URISyntaxException {
         com.google.api.services.calendar.model.Event event = new com.google.api.services.calendar.model.Event()
                 .setSummary(eventName)
                 .setLocation(location)
                 .setDescription(description);
 
-        DateTime startDateTime = new DateTime(startTime);
+        DateTime startDateTime = DateTime.parseRfc3339(startTime);
         EventDateTime start = new EventDateTime()
                 .setDateTime(startDateTime)
-                .setTimeZone("America/Los_Angeles");
+                .setTimeZone("America/Chicago");
         event.setStart(start);
 
-        DateTime endDateTime = new DateTime(endTime);
+        DateTime endDateTime = DateTime.parseRfc3339(endTime);
         EventDateTime end = new EventDateTime()
                 .setDateTime(endDateTime)
-                .setTimeZone("America/Los_Angeles");
+                .setTimeZone("America/Chicago");
         event.setEnd(end);
 
-        String[] recurrence = new String[]{"RRULE:FREQ=DAILY;COUNT=2"};
-        event.setRecurrence(Arrays.asList(recurrence));
-
         EventReminder[] reminderOverrides = new EventReminder[]{
-                new EventReminder().setMethod("email").setMinutes(24 * 60),
                 new EventReminder().setMethod("popup").setMinutes(30),
         };
         com.google.api.services.calendar.model.Event.Reminders reminders = new Event.Reminders()
@@ -124,46 +89,30 @@ public class GoogleCalendarService {
                 .setOverrides(Arrays.asList(reminderOverrides));
         event.setReminders(reminders);
 
-        String calendarId = "primary";
+        String calendarId = "fancypicnics@gmail.com";
         event = service.events().insert(calendarId, event).execute();
-        System.out.printf("Event created: %s\n", event.getHtmlLink());
-        System.out.println(event.getId());
-    }
-
-    public void getCalList() throws IOException, GeneralSecurityException {
-        String pageToken = null;
-        do {
-            Events events = service.events().list("primary").setMaxResults(10).setPageToken(pageToken).execute();
-            List<Event> items = events.getItems();
-            for (Event event : items) {
-
-                System.out.println(event.getSummary());
-                System.out.println(event.getId());
-            }
-            pageToken = events.getNextPageToken();
-        } while (pageToken != null);
+        Desktop.getDesktop().browse(new URI(event.getHtmlLink()));
+        return event.getId();
     }
     
-    public void updateEvent(String eventID,String summary, String startDate,String endDate, String description) throws IOException, GeneralSecurityException{
+    public void updateEvent(String eventID, String startDate, String endDate) throws IOException, URISyntaxException {
     // Retrieve the event from the API
-        Event event = service.events().get("primary",eventID).execute();
+        Event event = service.events().get("fancypicnics@gmail.com", eventID).execute();
 
     // Make a change
-        event.setSummary(summary);
-        event.setDescription(description);
         DateTime startDateTime = new DateTime(startDate);
         EventDateTime start = new EventDateTime()
                 .setDateTime(startDateTime)
-                .setTimeZone("America/Los_Angeles");
+                .setTimeZone("America/Chicago");
         event.setStart(start);
         DateTime endDateTime = new DateTime(endDate);
         EventDateTime end = new EventDateTime()
                 .setDateTime(endDateTime)
-                .setTimeZone("America/Los_Angeles");
+                .setTimeZone("America/Chicago");
         event.setEnd(end);
 
     // Update the event
-        Event updatedEvent = service.events().update("primary", event.getId(), event).execute();
-        System.out.println(updatedEvent.getUpdated());
+        Event updatedEvent = service.events().update("fancypicnics@gmail.com", eventID, event).execute();
+        Desktop.getDesktop().browse(new URI(updatedEvent.getHtmlLink()));
     }
 }

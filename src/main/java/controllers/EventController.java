@@ -2,6 +2,7 @@ package controllers;
 
 import entities.Controller;
 import entities.ControllerType;
+import entities.GoogleCalendarService;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 
@@ -9,18 +10,29 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import javafx.stage.Stage;
 
+import models.Addon;
 import models.Event;
-import models.SquareEmail;
+import models.InvoiceItem;
+import org.omg.CORBA.Environment;
 
+
+import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.security.GeneralSecurityException;
+import java.text.SimpleDateFormat;
+import java.time.*;
+
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class EventController extends Controller implements Initializable {
@@ -100,7 +112,7 @@ public class EventController extends Controller implements Initializable {
 
     public void addButtonPushed(ActionEvent event) throws IOException {
             try {
-                loadEventScene((Stage) tableView.getScene().getWindow(), "/views/AddEvent.fxml", ControllerType.ADD_EVENT, true, false, false, this);
+                loadEventScene((Stage) tableView.getScene().getWindow(), "/views/AddEvent.fxml", ControllerType.ADD_EVENT, true, false, this);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -121,7 +133,7 @@ public class EventController extends Controller implements Initializable {
         if(selectedObject != null) {
             selectedEvent = selectedObject;
             try {
-                loadEventScene((Stage) tableView.getScene().getWindow(), "/views/AddEvent.fxml", ControllerType.ADD_EVENT, false, false, false, this);
+                loadEventScene((Stage) tableView.getScene().getWindow(), "/views/AddEvent.fxml", ControllerType.ADD_EVENT, false, false, this);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -135,8 +147,60 @@ public class EventController extends Controller implements Initializable {
                 selectedObject.getInvoice().setIsPaid(true);
                 if (selectedObject.getInvoice().edit()) {
                     refreshTable();
-                    successAlert.setContentText("Event marked as paid.");
-                    successAlert.showAndWait();
+                    String conString = confirmationAlert.getContentText();
+                    confirmationAlert.setContentText("Success. Do you want to create a Google Calendar event?");
+                    confirmationAlert.showAndWait().filter(selection -> selection == ButtonType.OK).ifPresent(selection -> {
+                        String description = "";
+                        description += "Name: " + selectedObject.getCustomerName() + "\n" ;
+                        description += "Email: " + selectedObject.getCustomerEmail() + "\n" ;
+                        description += "Phone number: " + selectedObject.getCustomerPhone() + "\n" ;
+                        description += "Picnic Date: " + selectedObject.getPicnicDateTimeString() + "\n" ;
+                        description += "Time of Picnic: " + selectedObject.getPicnicTimeString() + "\n" ;
+                        description += "Estimated Guest Count: " + selectedObject.getGuestCount() + "\n" ;
+                        description += "Location: " + selectedObject.getEventLocation() + "\n" ;
+                        description += "Address: " + selectedObject.getEventAddress() + "\n" ;
+                        description += "Type of Event: " + selectedObject.getEventType() + "\n" ;
+                        description += "Picnic Style: " + selectedObject.getStyle() + "\n" ;
+                        description += "Custom Style: " + selectedObject.getCustomPalette() + "\n" ;
+
+                        List<InvoiceItem> invoiceItemList = InvoiceItem.findAllAddonsByInvoiceID(selectedObject.getInvoiceId());
+                        description += "Add-ons: ";
+
+                        InvoiceItem marquee = null;
+                        for (InvoiceItem invoiceItem :
+                                invoiceItemList) {
+                            description += invoiceItem.getItemDesc() + ", ";
+                            if(invoiceItem.getNote() != null && invoiceItem.getItemDesc().toLowerCase().contains("marquee") && invoiceItem.getNote() != null){
+                                marquee = invoiceItem;
+                            }
+                        }
+
+                        if(marquee != null)
+                            description += "\nMarquee Letters: " + marquee.getNote();
+
+                        String eventName = "Picnic for " + selectedObject.getCustomerName();
+                        String location = selectedObject.getEventAddress();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+                        String startTime = selectedObject.getPicnicDateTime().plusHours(6).format(formatter);
+                        String endTime = selectedObject.getPicnicDateTime().plusHours(7).format(formatter);
+
+                        GoogleCalendarService googleCalendarService = new GoogleCalendarService();
+                        try {
+                            googleCalendarService.GCalendar();
+                        } catch (IOException | GeneralSecurityException e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            selectedObject.setGoogleCalendarId(googleCalendarService.insertEvent(description, eventName, location, startTime, endTime));
+                            selectedObject.edit();
+                            successAlert.setContentText("Event successfully added to the calendar.");
+                            successAlert.showAndWait();
+                        } catch (IOException | URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    confirmationAlert.setContentText(conString);
                 } else {
                     selectedObject.getInvoice().setIsPaid(false);
                     refreshTable();

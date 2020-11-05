@@ -136,7 +136,7 @@ public abstract class Controller{
         childWindow.show();
     }
 
-    protected void loadEventScene(Stage parentWindow, String file, ControllerType type, boolean isNew, boolean createSquareInvoice, boolean isImport, EventController eventController) throws IOException{
+    protected void loadEventScene(Stage parentWindow, String file, ControllerType type, boolean isNew, boolean isImport, EventController eventController) throws IOException{
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(file));
         Parent parent = loader.load();
@@ -146,7 +146,6 @@ public abstract class Controller{
                 AddEventController controller = loader.getController();
                 controller.setIsNew(isNew);
                 controller.setIsImport(isImport);
-                controller.setCreateSquareInvoice(createSquareInvoice);
                 if(eventController != null)
                     controller.setParentController(eventController);
                 MIN_HEIGHT = 900;

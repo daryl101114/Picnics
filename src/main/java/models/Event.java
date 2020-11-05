@@ -1,17 +1,13 @@
 package models;
 
-import com.google.api.client.util.DateTime;
 import entities.QueryObject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import java.sql.SQLException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
 
 public class Event extends QueryObject {
 
@@ -25,7 +21,7 @@ public class Event extends QueryObject {
     private String eventAddress;
     private String eventType;
     private int employeeId;
-    private int googleCalendarId;
+    private String googleCalendarId;
     private String style;
     private String customPalette;
 
@@ -33,7 +29,7 @@ public class Event extends QueryObject {
     private List<InvoiceItem> invoiceItemList;
     private Invoice invoice;
 
-    public Event(int id, String squareEmailId, LocalDateTime picnicDateTime, int invoiceId, int customerId, String guestCount, String eventLocation, String eventAddress, String eventType, int employeeId, int googleCalendarId, String style, String customPalette) {
+    public Event(int id, String squareEmailId, LocalDateTime picnicDateTime, int invoiceId, int customerId, String guestCount, String eventLocation, String eventAddress, String eventType, int employeeId, String googleCalendarId, String style, String customPalette) {
         this.id = id;
         this.squareEmailId = squareEmailId;
         this.picnicDateTime = picnicDateTime;
@@ -65,7 +61,7 @@ public class Event extends QueryObject {
                 "event_address = " + (this.getEventAddress() == null ? this.getEventAddress() : "'" + this.getEventAddress().replaceAll("'", "''") + "'") + ", " +
                 "event_type = " + (this.getEventType() == null ? this.getEventType() : "'" + this.getEventType().replaceAll("'", "''") + "'") + ", " +
                 "employee_id = " + (this.getEmployeeId() == 0 ? "null" : this.getEmployeeId()) + ", " +
-                "google_calendar_id = " + (this.getGoogleCalendarId() == 0 ? "null" : this.getGoogleCalendarId()) + ", " +
+                "google_calendar_id = " + (this.getGoogleCalendarId() == null ? this.getGoogleCalendarId() : "'" + this.getGoogleCalendarId().replaceAll("'", "''") + "'") + ", " +
                 "style = " + (this.getStyle() == null ? this.getStyle() : "'" + this.getStyle().replaceAll("'", "''") + "'") + ", " +
                 "custom_palette = " + (this.getCustomPalette() == null ? this.getCustomPalette() : "'" + this.getCustomPalette().replaceAll("'", "''") + "'") + " " +
                 "WHERE id = " + this.getId();
@@ -84,7 +80,7 @@ public class Event extends QueryObject {
                 (this.getEventAddress() == null ? this.getEventAddress() : "'" + this.getEventAddress().replaceAll("'", "''") + "'") + ", " +
                 (this.getEventType() == null ? this.getEventType() : "'" + this.getEventType().replaceAll("'", "''") + "'") + ", " +
                 (this.getEmployeeId() == 0 ? "null" : this.getEmployeeId()) + ", " +
-                (this.getGoogleCalendarId() == 0 ? "null" : this.getGoogleCalendarId()) + ", " +
+                (this.getGoogleCalendarId() == null ? this.getGoogleCalendarId() : "'" + this.getGoogleCalendarId().replaceAll("'", "''") + "'") + ", " +
                 (this.getCustomPalette() == null ? this.getCustomPalette() : "'" + this.getCustomPalette().replaceAll("'", "''") + "'") + ", " +
                 (this.getStyle() == null ? this.getStyle() : "'" + this.getStyle().replaceAll("'", "''") + "'") +
                 ")";
@@ -222,11 +218,11 @@ public class Event extends QueryObject {
         this.employeeId = employeeId;
     }
 
-    public int getGoogleCalendarId() {
+    public String getGoogleCalendarId() {
         return googleCalendarId;
     }
 
-    public void setGoogleCalendarId(int googleCalendarId) {
+    public void setGoogleCalendarId(String googleCalendarId) {
         this.googleCalendarId = googleCalendarId;
     }
 
@@ -305,7 +301,7 @@ public class Event extends QueryObject {
         event.setEventAddress(resultSet.getString("event_address"));
         event.setEventType(resultSet.getString("event_type"));
         event.setEmployeeId(resultSet.getInt("employee_id"));
-        event.setGoogleCalendarId(resultSet.getInt("google_calendar_id"));
+        event.setGoogleCalendarId(resultSet.getString("google_calendar_id"));
         event.setStyle(resultSet.getString("style"));
         event.setCustomPalette(resultSet.getString("custom_palette"));
     }

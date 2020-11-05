@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -259,6 +260,14 @@
                    <Insets bottom="10.0" right="10.0" />
                </GridPane.margin>
            </JFXButton>
+         <CheckBox fx:id="checkbox1" mnemonicParsing="false" text="Create Square Invoice" GridPane.rowIndex="2">
+            <font>
+               <Font size="16.0" />
+            </font>
+            <GridPane.margin>
+               <Insets left="10.0" />
+            </GridPane.margin>
+         </CheckBox>
       </children>
    </GridPane>
    <GridPane style="-fx-background-color: #F2BEB9;">

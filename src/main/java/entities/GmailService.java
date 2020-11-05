@@ -11,6 +11,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.Base64;
 import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.model.*;
@@ -30,7 +31,7 @@ public class GmailService {
     private static final String USER = "me";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
-    private static final String[] SCOPES_LIST = {GmailScopes.GMAIL_LABELS, GmailScopes.GMAIL_READONLY};
+    private static final String[] SCOPES_LIST = {GmailScopes.GMAIL_READONLY, CalendarScopes.CALENDAR};
     private static final List<String> SCOPES = new ArrayList<>(Arrays.asList(SCOPES_LIST));
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 

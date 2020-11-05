@@ -2,6 +2,7 @@ package controllers;
 
 import entities.Controller;
 
+import entities.GoogleCalendarService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,13 +16,13 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import models.*;
 
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
+import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 import java.util.Date;
@@ -37,6 +38,8 @@ public class AddEventController extends Controller implements Initializable{
     @FXML private TextField customer_textField2;
     @FXML private TextField customer_textField3;
     @FXML private TextField customer_textField4;
+
+    @FXML private CheckBox checkbox1;
 
     @FXML private DatePicker event_datePicker;
     @FXML private TextField event_textfield1;
@@ -110,6 +113,10 @@ public class AddEventController extends Controller implements Initializable{
         column3.setOnEditCommit(event -> editRecord(event, 3) );
         column4.setOnEditCommit(event -> editRecord(event, 4) );
         column5.setOnEditCommit(event -> editRecord(event, 5) );
+
+        checkbox1.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            this.createSquareInvoice = checkbox1.isSelected();
+        });
     }
 
     public void autoPopulateEdit(){
@@ -235,6 +242,12 @@ public class AddEventController extends Controller implements Initializable{
         this.isNew = isNew;
         if(!isNew){
             label1.setText("Edit Event");
+            if(selectedEvent.getInvoiceId() >= 10000000) {
+                checkbox1.setVisible(false);
+                checkbox1.setDisable(true);
+            }else{
+                checkbox1.setText("Update Square Invoice");
+            }
             customer_textField1.setDisable(true);
             customer_textField2.setDisable(true);
             customer_textField3.setDisable(true);
@@ -243,6 +256,8 @@ public class AddEventController extends Controller implements Initializable{
             if(selectedEvent != null){
                 if(selectedEvent.getInvoice().getIsPaid()){
                     label1.setText("Re-schedule Event");
+                    checkbox1.setVisible(false);
+                    checkbox1.setDisable(true);
                     event_textfield2.setDisable(true);
                     event_textfield3.setDisable(true);
                     event_textfield4.setDisable(true);
@@ -256,10 +271,6 @@ public class AddEventController extends Controller implements Initializable{
                 }
             }
         }
-    }
-
-    public void setCreateSquareInvoice(boolean createSquareInvoice){
-        this.createSquareInvoice = createSquareInvoice;
     }
 
     public void setIsImport(boolean isImport){
@@ -368,7 +379,29 @@ public class AddEventController extends Controller implements Initializable{
                     selectedEvent.setPicnicDateTime(Instant.ofEpochMilli(picnicDate.getTime())
                             .atZone(ZoneId.systemDefault())
                             .toLocalDateTime());
-                    // Re-schedule google cal event
+
+                    if(selectedEvent.getGoogleCalendarId() !=  null) {
+                        String conString = confirmationAlert.getContentText();
+                        confirmationAlert.setContentText("Do you want to update the google calendar event?");
+                        confirmationAlert.showAndWait().filter(selection -> selection == ButtonType.OK).ifPresent(selection -> {
+                            GoogleCalendarService googleCalendarService = new GoogleCalendarService();
+                            try {
+                                googleCalendarService.GCalendar();
+                            } catch (IOException | GeneralSecurityException e) {
+                                e.printStackTrace();
+                            }
+
+                            try {
+                                DateTimeFormatter formatter3= DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+                                String startTime = selectedEvent.getPicnicDateTime().plusHours(6).format(formatter3);
+                                String endTime = selectedEvent.getPicnicDateTime().plusHours(7).format(formatter3);
+                                googleCalendarService.updateEvent(selectedEvent.getGoogleCalendarId(), startTime, endTime);
+                            } catch (IOException | URISyntaxException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                        confirmationAlert.setContentText(conString);
+                    }
 
                 } catch (Exception e) {
                     failureAlert.setContentText("Error updating the record.");
@@ -407,7 +440,7 @@ public class AddEventController extends Controller implements Initializable{
                 selectedEvent.getInvoice().setTotal(Math.round((subtotal * (1 + (TAX_RATE / 100.0))) * 100.0) / 100.0f);
                 selectedEvent.getInvoice().edit();
 
-                if(selectedEvent.getInvoiceId() < 10000000) {
+                if(selectedEvent.getInvoiceId() < 10000000 && createSquareInvoice) {
                     // Update square invoice
                 }
 
