@@ -1,5 +1,12 @@
 package controllers;
 
+import com.squareup.square.Environment;
+import com.squareup.square.SquareClient;
+import com.squareup.square.api.CustomersApi;
+import com.squareup.square.api.InvoicesApi;
+import com.squareup.square.api.OrdersApi;
+import com.squareup.square.exceptions.ApiException;
+import com.squareup.square.models.*;
 import entities.Controller;
 
 import entities.GoogleCalendarService;
@@ -14,6 +21,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 
 import models.*;
+import models.Customer;
+import models.Invoice;
 
 
 import java.io.IOException;
@@ -26,11 +35,17 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
+import java.util.UUID;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class AddEventController extends Controller implements Initializable{
 
     private final float TAX_RATE = 6.25f;
+    private final String LOCATION_ID = "4Y2RSJHP22YNJ";
+    private final String ACCESS_TOKEN = "EAAAEOW91CrQRyYWRf3plX_j0fJ1abT18SVTi6qSlrK25SMqyzLYmEpN2Sd3D7H4";
 
     @FXML private Label label1;
 
@@ -242,11 +257,12 @@ public class AddEventController extends Controller implements Initializable{
         this.isNew = isNew;
         if(!isNew){
             label1.setText("Edit Event");
-            if(selectedEvent.getInvoiceId() >= 10000000) {
+            if(selectedEvent.getInvoiceId() >= 10000000 && selectedEvent.getInvoice().getSquareInvoiceID() == null) {
                 checkbox1.setVisible(false);
                 checkbox1.setDisable(true);
             }else{
                 checkbox1.setText("Update Square Invoice");
+                checkbox1.setSelected(true);
             }
             customer_textField1.setDisable(true);
             customer_textField2.setDisable(true);
@@ -430,6 +446,11 @@ public class AddEventController extends Controller implements Initializable{
                 double shippingPrice = Double.parseDouble(event_textfield9.getText());
                 subtotal += guestPrice + shippingPrice;
 
+                String name = customer_textField1.getText();
+                String email = customer_textField2.getText();
+                String phone = customer_textField3.getText();
+                String source = customer_textField4.getText();
+
                 for (InvoiceItem invoiceItem :invoiceItemObservableList) {
                     subtotal += invoiceItem.getItemQuantity() * invoiceItem.getItemCost();
                 }
@@ -438,8 +459,166 @@ public class AddEventController extends Controller implements Initializable{
                 selectedEvent.getInvoice().setTotal(Math.round((subtotal * (1 + (TAX_RATE / 100.0))) * 100.0) / 100.0f);
                 selectedEvent.getInvoice().edit();
 
-                if(selectedEvent.getInvoiceId() < 10000000 && createSquareInvoice) {
-                    // Update square invoice
+                if(selectedEvent.getInvoiceId() < 10000000 && createSquareInvoice && selectedEvent.getInvoice().getSquareInvoiceID() != null) {
+                    DateTimeFormatter formatterPicnicDate = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+                    DateTimeFormatter formatterPicnicTime = DateTimeFormatter.ofPattern("hh:mm a");
+                    LocalTime picnicTime = LocalTime.parse(event_textfield1.getText(), DateTimeFormatter.ofPattern("HH:mm:ss"));
+                    String addressForSquare;
+
+                    if(event_textfield4.getText().toLowerCase().contains("home delivery")){
+                        addressForSquare = event_textfield5.getText();
+                    } else {
+                        addressForSquare = event_textfield4.getText().split("\\(")[0] + ", Houston TX";
+                    }
+
+                    String guestCountNote = "";
+                    guestCountNote += (event_textfield7.getText().isEmpty() ? event_textfield6.getText() : event_textfield7.getText()) + "\n\n";
+                    guestCountNote += formatterPicnicDate.format(event_datePicker.getValue()) + "\n";
+                    guestCountNote += formatterPicnicTime.format(picnicTime) + "\n";
+
+                    try {
+                        SquareClient client = new SquareClient.Builder()
+                                .environment(Environment.PRODUCTION)
+                                .accessToken(ACCESS_TOKEN)
+                                .build();
+
+                        InvoicesApi invoicesApi = client.getInvoicesApi();
+                        OrdersApi ordersApi = client.getOrdersApi();
+
+                        com.squareup.square.models.Invoice oldInvoice = invoicesApi.getInvoice(selectedEvent.getInvoice().getSquareInvoiceID()).getInvoice();
+                        String squareCustomerID = oldInvoice.getPrimaryRecipient().getCustomerId();
+
+                        CancelInvoiceRequest cancelInvoiceBody = new CancelInvoiceRequest.Builder(oldInvoice.getVersion())
+                                .build();
+
+                        invoicesApi.cancelInvoice(selectedEvent.getInvoice().getSquareInvoiceID(), cancelInvoiceBody);
+
+                        LinkedList<OrderLineItem> lineItems = new LinkedList<>();
+
+                        Money basePriceMoneyGC = new Money.Builder()
+                                .amount(Math.round(Double.parseDouble(event_textfield3.getText())) * 100)
+                                .currency("USD")
+                                .build();
+
+                        OrderLineItem orderLineItemGC = new OrderLineItem.Builder("1")
+                                .name(event_textfield2.getText() + " Guests")
+                                .basePriceMoney(basePriceMoneyGC)
+                                .note(guestCountNote)
+                                .build();
+                        lineItems.add(orderLineItemGC);
+
+                        for (InvoiceItem squareInvoiceItem : invoiceItemObservableList) {
+                            String addonNote = squareInvoiceItem.getNote();
+                            Money basePriceMoney = new Money.Builder()
+                                    .amount(Math.round(squareInvoiceItem.getItemCost()) * 100)
+                                    .currency("USD")
+                                    .build();
+
+                            OrderLineItem orderLineItem = new OrderLineItem.Builder(String.valueOf(squareInvoiceItem.getItemQuantity()))
+                                    .name(squareInvoiceItem.getItemDesc())
+                                    .basePriceMoney(basePriceMoney)
+                                    .note(addonNote)
+                                    .build();
+                            lineItems.add(orderLineItem);
+                        }
+
+                        Money basePriceMoneySH = new Money.Builder()
+                                .amount(Math.round(Double.parseDouble(event_textfield9.getText())) * 100)
+                                .currency("USD")
+                                .build();
+
+                        OrderLineItem orderLineItemSH = new OrderLineItem.Builder("1")
+                                .name("Delivery")
+                                .basePriceMoney(basePriceMoneySH)
+                                .note(addressForSquare)
+                                .build();
+                        lineItems.add(orderLineItemSH);
+
+                        OrderLineItemTax orderLineItemTax = new OrderLineItemTax.Builder()
+                                .name("Sales Tax")
+                                .percentage("6.25")
+                                .scope("ORDER")
+                                .build();
+
+                        LinkedList<OrderLineItemTax> taxes = new LinkedList<>();
+                        taxes.add(orderLineItemTax);
+
+
+                        Order order = new Order.Builder(LOCATION_ID)
+                                .lineItems(lineItems)
+                                .taxes(taxes)
+                                .customerId(squareCustomerID)
+                                .build();
+
+                        CreateOrderRequest orderBody = new CreateOrderRequest.Builder()
+                                .order(order)
+                                .idempotencyKey(UUID.randomUUID().toString())
+                                .build();
+
+                        CreateOrderResponse orderResult = ordersApi.createOrder(orderBody);
+                        String squareOrderID = orderResult.getOrder().getId();
+
+                        InvoiceRecipient primaryRecipient = new InvoiceRecipient.Builder()
+                                .customerId(squareCustomerID)
+                                .build();
+
+                        InvoicePaymentReminder invoicePaymentReminder1 = new InvoicePaymentReminder.Builder()
+                                .relativeScheduledDays(0)
+                                .build();
+
+                        InvoicePaymentReminder invoicePaymentReminder2 = new InvoicePaymentReminder.Builder()
+                                .relativeScheduledDays(1)
+                                .build();
+
+                        InvoicePaymentReminder invoicePaymentReminder3 = new InvoicePaymentReminder.Builder()
+                                .relativeScheduledDays(4)
+                                .build();
+
+                        LinkedList<InvoicePaymentReminder> reminders = new LinkedList<>();
+                        reminders.add(invoicePaymentReminder1);
+                        reminders.add(invoicePaymentReminder2);
+                        reminders.add(invoicePaymentReminder3);
+
+                        LocalDate eventDate = event_datePicker.getValue();
+                        long daysBetween = DAYS.between(LocalDate.now(), eventDate);
+                        LocalDate dueDate = daysBetween < 14 ? LocalDate.now() : eventDate.minusDays(14);
+                        DateTimeFormatter formatterDueDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        String dueDateString = formatterDueDate.format(dueDate);
+                        InvoicePaymentRequest invoicePaymentRequest = new InvoicePaymentRequest.Builder()
+                                .requestMethod("EMAIL")
+                                .requestType("BALANCE")
+                                .dueDate(dueDateString)
+                                .tippingEnabled(false)
+                                .reminders(reminders)
+                                .build();
+
+                        LinkedList<InvoicePaymentRequest> paymentRequests = new LinkedList<>();
+                        paymentRequests.add(invoicePaymentRequest);
+
+                        com.squareup.square.models.Invoice squareInvoice = new com.squareup.square.models.Invoice.Builder()
+                                .locationId(LOCATION_ID)
+                                .orderId(squareOrderID)
+                                .primaryRecipient(primaryRecipient)
+                                .paymentRequests(paymentRequests)
+                                .title("Fancy Picnics")
+                                .description("Thanks for choosing Fancy Picnics! We will arrive to the location between 3 and 1 hour prior your starting time!")
+                                .build();
+
+                        CreateInvoiceRequest invoiceBody = new CreateInvoiceRequest.Builder(squareInvoice)
+                                .idempotencyKey(UUID.randomUUID().toString())
+                                .build();
+
+                        CreateInvoiceResponse invoiceResult = invoicesApi.createInvoice(invoiceBody);
+                        selectedEvent.getInvoice().setSquareInvoiceID(invoiceResult.getInvoice().getId());
+                        PublishInvoiceRequest publishBody = new PublishInvoiceRequest.Builder(
+                                invoiceResult.getInvoice().getVersion())
+                                .idempotencyKey(UUID.randomUUID().toString())
+                                .build();
+
+                        PublishInvoiceResponse publishInvoiceResponse = invoicesApi.publishInvoice(invoiceResult.getInvoice().getId(), publishBody);
+                    } catch (ApiException | IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 InvoiceItem.deleteAllFromInvoice(selectedEvent.getInvoiceId());
@@ -606,8 +785,172 @@ public class AddEventController extends Controller implements Initializable{
                     if(!createSquareInvoice) {
                         invoice.setID(invoice.getNewIDFromDB());
                     } else {
-                        // Create square invoice
-                        invoice.setID(1);
+                        SquareClient client = new SquareClient.Builder()
+                                .environment(Environment.PRODUCTION)
+                                .accessToken(ACCESS_TOKEN)
+                                .build();
+
+                        String[] customerFullName = customer.getName().split(" ");
+                        String customerFirstName = customerFullName[0];
+                        String customerLastName = customerFullName.length > 1 ? customerFullName[1] : "";
+                        String customerEmail = customer.getEmail();
+                        String customerPhoneNumber = customer.getPhone();
+
+                        DateTimeFormatter formatterPicnicDate = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+                        DateTimeFormatter formatterPicnicTime = DateTimeFormatter.ofPattern("hh:mm a");
+                        LocalTime picnicTime = LocalTime.parse(event_textfield1.getText(), DateTimeFormatter.ofPattern("HH:mm:ss"));
+                        String addressForSquare;
+
+                        if(event_textfield4.getText().toLowerCase().contains("home delivery")){
+                            addressForSquare = event_textfield5.getText();
+                        } else {
+                            addressForSquare = event_textfield4.getText().split("\\(")[0] + ", Houston TX";
+                        }
+
+                        String guestCountNote = "";
+                        guestCountNote += (event_textfield7.getText().isEmpty() ? event_textfield6.getText() : event_textfield7.getText()) + "\n\n";
+                        guestCountNote += formatterPicnicDate.format(event_datePicker.getValue()) + "\n";
+                        guestCountNote += formatterPicnicTime.format(picnicTime) + "\n";
+
+                        CustomersApi customersApi = client.getCustomersApi();
+                        CreateCustomerRequest customerBody = new CreateCustomerRequest.Builder()
+                                .givenName(customerFirstName)
+                                .familyName(customerLastName)
+                                .emailAddress(customerEmail)
+                                .phoneNumber(customerPhoneNumber)
+                                .build();
+
+                        try {
+                            CreateCustomerResponse customerResult = customersApi.createCustomer(customerBody);
+                            String squareCustomerID = customerResult.getCustomer().getId();
+                            OrdersApi ordersApi = client.getOrdersApi();
+                            LinkedList<OrderLineItem> lineItems = new LinkedList<>();
+
+                            Money basePriceMoneyGC = new Money.Builder()
+                                    .amount(Math.round(Double.parseDouble(event_textfield3.getText())) * 100)
+                                    .currency("USD")
+                                    .build();
+
+                            OrderLineItem orderLineItemGC = new OrderLineItem.Builder("1")
+                                    .name(event_textfield2.getText() + " Guests")
+                                    .basePriceMoney(basePriceMoneyGC)
+                                    .note(guestCountNote)
+                                    .build();
+                            lineItems.add(orderLineItemGC);
+
+                            for (InvoiceItem squareInvoiceItem : invoiceItemObservableList) {
+                                String addonNote = squareInvoiceItem.getNote();
+                                Money basePriceMoney = new Money.Builder()
+                                        .amount(Math.round(squareInvoiceItem.getItemCost()) * 100)
+                                        .currency("USD")
+                                        .build();
+
+                                OrderLineItem orderLineItem = new OrderLineItem.Builder(String.valueOf(squareInvoiceItem.getItemQuantity()))
+                                        .name(squareInvoiceItem.getItemDesc())
+                                        .basePriceMoney(basePriceMoney)
+                                        .note(addonNote)
+                                        .build();
+                                lineItems.add(orderLineItem);
+                            }
+
+                            Money basePriceMoneySH = new Money.Builder()
+                                    .amount(Math.round(Double.parseDouble(event_textfield9.getText())) * 100)
+                                    .currency("USD")
+                                    .build();
+
+                            OrderLineItem orderLineItemSH = new OrderLineItem.Builder("1")
+                                    .name("Delivery")
+                                    .basePriceMoney(basePriceMoneySH)
+                                    .note(addressForSquare)
+                                    .build();
+                            lineItems.add(orderLineItemSH);
+
+                            OrderLineItemTax orderLineItemTax = new OrderLineItemTax.Builder()
+                                    .name("Sales Tax")
+                                    .percentage("6.25")
+                                    .scope("ORDER")
+                                    .build();
+
+                            LinkedList<OrderLineItemTax> taxes = new LinkedList<>();
+                            taxes.add(orderLineItemTax);
+
+
+                            Order order = new Order.Builder(LOCATION_ID)
+                                    .lineItems(lineItems)
+                                    .taxes(taxes)
+                                    .customerId(squareCustomerID)
+                                    .build();
+
+                            CreateOrderRequest orderBody = new CreateOrderRequest.Builder()
+                                    .order(order)
+                                    .idempotencyKey(UUID.randomUUID().toString())
+                                    .build();
+
+                            CreateOrderResponse orderResult = ordersApi.createOrder(orderBody);
+                            String squareOrderID = orderResult.getOrder().getId();
+                            InvoicesApi invoicesApi = client.getInvoicesApi();
+                            InvoiceRecipient primaryRecipient = new InvoiceRecipient.Builder()
+                                    .customerId(squareCustomerID)
+                                    .build();
+
+                            InvoicePaymentReminder invoicePaymentReminder1 = new InvoicePaymentReminder.Builder()
+                                    .relativeScheduledDays(0)
+                                    .build();
+
+                            InvoicePaymentReminder invoicePaymentReminder2 = new InvoicePaymentReminder.Builder()
+                                    .relativeScheduledDays(1)
+                                    .build();
+
+                            InvoicePaymentReminder invoicePaymentReminder3 = new InvoicePaymentReminder.Builder()
+                                    .relativeScheduledDays(4)
+                                    .build();
+
+                            LinkedList<InvoicePaymentReminder> reminders = new LinkedList<>();
+                            reminders.add(invoicePaymentReminder1);
+                            reminders.add(invoicePaymentReminder2);
+                            reminders.add(invoicePaymentReminder3);
+
+                            LocalDate eventDate = event_datePicker.getValue();
+                            long daysBetween = DAYS.between(LocalDate.now(), eventDate);
+                            LocalDate dueDate = daysBetween < 14 ? LocalDate.now() : eventDate.minusDays(14);
+                            DateTimeFormatter formatterDueDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            String dueDateString = formatterDueDate.format(dueDate);
+                            InvoicePaymentRequest invoicePaymentRequest = new InvoicePaymentRequest.Builder()
+                                    .requestMethod("EMAIL")
+                                    .requestType("BALANCE")
+                                    .dueDate(dueDateString)
+                                    .tippingEnabled(false)
+                                    .reminders(reminders)
+                                    .build();
+
+                            LinkedList<InvoicePaymentRequest> paymentRequests = new LinkedList<>();
+                            paymentRequests.add(invoicePaymentRequest);
+
+                            com.squareup.square.models.Invoice squareInvoice = new com.squareup.square.models.Invoice.Builder()
+                                    .locationId(LOCATION_ID)
+                                    .orderId(squareOrderID)
+                                    .primaryRecipient(primaryRecipient)
+                                    .paymentRequests(paymentRequests)
+                                    .title("Fancy Picnics")
+                                    .description("Thanks for choosing Fancy Picnics! We will arrive to the location between 3 and 1 hour prior your starting time!")
+                                    .build();
+
+                            CreateInvoiceRequest invoiceBody = new CreateInvoiceRequest.Builder(squareInvoice)
+                                    .idempotencyKey(UUID.randomUUID().toString())
+                                    .build();
+
+                            CreateInvoiceResponse invoiceResult = invoicesApi.createInvoice(invoiceBody);
+                            invoice.setID(Integer.parseInt(invoiceResult.getInvoice().getInvoiceNumber()));
+                            invoice.setSquareInvoiceID(invoiceResult.getInvoice().getId());
+                            PublishInvoiceRequest publishBody = new PublishInvoiceRequest.Builder(
+                                    invoiceResult.getInvoice().getVersion())
+                                    .idempotencyKey(UUID.randomUUID().toString())
+                                    .build();
+
+                            PublishInvoiceResponse publishInvoiceResponse = invoicesApi.publishInvoice(invoiceResult.getInvoice().getId(), publishBody);
+                        } catch (ApiException | IOException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     invoice.add();

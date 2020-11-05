@@ -15,13 +15,15 @@ public class Invoice extends QueryObject {
     private Float taxRate;
     private Float total;
     private boolean isPaid;
+    private String squareInvoiceID;
 
-    public Invoice(int id, Float subtotal, Float taxRate, Float total, boolean isPaid) {
+    public Invoice(int id, Float subtotal, Float taxRate, Float total, boolean isPaid, String squareInvoiceID) {
         this.id = id;
         this.subtotal = subtotal;
         this.taxRate = taxRate;
         this.total = total;
         this.isPaid = isPaid;
+        this.squareInvoiceID = squareInvoiceID;
     }
 
     public Invoice(){
@@ -34,15 +36,21 @@ public class Invoice extends QueryObject {
                 "subtotal = " + this.getSubtotal() +  ", " +
                 "tax_rate = " + this.getTaxRate() +  ", " +
                 "is_paid = " + this.getIsPaidBit() +  ", " +
-                "total = " + this.getTotal() +  " " +
+                "total = " + this.getTotal() +  ", " +
+                "square_invoice_id = " + (this.getSquareInvoiceID() == null ? this.getSquareInvoiceID() : "'" + this.getSquareInvoiceID().replaceAll("'", "''") + "'") + " " +
                 "WHERE id = " + this.getID();
 
         return executeUpdate(statement);
     }
 
     public boolean add(){
-        statement = "INSERT INTO invoice (id, subtotal, tax_rate, is_paid, total) VALUES (" +
-                this.getID() + ", " + this.getSubtotal() + ", " + this.getTaxRate() + ", " + this.getIsPaidBit() + ", " + this.getTotal() +
+        statement = "INSERT INTO invoice (id, subtotal, tax_rate, is_paid, total, square_invoice_id) VALUES (" +
+                this.getID() + ", " +
+                this.getSubtotal() + ", " +
+                this.getTaxRate() + ", " +
+                this.getIsPaidBit() + ", " +
+                this.getTotal() + ", " +
+                (this.getSquareInvoiceID() == null ? this.getSquareInvoiceID() : "'" + this.getSquareInvoiceID().replaceAll("'", "''") + "'") +
                 ")";
 
         return executeUpdate(statement);
@@ -145,6 +153,14 @@ public class Invoice extends QueryObject {
         return isPaid ? 1 : 0;
     }
 
+    public String getSquareInvoiceID() {
+        return squareInvoiceID;
+    }
+
+    public void setSquareInvoiceID(String squareInvoiceID) {
+        this.squareInvoiceID = squareInvoiceID;
+    }
+
     public boolean exists() {
         return (findByID(this.id) != null);
     }
@@ -159,6 +175,7 @@ public class Invoice extends QueryObject {
         invoice.setTaxRate(resultSet.getFloat("tax_rate"));
         invoice.setIsPaid(resultSet.getBoolean("is_paid"));
         invoice.setTotal(resultSet.getFloat("total"));
+        invoice.setSquareInvoiceID(resultSet.getString("square_invoice_id"));
     }
 
     public static int getChecksum(){
