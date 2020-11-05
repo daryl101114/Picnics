@@ -16,19 +16,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import javafx.stage.Stage;
 
-import models.Addon;
 import models.Event;
 import models.InvoiceItem;
-import org.omg.CORBA.Environment;
 
-
-import java.awt.*;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
-import java.text.SimpleDateFormat;
 import java.time.*;
 
 import java.time.format.DateTimeFormatter;
@@ -73,15 +67,7 @@ public class EventController extends Controller implements Initializable {
             }
         });
 
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem menuItem1 = new MenuItem("Mark as Paid");
-        menuItem1.setOnAction(event -> markPaid() );
-        MenuItem menuItem2 = new MenuItem("Edit Event");
-        menuItem2.setOnAction(event -> editEvent() );
-
-        contextMenu.getItems().add(menuItem1);
-        contextMenu.getItems().add(menuItem2);
-        tableView.setContextMenu(contextMenu);
+        setContextMenu();
 
         column1.maxWidthProperty().bind(tableView.widthProperty().multiply(0.15));
         column2.maxWidthProperty().bind(tableView.widthProperty().multiply(0.15));
@@ -107,7 +93,28 @@ public class EventController extends Controller implements Initializable {
 
         checkBox1.selectedProperty().addListener((observable, oldValue, newValue) -> {
             refreshTable();
+            setContextMenu();
         });
+    }
+
+    public void setContextMenu(){
+        if(!checkBox1.isSelected()) {
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem menuItem1 = new MenuItem("Mark as Paid");
+            menuItem1.setOnAction(event -> markPaid());
+            MenuItem menuItem2 = new MenuItem("Edit Event");
+            menuItem2.setOnAction(event -> editEvent());
+
+            contextMenu.getItems().add(menuItem1);
+            contextMenu.getItems().add(menuItem2);
+            tableView.setContextMenu(contextMenu);
+        } else {
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem menuItem1 = new MenuItem("Edit Event");
+            menuItem1.setOnAction(event -> editEvent());
+            contextMenu.getItems().add(menuItem1);
+            tableView.setContextMenu(contextMenu);
+        }
     }
 
     public void addButtonPushed(ActionEvent event) throws IOException {

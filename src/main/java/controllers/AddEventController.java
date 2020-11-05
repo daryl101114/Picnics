@@ -380,27 +380,35 @@ public class AddEventController extends Controller implements Initializable{
                             .atZone(ZoneId.systemDefault())
                             .toLocalDateTime());
 
-                    if(selectedEvent.getGoogleCalendarId() !=  null) {
-                        String conString = confirmationAlert.getContentText();
-                        confirmationAlert.setContentText("Do you want to update the google calendar event?");
-                        confirmationAlert.showAndWait().filter(selection -> selection == ButtonType.OK).ifPresent(selection -> {
-                            GoogleCalendarService googleCalendarService = new GoogleCalendarService();
-                            try {
-                                googleCalendarService.GCalendar();
-                            } catch (IOException | GeneralSecurityException e) {
-                                e.printStackTrace();
-                            }
+                    if(selectedEvent.edit()) {
+                        if(selectedEvent.getGoogleCalendarId() !=  null) {
+                            String conString = confirmationAlert.getContentText();
+                            confirmationAlert.setContentText("Do you want to update the Google Calendar event?");
+                            confirmationAlert.showAndWait().filter(selection -> selection == ButtonType.OK).ifPresent(selection -> {
+                                GoogleCalendarService googleCalendarService = new GoogleCalendarService();
+                                try {
+                                    googleCalendarService.GCalendar();
+                                } catch (IOException | GeneralSecurityException e) {
+                                    e.printStackTrace();
+                                }
 
-                            try {
-                                DateTimeFormatter formatter3= DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-                                String startTime = selectedEvent.getPicnicDateTime().plusHours(6).format(formatter3);
-                                String endTime = selectedEvent.getPicnicDateTime().plusHours(7).format(formatter3);
-                                googleCalendarService.updateEvent(selectedEvent.getGoogleCalendarId(), startTime, endTime);
-                            } catch (IOException | URISyntaxException e) {
-                                e.printStackTrace();
-                            }
-                        });
-                        confirmationAlert.setContentText(conString);
+                                try {
+                                    DateTimeFormatter formatter3= DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+                                    String startTime = selectedEvent.getPicnicDateTime().plusHours(6).format(formatter3);
+                                    String endTime = selectedEvent.getPicnicDateTime().plusHours(7).format(formatter3);
+                                    googleCalendarService.updateEvent(selectedEvent.getGoogleCalendarId(), startTime, endTime);
+                                } catch (IOException | URISyntaxException e) {
+                                    e.printStackTrace();
+                                }
+                            });
+                            confirmationAlert.setContentText(conString);
+                        }
+
+                        eventController.refreshTable();
+                        closeChildWindow(event);
+                    } else {
+                        failureAlert.setContentText("Error updating the record.");
+                        failureAlert.showAndWait();
                     }
 
                 } catch (Exception e) {
@@ -408,16 +416,6 @@ public class AddEventController extends Controller implements Initializable{
                     failureAlert.showAndWait();
                     e.printStackTrace();
                     return;
-                }
-
-                if(selectedEvent.edit()) {
-                    successAlert.setContentText("Success.");
-                    successAlert.showAndWait();
-                    eventController.refreshTable();
-                    closeChildWindow(event);
-                } else {
-                    failureAlert.setContentText("Error updating the record.");
-                    failureAlert.showAndWait();
                 }
             });
         }
