@@ -2,7 +2,6 @@ package controllers;
 
 import entities.Controller;
 import entities.ControllerType;
-import entities.GoogleCalendarService;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -10,27 +9,11 @@ import javafx.scene.control.Alert;
 
 import java.io.IOException;
 import java.net.URL;
-import java.security.GeneralSecurityException;
 import java.util.ResourceBundle;
 
-
 public class MainMenuController extends Controller implements Initializable {
-
-
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-//        GoogleCalendarService googleCalendarService = new GoogleCalendarService();
-//        try {
-//            googleCalendarService.GCalendar();
-////            googleCalendarService.insertEvent("Event Descrition", "The Best Event","Location", "2020-09-28T17:00:00-07:00","2020-09-28T17:00:00-07:00");
-//            googleCalendarService.getCalList();
-//            googleCalendarService.updateEvent("t5nkq0jp8t4pi6mg55c041sgas","NEW EVENT");
-//        } catch (IOException | GeneralSecurityException e) {
-//            e.printStackTrace();
-//        }
 
         clearSelectedObjects();
         successAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -66,5 +49,7 @@ public class MainMenuController extends Controller implements Initializable {
         loadScene(event, "/views/Event.fxml", ControllerType.EVENT);
     }
 
-
+    public void reportsPushed(ActionEvent event) throws IOException {
+        loadScene(event, "/views/Reports.fxml", ControllerType.REPORTS);
+    }
 }

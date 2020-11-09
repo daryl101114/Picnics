@@ -14,7 +14,7 @@ public abstract class QueryObject {
     protected static boolean executeUpdate(String statement) {
         try {
             conn = DriverManager.getConnection(connectionURL);
-            stmt = conn.prepareStatement(statement);
+            stmt = conn.prepareStatement(statement, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             int result = stmt.executeUpdate();
             if (result > 0)
                 return true;
@@ -28,7 +28,7 @@ public abstract class QueryObject {
 
     protected static void executeQuery(String statement) throws SQLException {
         conn = DriverManager.getConnection(connectionURL);
-        stmt = conn.prepareStatement(statement);
+        stmt = conn.prepareStatement(statement,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         resultSet = stmt.executeQuery();
     }
 

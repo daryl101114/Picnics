@@ -17,7 +17,10 @@ import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.model.*;
 import models.SquareEmail;
 
-
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
@@ -31,7 +34,7 @@ public class GmailService {
     private static final String USER = "me";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
-    private static final String[] SCOPES_LIST = {GmailScopes.GMAIL_READONLY, CalendarScopes.CALENDAR};
+    private static final String[] SCOPES_LIST = {GmailScopes.GMAIL_READONLY, CalendarScopes.CALENDAR, GmailScopes.GMAIL_SEND};
     private static final List<String> SCOPES = new ArrayList<>(Arrays.asList(SCOPES_LIST));
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
@@ -208,5 +211,60 @@ public class GmailService {
                 }
                 break;
         }
+    }
+
+    public void sendAutoEmail(String customerFirstName, String email){
+
+        String to = email;
+        String from = "fancypicnics@gmail.com";
+        String subject = "Picnic Request";
+        String bodyText = "Hi " + customerFirstName + "!\n" +
+                "\n" +
+                "Thank you for contacting Fancy Picnics. \n" +
+                "An automated invoice has been sent to you with all the add ons that you requested. \n" +
+                "This invoice can be changed at any time before payment has been made. Let us know if you wish to add/remove any item and we will update it. Please let us know if you have any questions.\n" +
+                "\n" +
+                "Our website for pricing and more information: https://www.fancypicnicshouston.com\n" +
+                "\n" +
+                "As a reminder, park deliveries last two hours and home deliveries last 3 hours, unless requested otherwise. \n" +
+                "We also have been experiencing high demand for weekend picnics so we recommend scheduling your picnic at least one week in advance. \n" +
+                "\n" +
+                "Thank you, \n" +
+                "Fancy Picnics Team";
+
+        MimeMessage emailContent = null;
+        try {
+            emailContent = createEmail(to, from, subject, bodyText);
+            Message message = createMessageWithEmail(emailContent);
+            message = service.users().messages().send("me", message).execute();
+        } catch (MessagingException | IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public static MimeMessage createEmail(String to,String from, String subject, String bodyText) throws MessagingException {
+        Properties props = new Properties();
+        Session session = Session.getDefaultInstance(props, null);
+
+        MimeMessage email = new MimeMessage(session);
+
+        email.setFrom(new InternetAddress(from));
+        email.addRecipient(javax.mail.Message.RecipientType.TO,
+                new InternetAddress(to));
+        email.setSubject(subject);
+        email.setText(bodyText);
+        return email;
+    }
+
+    public static Message createMessageWithEmail(MimeMessage emailContent) throws MessagingException, IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        emailContent.writeTo(buffer);
+        byte[] bytes = buffer.toByteArray();
+        String encodedEmail = Base64.encodeBase64URLSafeString(bytes);
+        Message message = new Message();
+        message.setRaw(encodedEmail);
+        return message;
     }
 }

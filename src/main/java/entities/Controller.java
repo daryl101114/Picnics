@@ -1,10 +1,11 @@
 package entities;
 
 import controllers.AddEventController;
-import controllers.EmailController;
+
 import controllers.EventController;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -47,6 +48,10 @@ public abstract class Controller{
 
     protected static Stage window;
 
+    @FXML public void exitApplication(ActionEvent event){
+
+    }
+
     public void mainMenuPushed(ActionEvent event) throws IOException {
         loadScene(event, "/views/MainMenu.fxml", ControllerType.MAIN_MENU);
     }
@@ -70,9 +75,16 @@ public abstract class Controller{
             }
             case EVENT: {
                 MIN_HEIGHT = 600;
-                MIN_WIDTH = 900;
+                MIN_WIDTH = 600;
                 PREF_HEIGHT = 600;
                 PREF_WIDTH = 900;
+                break;
+            }
+            case REPORTS:{
+                MIN_HEIGHT = 500;
+                MIN_WIDTH = 600;
+                PREF_HEIGHT = 500;
+                PREF_WIDTH = 600;
                 break;
             }
 
@@ -109,16 +121,6 @@ public abstract class Controller{
                 break;
             }
 
-            case ADD_INVOICE: {
-             //   CustomerController controller = loader.getController();
-             //   controller.setSelectedEmail(selectedSquareEmail);
-                MIN_HEIGHT = 500;
-                MIN_WIDTH = 500;
-                PREF_HEIGHT = 500;
-                PREF_WIDTH = 500;
-                break;
-            }
-
             default:
 
                 break;
@@ -148,8 +150,8 @@ public abstract class Controller{
                 controller.setIsImport(isImport);
                 if(eventController != null)
                     controller.setParentController(eventController);
-                MIN_HEIGHT = 900;
-                MIN_WIDTH = 900;
+                MIN_HEIGHT = 600;
+                MIN_WIDTH = 600;
                 PREF_HEIGHT = 900;
                 PREF_WIDTH = 900;
                 break;

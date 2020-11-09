@@ -15,7 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import models.Invoice;
+
 import models.SquareEmail;
 
 import javax.swing.*;
@@ -53,7 +53,7 @@ public class EmailController extends Controller implements Initializable {
 
         ContextMenu contextMenu = new ContextMenu();
         MenuItem menuItem1 = new MenuItem("Generate Invoice");
-        menuItem1.setOnAction(event -> generateInvoice(event) );
+        menuItem1.setOnAction(this::generateInvoice);
         MenuItem menuItem2 = new MenuItem("Ignore Email");
         menuItem2.setOnAction(event -> ignoreEmail() );
 
@@ -80,10 +80,6 @@ public class EmailController extends Controller implements Initializable {
         column3.setCellValueFactory(new PropertyValueFactory<>("eventEmail"));
         column4.setCellValueFactory(new PropertyValueFactory<>("eventDate"));
         column5.setCellValueFactory(new PropertyValueFactory<>("eventGuestCount"));
-    }
-
-    public void refreshTable(){
-        tableView.refresh();
     }
 
     public void reloadTablePushed() throws InterruptedException {

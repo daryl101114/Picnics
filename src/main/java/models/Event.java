@@ -91,7 +91,11 @@ public class Event extends QueryObject {
     public static ObservableList<Event> findAllForTable(LocalDate fromDate, LocalDate toDate) {
         List<Event> events = new ArrayList<>();
         try {
-            statement = "SELECT * FROM event WHERE picnic_date_time BETWEEN '" + fromDate.toString() + "' AND '" + toDate.toString() + "';";
+            statement = "SELECT e.id as event_id, square_email_id, picnic_date_time, invoice_id, customer_id, guest_count, event_address, event_type, employee_id, google_calendar_id, custom_palette, style, event_location, c.id as customer_table_id, name, phone, source, email, i.id as invoice_table_id, subtotal, tax_rate, is_paid, total, square_invoice_id, discount_percentage\n" +
+                    "FROM event e\n" +
+                    "JOIN customer c on e.customer_id = c.id\n" +
+                    "JOIN invoice i on i.id = e.invoice_id\n" +
+                    "WHERE picnic_date_time BETWEEN '" + fromDate.toString() + "' AND '" + toDate.toString() + "';";
             executeQuery(statement);
             while (resultSet.next()) {
                 Event event = new Event();
@@ -102,9 +106,6 @@ public class Event extends QueryObject {
             e.printStackTrace();
         } finally {
             terminateQuery();
-        }
-        for (Event event : events) {
-            setEventDetails(event);
         }
         return FXCollections.observableList(events);
     }
@@ -291,7 +292,7 @@ public class Event extends QueryObject {
     }
 
     private static void setEventFromQuery(Event event) throws SQLException {
-        event.setId(resultSet.getInt("id"));
+        event.setId(resultSet.getInt("event_id"));
         event.setSquareEmailId(resultSet.getString("square_email_id"));
         event.setPicnicDateTime(resultSet.getTimestamp("picnic_date_time").toLocalDateTime());
         event.setInvoiceId(resultSet.getInt("invoice_id"));
@@ -304,11 +305,25 @@ public class Event extends QueryObject {
         event.setGoogleCalendarId(resultSet.getString("google_calendar_id"));
         event.setStyle(resultSet.getString("style"));
         event.setCustomPalette(resultSet.getString("custom_palette"));
-    }
 
-    private static void setEventDetails(Event event) {
-        event.setCustomer(Customer.findByID(event.getCustomerId()));
-        event.setInvoice(Invoice.findByID(event.getInvoiceId()));
+        Customer customer = new Customer();
+        customer.setID(resultSet.getInt("customer_table_id"));
+        customer.setName(resultSet.getString("name"));
+        customer.setPhone(resultSet.getString("phone"));
+        customer.setSource(resultSet.getString("source"));
+        customer.setEmail(resultSet.getString("email"));
+        event.setCustomer(customer);
+
+        Invoice invoice = new Invoice();
+        invoice.setID(resultSet.getInt("invoice_table_id"));
+        invoice.setSubtotal(resultSet.getFloat("subtotal"));
+        invoice.setTaxRate(resultSet.getFloat("tax_rate"));
+        invoice.setIsPaid(resultSet.getBoolean("is_paid"));
+        invoice.setTotal(resultSet.getFloat("total"));
+        invoice.setSquareInvoiceID(resultSet.getString("square_invoice_id"));
+        invoice.setDiscountPercentage(resultSet.getDouble("discount_percentage"));
+
+        event.setInvoice(invoice);
     }
 
     public static int getChecksum() {

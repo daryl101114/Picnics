@@ -27,7 +27,7 @@
         <RowConstraints percentHeight="55.0" vgrow="SOMETIMES" />
         <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
     </rowConstraints>
-    <TableView fx:id="tableView" editable="false" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+    <TableView fx:id="tableView" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
         <columns>
             <TableColumn fx:id="column1" maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="Customer" />
             <TableColumn fx:id="column2" maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="Email" />
@@ -92,7 +92,7 @@
        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
      </rowConstraints>
       <children>
-          <Label text="From:" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+          <Label fx:id="label1" text="From:" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
               <font>
                   <Font size="16.0" />
               </font>
@@ -110,7 +110,7 @@
                <Insets left="80.0" />
             </GridPane.margin>
          </TextField>
-          <Label text="To:" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.valignment="CENTER">
+          <Label fx:id="label2" text="To:" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.valignment="CENTER">
               <font>
                   <Font size="16.0" />
               </font>
@@ -139,6 +139,14 @@
                <Insets />
             </GridPane.margin>
          </Label>
+         <CheckBox fx:id="checkBox2" layoutX="275.0" layoutY="83.0" mnemonicParsing="false" text="Ignore Dates" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <font>
+               <Font size="16.0" />
+            </font>
+            <GridPane.margin>
+               <Insets left="80.0" />
+            </GridPane.margin>
+         </CheckBox>
       </children>
    </GridPane>
       <ImageView fitHeight="84.0" fitWidth="82.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">

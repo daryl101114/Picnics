@@ -1,5 +1,6 @@
 package controllers;
 
+import com.google.api.services.gmail.GmailScopes;
 import com.squareup.square.Environment;
 import com.squareup.square.SquareClient;
 import com.squareup.square.api.CustomersApi;
@@ -9,7 +10,10 @@ import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.models.*;
 import entities.Controller;
 
+import entities.GmailService;
 import entities.GoogleCalendarService;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -66,6 +70,7 @@ public class AddEventController extends Controller implements Initializable{
     @FXML private TextField event_textfield7;
     @FXML private TextField event_textfield8;
     @FXML private TextField event_textfield9;
+    @FXML private TextField textFieldDiscount;
 
     @FXML private TableColumn<InvoiceItem, String> column1;
     @FXML private TableColumn<InvoiceItem, String> column2;
@@ -100,6 +105,8 @@ public class AddEventController extends Controller implements Initializable{
         menuItem1.setOnAction(event -> removeAddon() );
         MenuItem menuItem2 = new MenuItem("New Addon");
         menuItem2.setOnAction(event -> newAddon() );
+        MenuItem menuItem3 = new MenuItem("Add Discount");
+        menuItem2.setOnAction(event -> newAddon() );
 
         contextMenu.getItems().add(menuItem1);
         contextMenu.getItems().add(menuItem2);
@@ -129,6 +136,7 @@ public class AddEventController extends Controller implements Initializable{
         column4.setOnEditCommit(event -> editRecord(event, 4) );
         column5.setOnEditCommit(event -> editRecord(event, 5) );
 
+        checkbox1.setSelected(true);
         checkbox1.selectedProperty().addListener((observable, oldValue, newValue) -> {
             this.createSquareInvoice = checkbox1.isSelected();
         });
@@ -155,6 +163,7 @@ public class AddEventController extends Controller implements Initializable{
             event_textfield6.setText(selectedEvent.getStyle());
             event_textfield7.setText(selectedEvent.getCustomPalette());
             event_textfield8.setText(selectedEvent.getEventType());
+            textFieldDiscount.setText(String.valueOf(selectedEvent.getInvoice().getDiscountPercentage()));
 
             InvoiceItem shippingInvoiceItem = InvoiceItem.findShippingByInvoice(selectedEvent.getInvoiceId());
             if(shippingInvoiceItem.getItemCost() > 0){
@@ -231,23 +240,28 @@ public class AddEventController extends Controller implements Initializable{
             event_textfield8.setText(selectedSquareEmail.getEventType());
 
             String[] addonsArray = selectedSquareEmail.getEventAddonsArray();
-            for (int i = 0; i < addonsArray.length; i++) {
-                if(addonsArray[i].isEmpty())
-                    continue;
-                InvoiceItem invoiceItem = new InvoiceItem();
-                invoiceItem.setItemDesc(addonsArray[i]);
-                Addon addon = new Addon();
-                addon.setName(addonsArray[i]);
-                if(addon.getName().toLowerCase().equals("marquee letter")) {
-                    invoiceItem.setNote(selectedSquareEmail.getMarqueeLetters());
-                    invoiceItem.setItemQuantity(selectedSquareEmail.getMarqueeLetters().replaceAll("\\s", "").length());
+            if (addonsArray != null) {
+                for (int i = 0; i < addonsArray.length; i++) {
+                    if(addonsArray[i].isEmpty())
+                        continue;
+                    if(addonsArray[i].toLowerCase().trim().equals("none"))
+                        continue;
+                    InvoiceItem invoiceItem = new InvoiceItem();
+                    invoiceItem.setItemDesc(addonsArray[i]);
+                    Addon addon = new Addon();
+                    addon.setName(addonsArray[i]);
+                    if(addon.getName().toLowerCase().equals("marquee letter")) {
+                        invoiceItem.setNote(selectedSquareEmail.getMarqueeLetters());
+                        if(selectedSquareEmail.getMarqueeLetters() != null)
+                            invoiceItem.setItemQuantity(selectedSquareEmail.getMarqueeLetters().replaceAll("\\s", "").length());
+                    }
+                    if(addon.exists()) {
+                        addon = Addon.findByName(addonsArray[i]);
+                        invoiceItem.setItemCost(addon.getPrice());
+                        invoiceItem.setItemSupplierCost(addon.getSupplierCost());
+                    }
+                    invoiceItemObservableList.add(invoiceItem);
                 }
-                if(addon.exists()) {
-                    addon = Addon.findByName(addonsArray[i]);
-                    invoiceItem.setItemCost(addon.getPrice());
-                    invoiceItem.setItemSupplierCost(addon.getSupplierCost());
-                }
-                invoiceItemObservableList.add(invoiceItem);
             }
             tableView.setItems(invoiceItemObservableList);
         }
@@ -282,7 +296,7 @@ public class AddEventController extends Controller implements Initializable{
                     event_textfield7.setDisable(true);
                     event_textfield8.setDisable(true);
                     event_textfield9.setDisable(true);
-
+                    textFieldDiscount.setDisable(true);
                     tableView.setDisable(true);
                 }
             }
@@ -444,6 +458,12 @@ public class AddEventController extends Controller implements Initializable{
 
                 double guestPrice = Double.parseDouble(event_textfield3.getText());
                 double shippingPrice = Double.parseDouble(event_textfield9.getText());
+                Double discountPercentage = 0d;
+
+                if(!textFieldDiscount.getText().trim().equals("")) {
+                    discountPercentage = Double.parseDouble(textFieldDiscount.getText().replace("%", "").trim());
+                }
+
                 subtotal += guestPrice + shippingPrice;
 
                 String name = customer_textField1.getText();
@@ -455,8 +475,13 @@ public class AddEventController extends Controller implements Initializable{
                     subtotal += invoiceItem.getItemQuantity() * invoiceItem.getItemCost();
                 }
 
+                if(discountPercentage != 0d){
+                    subtotal = (float)(subtotal - (subtotal * (discountPercentage / 100)));
+                }
+
                 selectedEvent.getInvoice().setSubtotal(subtotal);
                 selectedEvent.getInvoice().setTotal(Math.round((subtotal * (1 + (TAX_RATE / 100.0))) * 100.0) / 100.0f);
+                selectedEvent.getInvoice().setDiscountPercentage(discountPercentage);
                 selectedEvent.getInvoice().edit();
 
                 if(selectedEvent.getInvoiceId() < 10000000 && createSquareInvoice && selectedEvent.getInvoice().getSquareInvoiceID() != null) {
@@ -543,12 +568,33 @@ public class AddEventController extends Controller implements Initializable{
                         LinkedList<OrderLineItemTax> taxes = new LinkedList<>();
                         taxes.add(orderLineItemTax);
 
+                        Order order;
+                        if(!textFieldDiscount.getText().trim().equals(""))
+                        {
+                            Double discount = Double.parseDouble(textFieldDiscount.getText().replace("%", "").trim());
 
-                        Order order = new Order.Builder(LOCATION_ID)
-                                .lineItems(lineItems)
-                                .taxes(taxes)
-                                .customerId(squareCustomerID)
-                                .build();
+                            OrderLineItemDiscount orderLineItemDiscount = new OrderLineItemDiscount.Builder()
+                                    .name("Discount: ")
+                                    .percentage(String.valueOf(discount))
+                                    .scope("ORDER")
+                                    .build();
+
+                            LinkedList<OrderLineItemDiscount> discounts = new LinkedList<>();
+                            discounts.add(orderLineItemDiscount);
+
+                            order = new Order.Builder(LOCATION_ID)
+                                    .lineItems(lineItems)
+                                    .taxes(taxes)
+                                    .discounts(discounts)
+                                    .customerId(squareCustomerID)
+                                    .build();
+                        } else {
+                            order = new Order.Builder(LOCATION_ID)
+                                    .lineItems(lineItems)
+                                    .taxes(taxes)
+                                    .customerId(squareCustomerID)
+                                    .build();
+                        }
 
                         CreateOrderRequest orderBody = new CreateOrderRequest.Builder()
                                 .order(order)
@@ -749,6 +795,12 @@ public class AddEventController extends Controller implements Initializable{
 
                 double guestPrice = Double.parseDouble(event_textfield3.getText());
                 double shippingPrice = Double.parseDouble(event_textfield9.getText());
+                Double discountPercentage = 0d;
+
+                if(!textFieldDiscount.getText().trim().equals("")) {
+                    discountPercentage = Double.parseDouble(textFieldDiscount.getText().replace("%", "").trim());
+                }
+
                 subtotal += guestPrice + shippingPrice;
 
                 for (InvoiceItem invoiceItem :invoiceItemObservableList) {
@@ -775,11 +827,16 @@ public class AddEventController extends Controller implements Initializable{
                     customer.edit();
                 }
 
+                if(discountPercentage != 0d){
+                    subtotal = (float)(subtotal - (subtotal * (discountPercentage / 100)));
+                }
+
                 Invoice invoice = new Invoice();
                 invoice.setSubtotal(subtotal);
                 invoice.setTaxRate(TAX_RATE);
                 invoice.setIsPaid(false);
                 invoice.setTotal(Math.round((subtotal * (1 + (TAX_RATE / 100.0))) * 100.0) / 100.0f);
+                invoice.setDiscountPercentage(discountPercentage);
 
                 if(isNew){
                     if(!createSquareInvoice) {
@@ -874,12 +931,33 @@ public class AddEventController extends Controller implements Initializable{
                             LinkedList<OrderLineItemTax> taxes = new LinkedList<>();
                             taxes.add(orderLineItemTax);
 
+                            Order order;
+                            if(!textFieldDiscount.getText().trim().equals(""))
+                            {
+                                Double discount = Double.parseDouble(textFieldDiscount.getText().replace("%", "").trim());
 
-                            Order order = new Order.Builder(LOCATION_ID)
-                                    .lineItems(lineItems)
-                                    .taxes(taxes)
-                                    .customerId(squareCustomerID)
-                                    .build();
+                                OrderLineItemDiscount orderLineItemDiscount = new OrderLineItemDiscount.Builder()
+                                        .name("Discount: ")
+                                        .percentage(String.valueOf(discount))
+                                        .scope("ORDER")
+                                        .build();
+
+                                LinkedList<OrderLineItemDiscount> discounts = new LinkedList<>();
+                                discounts.add(orderLineItemDiscount);
+
+                                order = new Order.Builder(LOCATION_ID)
+                                        .lineItems(lineItems)
+                                        .taxes(taxes)
+                                        .discounts(discounts)
+                                        .customerId(squareCustomerID)
+                                        .build();
+                            } else {
+                                order = new Order.Builder(LOCATION_ID)
+                                        .lineItems(lineItems)
+                                        .taxes(taxes)
+                                        .customerId(squareCustomerID)
+                                        .build();
+                            }
 
                             CreateOrderRequest orderBody = new CreateOrderRequest.Builder()
                                     .order(order)
@@ -948,6 +1026,9 @@ public class AddEventController extends Controller implements Initializable{
                                     .build();
 
                             PublishInvoiceResponse publishInvoiceResponse = invoicesApi.publishInvoice(invoiceResult.getInvoice().getId(), publishBody);
+
+                            GmailService gmailService = new GmailService();
+                            gmailService.sendAutoEmail(customerFirstName, customerEmail);
                         } catch (ApiException | IOException e) {
                             e.printStackTrace();
                         }
@@ -1148,6 +1229,13 @@ public class AddEventController extends Controller implements Initializable{
             return false;
         }
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        LocalDate minValueDate = LocalDate.parse("01-01-1753", formatter);
+        if(event_datePicker.getValue().isBefore(minValueDate)){
+            failureAlert.setContentText("The minimum date allowed is 01-01-1753.");
+            failureAlert.showAndWait();
+            return false;
+        }
 
         try{
             LocalTime time = LocalTime.parse(event_textfield1.getText(), DateTimeFormatter.ofPattern("HH:mm:ss"));
@@ -1172,6 +1260,24 @@ public class AddEventController extends Controller implements Initializable{
             failureAlert.showAndWait();
             return false;
         }
+
+        try{
+            if(textFieldDiscount.getText() != null) {
+                if (!textFieldDiscount.getText().trim().replaceAll("%", "").equals("")) {
+                    double discount = Double.parseDouble(textFieldDiscount.getText().replaceAll("%", ""));
+                    if(discount < 0 || discount >= 100) {
+                        failureAlert.setContentText("Discount percentage has to be between 0 and 100.");
+                        failureAlert.showAndWait();
+                        return false;
+                    }
+                }
+            }
+        }catch (Exception ex){
+            failureAlert.setContentText("Please enter a valid discount price.");
+            failureAlert.showAndWait();
+            return false;
+        }
+
 
         for (InvoiceItem addon:invoiceItemObservableList) {
             if(addon.getItemDesc().equals("New Addon") || addon.getItemCost() == 0){

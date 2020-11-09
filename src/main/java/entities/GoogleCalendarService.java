@@ -24,7 +24,6 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class GoogleCalendarService {
     private static final String APPLICATION_NAME = "Fancy Picnics";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
-    private static final String[] SCOPES_LIST = {GmailScopes.GMAIL_READONLY, CalendarScopes.CALENDAR};
+    private static final String[] SCOPES_LIST = {GmailScopes.GMAIL_READONLY, CalendarScopes.CALENDAR, GmailScopes.GMAIL_SEND};
     private static final List<String> SCOPES = new ArrayList<>(Arrays.asList(SCOPES_LIST));
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
     private static Calendar service;
