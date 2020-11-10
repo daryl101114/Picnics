@@ -48,11 +48,8 @@ public class ReportsController extends Controller implements Initializable {
     public void reportSelected(String report){
         switch (report){
             case "Accounting":
-            case "Profit":
             case "Conversion Rate": {
-                label1.setText("Month start:");
                 label1.setVisible(true);
-                label2.setText("Month end:");
                 label2.setVisible(true);
 
                 dpFrom.setVisible(true);
@@ -66,6 +63,11 @@ public class ReportsController extends Controller implements Initializable {
             case "Most Picnic Types":
             case "Best Addons":
             default:
+                label1.setVisible(false);
+                label2.setVisible(false);
+
+                dpFrom.setVisible(false);
+                dpTo.setVisible(false);
                 break;
         }
     }
