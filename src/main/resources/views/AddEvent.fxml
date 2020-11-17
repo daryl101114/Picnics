@@ -201,6 +201,14 @@
             </font>
          </Label>
          <TextField fx:id="event_textfield9" maxWidth="170.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+         <Label alignment="CENTER" contentDisplay="CENTER" text="\$" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+            <font>
+               <Font size="16.0" />
+            </font>
+            <GridPane.margin>
+               <Insets right="10.0" />
+            </GridPane.margin>
+         </Label>
       </children>
       <GridPane.margin>
          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

@@ -31,7 +31,7 @@
             <RowConstraints percentHeight="20.0" vgrow="SOMETIMES" />
             <RowConstraints percentHeight="20.0" vgrow="SOMETIMES" />
         </rowConstraints>
-        <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Username:" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+        <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Username: *" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
             <font>
                 <Font size="16.0" />
             </font>
@@ -44,7 +44,7 @@
                 <Insets left="125.0" />
             </GridPane.margin>
         </TextField>
-        <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Employee:" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+        <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Employee: *" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
             <font>
                 <Font size="16.0" />
             </font>
@@ -57,7 +57,7 @@
                 <Insets left="125.0" />
             </GridPane.margin>
         </JFXComboBox>
-        <Label alignment="CENTER_RIGHT" text="Password:" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+        <Label alignment="CENTER_RIGHT" text="Password: *" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
             <font>
                 <Font size="16.0" />
             </font>
@@ -70,7 +70,7 @@
                 <Insets left="125.0" />
             </GridPane.margin>
         </PasswordField>
-        <Label alignment="CENTER_RIGHT" text="Verify:" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+        <Label alignment="CENTER_RIGHT" text="Verify: *" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
             <GridPane.margin>
                 <Insets right="125.0" />
             </GridPane.margin>

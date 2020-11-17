@@ -31,7 +31,7 @@
             <RowConstraints percentHeight="16.7" vgrow="SOMETIMES" />
             <RowConstraints percentHeight="16.7" vgrow="SOMETIMES" />
         </rowConstraints>
-        <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="First Name:" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+        <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="First Name: *" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
             <font>
                 <Font size="16.0" />
             </font>
@@ -44,7 +44,7 @@
                 <Insets left="20.0" />
             </GridPane.margin>
         </TextField>
-        <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Last Name:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+        <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Last Name: *" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
             <font>
                 <Font size="16.0" />
             </font>
