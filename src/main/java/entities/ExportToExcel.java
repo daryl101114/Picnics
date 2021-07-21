@@ -41,7 +41,7 @@ public class ExportToExcel extends QueryObject{
         DateTimeFormatter formatterExtension = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
         String reportName = report + "_" + formatterExtension.format(LocalDateTime.now());
 
-
+        //QUERIES INTO THE DATABASE
         switch (report){
             case "Accounting":{
                 statement = "SELECT c.name, e.picnic_date_time, e.event_address, ii.item_desc, ii.item_quantity, ii.item_cost, ii.item_supplier_cost, i.discount_percentage FROM invoice_item ii\n" +

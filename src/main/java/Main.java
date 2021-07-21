@@ -9,12 +9,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/views/LogIn.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/views/MainMenu.fxml"));
         primaryStage.setTitle("Fancy Picnics");
         primaryStage.setScene(new Scene(root, 600, 600));
         primaryStage.setMinWidth(400);
         primaryStage.setMinHeight(550);
-        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/fancy-picnics.jpg")));
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/Fancy-Picnics-Logo.png")));
         primaryStage.show();
     }
 
